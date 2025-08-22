@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drzewko umiejętności – Breaking</title>
+  <style>
+    :root{
+      --bg:#0f1220; --panel:#151936; --panel-2:#1a1f46; --muted:#8a90b0;
+      --text:#f3f5ff; --accent:#7c9dff; --accent-2:#6df0c2; --danger:#ff6b6b;
+      --locked:#2c315a; --unlocked:#2a6c4e;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:Inter, "SF Pro Text", Roboto, Arial, sans-serif; background:radial-gradient(1200px 800px at 80% -10%, #233 0%, #0f1220 55%), var(--bg); color:var(--text)}
+    header{position:sticky; top:0; z-index:20; background:rgba(15,18,32,.7); backdrop-filter: blur(8px); border-bottom:1px solid #262b55}
+    .wrap{max-width:1200px; margin:0 auto; padding:18px 20px}
+    .title{display:flex; align-items:center; gap:14px}
+    .title h1{font-size:22px; margin:0}
+    .badge{padding:4px 10px; border-radius:999px; background:linear-gradient(120deg, var(--panel-2), var(--panel)); color:var(--muted); font-size:12px; border:1px solid #2a2f62}
+
+    .toolbar{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px}
+    .search{flex:1; min-width:220px; position:relative}
+    .search input{width:100%; padding:12px 42px 12px 14px; border-radius:12px; border:1px solid #2a2f62; background:var(--panel); color:var(--text)}
+    .search svg{position:absolute; right:12px; top:50%; transform:translateY(-50%); opacity:.6}
+
+    .user-select{min-width:200px; padding:12px; border-radius:12px; border:1px solid #2a2f62; background:var(--panel); color:var(--text)}
+
+    .grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:16px; margin:18px auto 40px}
+    .card{grid-column: span 12; background:linear-gradient(180deg, var(--panel-2), var(--panel)); border:1px solid #2a2f62; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
+    @media(min-width:900px){ .card{grid-column: span 6} }
+    .card h2{margin:0 0 6px 0; font-size:18px}
+    .subtitle{margin:0 0 14px 0; color:var(--muted); font-size:13px}
+
+    .subgrid{display:grid; grid-template-columns:repeat(12, 1fr); gap:10px; margin-top:12px}
+    .skill{grid-column: span 6; display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; border:1px solid #2b315f; background:var(--locked); position:relative}
+    @media(min-width:720px){ .skill{grid-column: span 4} }
+    .skill.unlocked{ background:linear-gradient(180deg, #214537, var(--unlocked)); border-color:#37765b }
+    .skill .name{font-weight:600}
+    .skill .level{font-size:12px; color:var(--muted)}
+    .skill[data-note]::after{content:attr(data-note); position:absolute; bottom:-8px; left:10px; font-size:10px; color:#b7bdd6; opacity:.8}
+
+    .icons{display:flex; gap:6px; opacity:.8}
+    .progress{height:8px; width:100%; background:#262b55; border-radius:999px; overflow:hidden; border:1px solid #2a2f62}
+    .progress > span{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease}
+
+    .footer{color:#9aa1c8; text-align:center; padding:30px 0; border-top:1px solid #262b55}
+    .hint{font-size:12px; color:#aab0d8}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l2.39 4.84L20 8l-4 3.9.94 5.48L12 15.77l-4.94 1.61L8 11.9 4 8l5.61-1.16L12 2z" stroke="#7c9dff" stroke-width="1.2"/></svg>
+        <h1>Drzewko umiejętności – Breaking</h1>
+      </div>
+      <div class="toolbar">
+        <div class="search">
+          <input id="search" placeholder="Szukaj kategorii lub umiejętności…" />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="#aab0d8"/></svg>
+        </div>
+        <select id="userSelect" class="user-select"></select>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <footer class="footer">
+   ✨✨ Wybierz użytkownika w prawym górnym rogu. ✨✨
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBdhMIiqetOfDGP85ERxtgwn3AXR50pBcE",
+      authDomain: "base-468e0.firebaseapp.com",
+      projectId: "base-468e0",
+      storageBucket: "base-468e0.appspot.com",
+      messagingSenderId: "829161895559",
+      appId: "1:829161895559:web:d832541aac05b35847ea22"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const TREE = [
+  {
+    id: "toprock",
+    name: "Toprock",
+    desc: "Podstawowe kroki wykonywane na stojąco – wprowadzenie i rytmika.",
+    skills: [
+      { id: "basic-toprock", name: "Basic Toprock", level: "Poziom 1" },
+      { id: "indian-step", name: "Indian Step", level: "Poziom 1", req: ["basic-toprock"] },
+      { id: "side-step", name: "Side Step", level: "Poziom 2", req: ["indian-step"] },
+      { id: "crossover-step", name: "Crossover Step", level: "Poziom 2", req: ["side-step"] },
+      { id: "advanced-toprock", name: "Zaawansowane wariacje Toprock", level: "Poziom 3", req: ["crossover-step"] }
+    ]
+  },
+  {
+    id: "footwork",
+    name: "Footwork",
+    desc: "Ruchy wykonywane blisko ziemi – budują flow i kreatywność.",
+    skills: [
+      { id: "basic-6step", name: "6-step", level: "Poziom 1" },
+      { id: "cc", name: "CC (Kick-outs)", level: "Poziom 1", req: ["basic-6step"] },
+      { id: "3step", name: "3-step", level: "Poziom 2", req: ["basic-6step"] },
+      { id: "coffee-grinder", name: "Coffee Grinder", level: "Poziom 2", req: ["cc"] },
+      { id: "footwork-combos", name: "Kombinacje footworku", level: "Poziom 3", req: ["3step","coffee-grinder"] }
+    ]
+  },
+  {
+    id: "freezes",
+    name: "Freezy",
+    desc: "Pozycje zatrzymania, które budują mocny akcent w tańcu.",
+    skills: [
+      { id: "baby-freeze", name: "Baby Freeze", level: "Poziom 1" },
+      { id: "chair-freeze", name: "Chair Freeze", level: "Poziom 1", req: ["baby-freeze"] },
+      { id: "airchair", name: "Airchair", level: "Poziom 2", req: ["chair-freeze"] },
+      { id: "handstand-freeze", name: "Handstand Freeze", level: "Poziom 2", req: ["baby-freeze"] },
+      { id: "combo-freezes", name: "Kombinacje Freezów", level: "Poziom 3", req: ["airchair","handstand-freeze"] }
+    ]
+  },
+  {
+    id: "powermoves",
+    name: "Powermoves",
+    desc: "Dynamiczne ruchy wymagające siły, kontroli i rotacji.",
+    skills: [
+      { id: "backspin", name: "Backspin", level: "Poziom 1" },
+      { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] },
+      { id: "flare", name: "Flare", level: "Poziom 2", req: ["windmill"] },
+      { id: "headspin", name: "Headspin", level: "Poziom 2", req: ["windmill"] },
+      { id: "airflare", name: "Airflare", level: "Poziom 3", req: ["flare","headspin"] }
+    ]
+  },
+  {
+    id: "style",
+    name: "Styl i muzykalność",
+    desc: "Rozwijanie indywidualnego stylu i interpretacji muzyki.",
+    skills: [
+      { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
+      { id: "musicality", name: "Muzykalność w tańcu", level: "Poziom 2", req: ["rhythm"] },
+      { id: "transitions", name: "Płynne przejścia", level: "Poziom 2", req: ["musicality"] },
+      { id: "personal-style", name: "Wypracowanie własnego stylu", level: "Poziom 3", req: ["transitions"] }
+    ]
+  }
+];
+
+
+    let unlocked = {};
+    let currentUserId = null;
+
+    const grid = document.getElementById('grid');
+    const userSelect = document.getElementById('userSelect');
+
+    async function loadUsers(){
+      const snapshot = await getDocs(collection(db, "users"));
+      userSelect.innerHTML = `<option value="">Wybierz użytkownika</option>`;
+      snapshot.forEach(docSnap=>{
+        const u = docSnap.data();
+        userSelect.innerHTML += `<option value="${docSnap.id}">${u.name}</option>`;
+      });
+    }
+
+    async function loadUserSkills(userId){
+      currentUserId = userId;
+      if(!userId){ grid.innerHTML=""; return; }
+      const snap = await getDoc(doc(db,"users",userId));
+      unlocked = snap.exists()? snap.data().skills||{} : {};
+      render();
+    }
+
+    function render(){
+      grid.innerHTML = '';
+      const query = (document.getElementById('search').value || '').toLowerCase().trim();
+
+      TREE.forEach(cat=>{
+        const card = document.createElement('section');
+        card.className = 'card';
+        const unlockedCount = cat.skills.filter(s=>!!unlocked[s.id]).length;
+        const progress = Math.round(100 * unlockedCount / cat.skills.length);
+
+        card.innerHTML = `
+          <h2>${cat.name}</h2>
+          <p class="subtitle">${cat.desc}</p>
+          <div class="progress"><span style="width:${progress}%"></span></div>
+          <div class="subgrid"></div>
+        `;
+        const sub = card.querySelector('.subgrid');
+        cat.skills
+          .filter(s=>filterSkill(cat, s, query))
+          .forEach(skill=>sub.appendChild(renderSkill(skill)));
+        grid.appendChild(card);
+      });
+    }
+
+    function filterSkill(cat, skill, q){
+      if(!q) return true;
+      return [cat.name, skill.name, skill.level].some(t=>(t||'').toLowerCase().includes(q));
+    }
+
+    function renderSkill(skill){
+      const el = document.createElement('div');
+      const isUnlocked = !!unlocked[skill.id];
+      const prereqOk = (skill.req||[]).every(id=>unlocked[id]);
+      el.className = 'skill' + (isUnlocked ? ' unlocked' : '');
+      el.dataset.note = skill.req ? `Wymaga: ${skill.req.map(id=>id).join(', ')}` : '';
+      el.innerHTML = `
+        <div class="icons">${isUnlocked?unlockedIcon():lockedIcon(prereqOk)}</div>
+        <div>
+          <div class="name">${skill.name}</div>
+          <div class="level">${skill.level}</div>
+        </div>
+      `;
+      return el;
+    }
+
+    function lockedIcon(prereqOk){
+      const stroke = prereqOk? '#aab0d8' : '#ffb0b0';
+      return `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 1 1 10 0v2" stroke="${stroke}"/><rect x="5" y="10" width="14" height="10" rx="2" stroke="${stroke}"/></svg>`;
+    }
+    function unlockedIcon(){
+      return `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 9.5-2" stroke="#6df0c2"/><rect x="5" y="10" width="14" height="10" rx="2" stroke="#6df0c2"/><path d="M9 15l2 2 4-4" stroke="#6df0c2"/></svg>`;
+    }
+
+    // Interakcje
+    document.getElementById('search').addEventListener('input', render);
+    userSelect.addEventListener('change', e=>loadUserSkills(e.target.value));
+
+    // Start
+    loadUsers();
+  </script>
+</body>
+</html>

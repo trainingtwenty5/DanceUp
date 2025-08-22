@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Admina – Drzewko umiejętności</title>
+  <style>
+    body { font-family: Inter, sans-serif; background:#0f1220; color:#f3f5ff; margin:0; padding:20px; }
+    h1 { margin-bottom:20px; }
+    select, input, button { padding:8px 12px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff; margin-right:10px; }
+    .category { margin-top:20px; padding:16px; border-radius:12px; background:#151936; border:1px solid #2a2f62; }
+    .skill { padding:8px 12px; border-radius:8px; margin:6px 0; cursor:pointer; display:flex; justify-content:space-between; }
+    .skill.unlocked { background:#214537; border:1px solid #37765b; color:#dff8ef; }
+    .skill.locked { background:#2c315a; border:1px solid #2b315f; color:#aab0d8; }
+    .new-user { margin-top:20px; }
+  </style>
+</head>
+<body>
+  <h1>Panel Admina – Drzewko umiejętności</h1>
+
+  <label>Wybierz użytkownika:
+    <select id="userSelect"></select>
+  </label>
+
+  <div class="new-user">
+    <input id="newUserName" placeholder="Nowy użytkownik" />
+    <button id="addUser">Dodaj użytkownika</button>
+  </div>
+
+  <div id="categories"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBdhMIiqetOfDGP85ERxtgwn3AXR50pBcE",
+      authDomain: "base-468e0.firebaseapp.com",
+      projectId: "base-468e0",
+      storageBucket: "base-468e0.appspot.com",
+      messagingSenderId: "829161895559",
+      appId: "1:829161895559:web:d832541aac05b35847ea22"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const TREE = [
+      { id: "toprock", name: "Toprock", desc: "Podstawowe kroki wykonywane na stojąco.", skills: [
+          { id: "basic-toprock", name: "Basic Toprock", level: "Poziom 1" },
+          { id: "indian-step", name: "Indian Step", level: "Poziom 1", req: ["basic-toprock"] },
+          { id: "side-step", name: "Side Step", level: "Poziom 2", req: ["indian-step"] },
+          { id: "crossover-step", name: "Crossover Step", level: "Poziom 2", req: ["side-step"] },
+          { id: "advanced-toprock", name: "Zaawansowane wariacje Toprock", level: "Poziom 3", req: ["crossover-step"] }
+        ]},
+      { id: "footwork", name: "Footwork", desc: "Ruchy wykonywane blisko ziemi.", skills: [
+          { id: "basic-6step", name: "6-step", level: "Poziom 1" },
+          { id: "cc", name: "CC (Kick-outs)", level: "Poziom 1", req: ["basic-6step"] },
+          { id: "3step", name: "3-step", level: "Poziom 2", req: ["basic-6step"] },
+          { id: "coffee-grinder", name: "Coffee Grinder", level: "Poziom 2", req: ["cc"] },
+          { id: "footwork-combos", name: "Kombinacje footworku", level: "Poziom 3", req: ["3step","coffee-grinder"] }
+        ]},
+      { id: "freezes", name: "Freezy", desc: "Pozycje zatrzymania w tańcu.", skills: [
+          { id: "baby-freeze", name: "Baby Freeze", level: "Poziom 1" },
+          { id: "chair-freeze", name: "Chair Freeze", level: "Poziom 1", req: ["baby-freeze"] },
+          { id: "airchair", name: "Airchair", level: "Poziom 2", req: ["chair-freeze"] },
+          { id: "handstand-freeze", name: "Handstand Freeze", level: "Poziom 2", req: ["baby-freeze"] },
+          { id: "combo-freezes", name: "Kombinacje Freezów", level: "Poziom 3", req: ["airchair","handstand-freeze"] }
+        ]},
+      { id: "powermoves", name: "Powermoves", desc: "Dynamiczne ruchy wymagające siły i kontroli.", skills: [
+          { id: "backspin", name: "Backspin", level: "Poziom 1" },
+          { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] },
+          { id: "flare", name: "Flare", level: "Poziom 2", req: ["windmill"] },
+          { id: "headspin", name: "Headspin", level: "Poziom 2", req: ["windmill"] },
+          { id: "airflare", name: "Airflare", level: "Poziom 3", req: ["flare","headspin"] }
+        ]},
+      { id: "style", name: "Styl i muzykalność", desc: "Rozwijanie własnego stylu.", skills: [
+          { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
+          { id: "musicality", name: "Muzykalność w tańcu", level: "Poziom 2", req: ["rhythm"] },
+          { id: "transitions", name: "Płynne przejścia", level: "Poziom 2", req: ["musicality"] },
+          { id: "personal-style", name: "Wypracowanie własnego stylu", level: "Poziom 3", req: ["transitions"] }
+        ]}
+    ];
+
+    const userSelect = document.getElementById("userSelect");
+    const categoriesDiv = document.getElementById("categories");
+    let currentUserId = null;
+    let usersData = {};
+
+    async function loadUsers(){
+      const snap = await getDocs(collection(db,"users"));
+      userSelect.innerHTML = "<option value=''>-- wybierz --</option>";
+      snap.forEach(docSnap=>{
+        const user = docSnap.data();
+        usersData[docSnap.id] = user;
+        const opt = document.createElement("option");
+        opt.value = docSnap.id;
+        opt.textContent = user.name;
+        userSelect.appendChild(opt);
+      });
+    }
+
+    userSelect.addEventListener("change", ()=>{
+      currentUserId = userSelect.value;
+      renderCategories();
+      if(currentUserId){
+        const userRef = doc(db,"users",currentUserId);
+        onSnapshot(userRef, snap=>{
+          if(snap.exists()){
+            usersData[currentUserId].skills = snap.data().skills || {};
+            renderCategories();
+          }
+        });
+      }
+    });
+
+    async function addUser(){
+      const name = document.getElementById("newUserName").value.trim();
+      if(!name) return alert("Podaj nazwę użytkownika");
+      const docRef = await addDoc(collection(db,"users"), { name, skills: {} });
+      usersData[docRef.id] = { name, skills: {} };
+      const opt = document.createElement("option");
+      opt.value = docRef.id;
+      opt.textContent = name;
+      userSelect.appendChild(opt);
+      userSelect.value = docRef.id;
+      currentUserId = docRef.id;
+      renderCategories();
+      document.getElementById("newUserName").value = "";
+    }
+
+    document.getElementById("addUser").addEventListener("click", addUser);
+
+    function renderCategories(){
+      categoriesDiv.innerHTML = "";
+      if(!currentUserId) return;
+      const userSkills = usersData[currentUserId].skills || {};
+      TREE.forEach(cat=>{
+        const catDiv = document.createElement("div");
+        catDiv.className = "category";
+        catDiv.innerHTML = `<h2>${cat.name}</h2><p>${cat.desc}</p>`;
+        cat.skills.forEach(skill=>{
+          const div = document.createElement("div");
+          const unlocked = userSkills[skill.id];
+          div.className = "skill " + (unlocked?"unlocked":"locked");
+          div.textContent = skill.name + (unlocked ? " ✅":" ❌");
+          div.addEventListener("click", ()=>toggleSkill(skill.id));
+          catDiv.appendChild(div);
+        });
+        categoriesDiv.appendChild(catDiv);
+      });
+    }
+
+    async function toggleSkill(skillId){
+      if(!currentUserId) return;
+      const userRef = doc(db,"users",currentUserId);
+      const userSkills = usersData[currentUserId].skills || {};
+      userSkills[skillId] = !userSkills[skillId];
+      await updateDoc(userRef,{skills:userSkills});
+      usersData[currentUserId].skills = userSkills;
+      renderCategories();
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>
