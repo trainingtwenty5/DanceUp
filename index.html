@@ -3,80 +3,546 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Drzewko umiejętności – Breaking</title>
+  <title>Drzewko Umiejętności Breaking - Widok Drzewa</title>
   <style>
-    :root{
-      --bg:#0f1220; --panel:#151936; --panel-2:#1a1f46; --muted:#8a90b0;
-      --text:#f3f5ff; --accent:#7c9dff; --accent-2:#6df0c2; --danger:#ff6b6b;
-      --locked:#2c315a; --unlocked:#2a6c4e;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 16px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:Inter, "SF Pro Text", Roboto, Arial, sans-serif; background:radial-gradient(1200px 800px at 80% -10%, #233 0%, #0f1220 55%), var(--bg); color:var(--text)}
-    header{position:sticky; top:0; z-index:20; background:rgba(15,18,32,.7); backdrop-filter: blur(8px); border-bottom:1px solid #262b55}
-    .wrap{max-width:1200px; margin:0 auto; padding:18px 20px}
-    .title{display:flex; align-items:center; gap:14px}
-    .title h1{font-size:22px; margin:0}
-    .badge{padding:4px 10px; border-radius:999px; background:linear-gradient(120deg, var(--panel-2), var(--panel)); color:var(--muted); font-size:12px; border:1px solid #2a2f62}
+  
+        :root {
+            --bg: ; 
+            --panel: #151936; 
+            --text: #f3f5ff; 
+            --accent: #7c9dff; 
+            --accent-2: #6df0c2; 
+            --locked: bule; 
+            --unlocked: blue;
+            --connector: #4a5085;
+            
+            /* Zaktualizowane kolory */
+			/* Zaktualizowane kolory gradientowe */
+			--level1: #e6af89; /* Żółty gradient, energetyczny */
+			--level2: green; /* Zielony gradient, świeży i nowoczesny */
+			--level3: blue;           /* Subtelny szary → fiolet, elegancki *
+						
+            /* Nowe zmienne dla lepszej konsystencji */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
 
-    .toolbar{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px}
-    .search{flex:1; min-width:220px; position:relative}
-    .search input{width:100%; padding:12px 42px 12px 14px; border-radius:12px; border:1px solid #2a2f62; background:var(--panel); color:var(--text)}
-    .search svg{position:absolute; right:12px; top:50%; transform:translateY(-50%); opacity:.6}
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
 
-    .user-select{min-width:200px; padding:12px; border-radius:12px; border:1px solid #2a2f62; background:var(--panel); color:var(--text)}
+        body { 
+            font-family: 'Inter', 'SF Pro Text', Roboto, Arial, sans-serif; 
+            background: var(--bg); 
+            color: var(--text);
+            overflow-x: hidden;
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
-    .grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:16px; margin:18px auto 40px}
-    .card{grid-column: span 12; background:linear-gradient(180deg, var(--panel-2), var(--panel)); border:1px solid #2a2f62; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
-    @media(min-width:900px){ .card{grid-column: span 6} }
-    .card h2{margin:0 0 6px 0; font-size:18px}
-    .subtitle{margin:0 0 14px 0; color:var(--muted); font-size:13px}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-    .subgrid{display:grid; grid-template-columns:repeat(12, 1fr); gap:10px; margin-top:12px}
-    .skill{grid-column: span 6; display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; border:1px solid #2b315f; background:var(--locked); position:relative}
-    @media(min-width:720px){ .skill{grid-column: span 4} }
-    .skill.unlocked{ background:linear-gradient(180deg, #214537, var(--unlocked)); border-color:#37765b }
-    .skill .name{font-weight:600}
-    .skill .level{font-size:12px; color:var(--muted)}
-    .skill[data-note]::after{content:attr(data-note); position:absolute; bottom:-8px; left:10px; font-size:10px; color:#b7bdd6; opacity:.8}
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
 
-    .icons{display:flex; gap:6px; opacity:.8}
-    .progress{height:8px; width:100%; background:#262b55; border-radius:999px; overflow:hidden; border:1px solid #2a2f62}
-    .progress > span{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease}
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
 
-    .footer{color:#9aa1c8; text-align:center; padding:30px 0; border-top:1px solid #262b55}
-    .hint{font-size:12px; color:#aab0d8}
+        .subtitle {
+            color: #8a90b0;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Ekran logowania */
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: var(--panel);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 15px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(124, 157, 255, 0.3);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-lg);
+            border: none;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: var(--bg);
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .auth-switch {
+            text-align: center;
+            color: #8a90b0;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .auth-switch:hover {
+            color: var(--accent);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        /* Główna aplikacja */
+        .app-container {
+            display: none;
+        }
+
+        /* Drzewko umiejętności */
+        .skill-tree {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 1000px;
+            padding: 2rem 0;
+        }
+
+        /* Centralna oś drzewka */
+        .tree-axis {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        /* Poziomy drzewka */
+        .tree-level {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 120px 0;
+            z-index: 2;
+            gap: 40px;
+        }
+
+        /* Główny skill na osi */
+        .main-skill {
+            position: relative;
+            padding: 18px 24px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            min-width: 180px;
+            z-index: 3;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .main-skill:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+.main-skill.level1 { 
+    background: linear-gradient(135deg, #FFD700, #FFA500); /* Złoty → pomarańczowy gradient, energetyczny i ciepły */
+    border: 2px solid rgba(255, 215, 0, 0.3); 
+}
+
+.main-skill.level2 { 
+    background: linear-gradient(135deg, #00E676, #1DE9B6); /* Jasny, świeży zielony → turkusowy, nowoczesny */
+    border: 2px solid rgba(0, 230, 118, 0.3); 
+}
+
+.main-skill.level3 { 
+    background: linear-gradient(135deg, #8E8E8E, #B39DDB); /* Szary → delikatny fiolet, elegancki i subtelny */
+    border: 2px solid rgba(142, 142, 142, 0.3); 
+}
+
+.main-skill.locked { 
+    background: #4a5085; 
+    border-color: #4a5085; 
+    opacity: 0.7; 
+}
+
+        .skill-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .skill-level {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Gałęzie (lewa i prawa) */
+        .branch {
+            position: absolute;
+            top: 50%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .branch-left { right: calc(50% + 120px); flex-direction: column-reverse; }
+        .branch-right { left: calc(50% + 120px); }
+
+        /* Łącznik gałęzi */
+        .branch-connector {
+            width: 80px;
+            height: 2px;
+            background: var(--connector);
+            position: relative;
+        }
+
+        .branch-left .branch-connector::after,
+        .branch-right .branch-connector::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            top: -5px;
+            border: 2px solid var(--connector);
+            border-radius: 50%;
+            background: var(--panel);
+        }
+
+        .branch-left .branch-connector::after { left: 0; }
+        .branch-right .branch-connector::after { right: 0; }
+
+        /* Skill na gałęzi */
+        .branch-skill {
+            padding: 14px 20px;
+            border-radius: var(--radius-xl);
+            min-width: 160px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .branch-skill:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .branch-skill.level1 { 
+            background: linear-gradient(135deg, var(--level1), #FFB74D); 
+            border: 2px solid rgba(255, 209, 102, 0.3);
+        }
+        .branch-skill.level2 { 
+            background: linear-gradient(135deg, var(--level2), #05C191); 
+            border: 2px solid rgba(6, 214, 160, 0.3);
+        }
+        .branch-skill.level3 { 
+            background: linear-gradient(135deg, var(--level3), #7A6E7A); 
+            border: 2px solid rgba(154, 140, 152, 0.3);
+        }
+        .branch-skill.locked { 
+            background: var(--locked); 
+            border-color: #4a5085; 
+            opacity: 0.7; 
+        }
+
+        /* Licznik umiejętności w gałęzi */
+        .branch-counter {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--panel);
+            padding: 3px 8px;
+            border-radius: var(--radius-lg);
+            font-size: 0.8rem;
+            border: 1px solid var(--connector);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Linie łączące */
+        .connector {
+            position: absolute;
+            background: var(--connector);
+            z-index: 1;
+        }
+
+        .vertical-connector {
+            width: 2px;
+            height: 80px;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Panel użytkownika */
+        .user-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(21, 25, 54, 0.8);
+            padding: 15px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-name { font-weight: 600; }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--locked);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .logout-btn {
+            padding: 8px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+            transform: translateY(-1px);
+        }
+
+        /* Responsywność */
+        @media (max-width: 1200px) {
+            .branch-left { right: calc(50% + 100px); }
+            .branch-right { left: calc(50% + 100px); }
+        }
+
+        @media (max-width: 900px) {
+            .branch { 
+                flex-direction: column !important; 
+                position: static; 
+                margin: 20px 0; 
+                justify-content: center; 
+            }
+            .branch-connector { 
+                width: 2px; 
+                height: 40px; 
+                margin: 10px 0; 
+            }
+            .branch-left .branch-connector::after,
+            .branch-right .branch-connector::after { 
+                left: 50%; 
+                transform: translateX(-50%) rotate(0); 
+            }
+            .tree-level { 
+                flex-direction: column; 
+                align-items: center; 
+                gap: 20px; 
+            }
+            
+            .user-panel {
+                position: relative;
+                top: unset;
+                right: unset;
+                margin-bottom: 20px;
+                width: 100%;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .auth-container {
+                margin: 50px auto;
+                padding: 20px;
+            }
+            
+            .skill-tree {
+                padding: 1rem 0;
+            }
+            
+            .main-skill, .branch-skill {
+                min-width: 140px;
+                padding: 14px 16px;
+            }
+        }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <div class="title">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l2.39 4.84L20 8l-4 3.9.94 5.48L12 15.77l-4.94 1.61L8 11.9 4 8l5.61-1.16L12 2z" stroke="#7c9dff" stroke-width="1.2"/></svg>
-        <h1>Drzewko umiejętności – Breaking</h1>
-      </div>
-      <div class="toolbar">
-        <div class="search">
-          <input id="search" placeholder="Szukaj kategorii lub umiejętności…" />
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="#aab0d8"/></svg>
-        </div>
-        <select id="userSelect" class="user-select"></select>
+  <!-- Ekran logowania -->
+  <div id="auth-container" class="auth-container">
+    <h2>Logowanie do Drzewka Umiejętności</h2>
+    <div id="login-form">
+      <input type="email" id="login-email" class="auth-input" placeholder="Adres email">
+      <input type="password" id="login-password" class="auth-input" placeholder="Hasło">
+      <div id="login-error" class="error-message"></div>
+      <button id="login-btn" class="auth-button">Zaloguj się</button>
+      <div class="auth-switch" id="show-register">Nie masz konta? Zarejestruj się</div>
+    </div>
+    
+    <div id="register-form" style="display: none;">
+      <input type="text" id="register-name" class="auth-input" placeholder="Imię i nazwisko">
+      <input type="email" id="register-email" class="auth-input" placeholder="Adres email">
+      <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)">
+      <div id="register-error" class="error-message"></div>
+      <button id="register-btn" class="auth-button">Zarejestruj się</button>
+      <div class="auth-switch" id="show-login">Masz już konto? Zaloguj się</div>
+    </div>
+  </div>
+
+  <!-- Główna aplikacja -->
+  <div id="app-container" class="app-container">
+    <div class="container">
+      <header>
+        <h1>Drzewko Umiejętności Breaking</h1>
+        <p class="subtitle">Śledź swoje postępy w nauce breakdance</p>
+      </header>
+      
+      <div class="skill-tree" id="skillTree">
+        <!-- Drzewko będzie generowane dynamicznie -->
       </div>
     </div>
-  </header>
+    
+    <div class="user-panel">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-name" id="userName">Użytkownik</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">0/25 umiejętności</div>
+      <button class="logout-btn" id="logoutBtn">Wyloguj</button>
+    </div>
+  </div>
 
-  <main class="wrap">
-    <div id="grid" class="grid"></div>
-  </main>
-
-  <footer class="footer">
-   ✨✨ Wybierz użytkownika w prawym górnym rogu. ✨✨
-  </footer>
-
+  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      doc, 
+      getDoc, 
+      setDoc,
+      updateDoc 
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBdhMIiqetOfDGP85ERxtgwn3AXR50pBcE",
@@ -86,154 +552,389 @@
       messagingSenderId: "829161895559",
       appId: "1:829161895559:web:d832541aac05b35847ea22"
     };
+    
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    const TREE = [
-  {
-    id: "toprock",
-    name: "Toprock",
-    desc: "Podstawowe kroki wykonywane na stojąco – wprowadzenie i rytmika.",
-    skills: [
-      { id: "basic-toprock", name: "Basic Toprock", level: "Poziom 1" },
-      { id: "indian-step", name: "Indian Step", level: "Poziom 1", req: ["basic-toprock"] },
-      { id: "side-step", name: "Side Step", level: "Poziom 2", req: ["indian-step"] },
-      { id: "crossover-step", name: "Crossover Step", level: "Poziom 2", req: ["side-step"] },
-      { id: "advanced-toprock", name: "Zaawansowane wariacje Toprock", level: "Poziom 3", req: ["crossover-step"] }
-    ]
-  },
-  {
-    id: "footwork",
-    name: "Footwork",
-    desc: "Ruchy wykonywane blisko ziemi – budują flow i kreatywność.",
-    skills: [
-      { id: "basic-6step", name: "6-step", level: "Poziom 1" },
-      { id: "cc", name: "CC (Kick-outs)", level: "Poziom 1", req: ["basic-6step"] },
-      { id: "3step", name: "3-step", level: "Poziom 2", req: ["basic-6step"] },
-      { id: "coffee-grinder", name: "Coffee Grinder", level: "Poziom 2", req: ["cc"] },
-      { id: "footwork-combos", name: "Kombinacje footworku", level: "Poziom 3", req: ["3step","coffee-grinder"] }
-    ]
-  },
-  {
-    id: "freezes",
-    name: "Freezy",
-    desc: "Pozycje zatrzymania, które budują mocny akcent w tańcu.",
-    skills: [
-      { id: "baby-freeze", name: "Baby Freeze", level: "Poziom 1" },
-      { id: "chair-freeze", name: "Chair Freeze", level: "Poziom 1", req: ["baby-freeze"] },
-      { id: "airchair", name: "Airchair", level: "Poziom 2", req: ["chair-freeze"] },
-      { id: "handstand-freeze", name: "Handstand Freeze", level: "Poziom 2", req: ["baby-freeze"] },
-      { id: "combo-freezes", name: "Kombinacje Freezów", level: "Poziom 3", req: ["airchair","handstand-freeze"] }
-    ]
-  },
-  {
-    id: "powermoves",
-    name: "Powermoves",
-    desc: "Dynamiczne ruchy wymagające siły, kontroli i rotacji.",
-    skills: [
-      { id: "backspin", name: "Backspin", level: "Poziom 1" },
-      { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] },
-      { id: "flare", name: "Flare", level: "Poziom 2", req: ["windmill"] },
-      { id: "headspin", name: "Headspin", level: "Poziom 2", req: ["windmill"] },
-      { id: "airflare", name: "Airflare", level: "Poziom 3", req: ["flare","headspin"] }
-    ]
-  },
-  {
-    id: "style",
-    name: "Styl i muzykalność",
-    desc: "Rozwijanie indywidualnego stylu i interpretacji muzyki.",
-    skills: [
-      { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
-      { id: "musicality", name: "Muzykalność w tańcu", level: "Poziom 2", req: ["rhythm"] },
-      { id: "transitions", name: "Płynne przejścia", level: "Poziom 2", req: ["musicality"] },
-      { id: "personal-style", name: "Wypracowanie własnego stylu", level: "Poziom 3", req: ["transitions"] }
-    ]
-  }
-];
+    // Struktura drzewka umiejętności
+        const SKILL_TREE = [
+      {
+        id: "toprock",
+        name: "Toprock",
+        desc: "Podstawowe kroki wykonywane na stojąco",
+        level: "Poziom podstawowy",
+        branches: [
+          {
+            direction: "left",
+            skills: [
+              { id: "basic-toprock", name: "Basic Toprock", level: "Poziom 1" },
+              { id: "indian-step", name: "Indian Step", level: "Poziom 1", req: ["basic-toprock"] },
+              { id: "side-step", name: "Side Step", level: "Poziom 2", req: ["indian-step"] },
+              { id: "crossover-step", name: "Crossover Step", level: "Poziom 2", req: ["side-step"] },
+              { id: "advanced-toprock", name: "Zaawansowane Toprock", level: "Poziom 3", req: ["crossover-step"] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "footwork",
+        name: "Footwork",
+        desc: "Ruchy wykonywane blisko ziemi",
+        level: "Poziom średniozaawansowany",
+        branches: [
+          {
+            direction: "right",
+            skills: [
+              { id: "basic-6step", name: "6-step", level: "Poziom 1" },
+              { id: "cc", name: "CC (Kick-outs)", level: "Poziom 1", req: ["basic-6step"] },
+              { id: "3step", name: "3-step", level: "Poziom 2", req: ["basic-6step"] },
+              { id: "coffee-grinder", name: "Coffee Grinder", level: "Poziom 2", req: ["cc"] },
+              { id: "footwork-combos", name: "Kombinacje", level: "Poziom 3", req: ["3step","coffee-grinder"] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "freezes",
+        name: "Freezy",
+        desc: "Pozycje zatrzymania w tańcu",
+        level: "Poziom zaawansowany",
+        branches: [
+          {
+            direction: "left",
+            skills: [
+              { id: "baby-freeze", name: "Baby Freeze", level: "Poziom 1" },
+              { id: "chair-freeze", name: "Chair Freeze", level: "Poziom 1", req: ["baby-freeze"] },
+              { id: "airchair", name: "Airchair", level: "Poziom 2", req: ["chair-freeze"] },
+              { id: "handstand-freeze", name: "Handstand Freeze", level: "Poziom 2", req: ["baby-freeze"] },
+              { id: "combo-freezes", name: "Kombinacje Freezów", level: "Poziom 3", req: ["airchair","handstand-freeze"] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "powermoves",
+        name: "Powermoves",
+        desc: "Dynamiczne ruchy wymagające siły",
+        level: "Poziom ekspert",
+        branches: [
+          {
+            direction: "left",
+            skills: [
+              { id: "backspin", name: "Backspin", level: "Poziom 1" },
+              { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] }
+            ]
+          },
+          {
+            direction: "right",
+            skills: [
+              { id: "flare", name: "Flare", level: "Poziom 2", req: ["windmill"] },
+              { id: "headspin", name: "Headspin", level: "Poziom 2", req: ["windmill"] },
+              { id: "airflare", name: "Airflare", level: "Poziom 3", req: ["flare","headspin"] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "style",
+        name: "Styl i muzykalność",
+        desc: "Rozwijanie własnego stylu",
+        level: "Poziom mistrzowski",
+        branches: [
+          {
+            direction: "left",
+            skills: [
+              { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
+              { id: "musicality", name: "Muzykalność", level: "Poziom 2", req: ["rhythm"] }
+            ]
+          },
+          {
+            direction: "right",
+            skills: [
+              { id: "transitions", name: "Płynne przejścia", level: "Poziom 2", req: ["musicality"] },
+              { id: "personal-style", name: "Własny styl", level: "Poziom 3", req: ["transitions"] }
+            ]
+          }
+        ]
+      }
+    ];
 
-
-    let unlocked = {};
+    // Zmienne globalne
+    let userSkills = {};
     let currentUserId = null;
 
-    const grid = document.getElementById('grid');
-    const userSelect = document.getElementById('userSelect');
+    // Referencje do elementów DOM
+    const authContainer = document.getElementById('auth-container');
+    const appContainer = document.getElementById('app-container');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const loginError = document.getElementById('login-error');
+    const registerError = document.getElementById('register-error');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const skillTree = document.getElementById('skillTree');
 
-    async function loadUsers(){
-      const snapshot = await getDocs(collection(db, "users"));
-      userSelect.innerHTML = `<option value="">Wybierz użytkownika</option>`;
-      snapshot.forEach(docSnap=>{
-        const u = docSnap.data();
-        userSelect.innerHTML += `<option value="${docSnap.id}">${u.name}</option>`;
-      });
+    // Przełączanie między formularzami
+    document.getElementById('show-register').addEventListener('click', () => {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      registerError.textContent = '';
+    });
+
+    document.getElementById('show-login').addEventListener('click', () => {
+      registerForm.style.display = 'none';
+      loginForm.style.display = 'block';
+      loginError.textContent = '';
+    });
+
+    // Logowanie
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        loginError.textContent = '';
+      } catch (error) {
+        console.error('Błąd logowania:', error);
+        loginError.textContent = getAuthErrorMessage(error.code);
+      }
+    });
+
+    // Rejestracja
+    document.getElementById('register-btn').addEventListener('click', async () => {
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      
+      if (!name) {
+        registerError.textContent = 'Podaj imię i nazwisko';
+        return;
+      }
+      
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Utwórz dokument użytkownika w Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          name: name,
+          email: email,
+          role: "user", // Domyślnie ustawiamy rolę "user"
+          skills: {},
+          createdAt: new Date()
+        });
+        
+        registerError.textContent = '';
+      } catch (error) {
+        console.error('Błąd rejestracji:', error);
+        registerError.textContent = getAuthErrorMessage(error.code);
+      }
+    });
+
+    // Wylogowanie
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error('Błąd wylogowania:', error);
+      }
+    });
+
+    // Obserwuj stan autentykacji
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Użytkownik zalogowany
+        currentUserId = user.uid;
+        authContainer.style.display = 'none';
+        appContainer.style.display = 'block';
+        
+        // Pobierz dane użytkownika
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        let userData = userDoc.exists() ? userDoc.data() : {};
+        
+        // Ustaw informacje o użytkowniku
+        userAvatar.textContent = userData.name ? userData.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+        userName.textContent = userData.name || user.email;
+        
+        // Załaduj umiejętności użytkownika
+        await loadUserSkills();
+        renderSkillTree();
+      } else {
+        // Użytkownik wylogowany
+        currentUserId = null;
+        authContainer.style.display = 'block';
+        appContainer.style.display = 'none';
+      }
+    });
+
+    // Załaduj umiejętności użytkownika z Firestore
+    async function loadUserSkills() {
+      if (!currentUserId) return;
+      
+      try {
+        const userDoc = await getDoc(doc(db, "users", currentUserId));
+        if (userDoc.exists()) {
+          // Dla użytkownika ładujemy tylko poziom, nie pełne dane
+          const userData = userDoc.data();
+          userSkills = userData.skills || {};
+        } else {
+          userSkills = {};
+        }
+      } catch (error) {
+        console.error("Błąd ładowania umiejętności:", error);
+        userSkills = {};
+      }
     }
 
-    async function loadUserSkills(userId){
-      currentUserId = userId;
-      if(!userId){ grid.innerHTML=""; return; }
-      const snap = await getDoc(doc(db,"users",userId));
-      unlocked = snap.exists()? snap.data().skills||{} : {};
-      render();
-    }
-
-    function render(){
-      grid.innerHTML = '';
-      const query = (document.getElementById('search').value || '').toLowerCase().trim();
-
-      TREE.forEach(cat=>{
-        const card = document.createElement('section');
-        card.className = 'card';
-        const unlockedCount = cat.skills.filter(s=>!!unlocked[s.id]).length;
-        const progress = Math.round(100 * unlockedCount / cat.skills.length);
-
-        card.innerHTML = `
-          <h2>${cat.name}</h2>
-          <p class="subtitle">${cat.desc}</p>
-          <div class="progress"><span style="width:${progress}%"></span></div>
-          <div class="subgrid"></div>
+    // Funkcja do renderowania drzewka
+    function renderSkillTree() {
+      skillTree.innerHTML = '';
+      
+      // Dodaj centralną oś
+      const axis = document.createElement('div');
+      axis.className = 'tree-axis';
+      skillTree.appendChild(axis);
+      
+      // Renderuj każdy poziom drzewka
+      SKILL_TREE.forEach((category, index) => {
+        const level = document.createElement('div');
+        level.className = 'tree-level';
+        
+        // Dodaj łącznik (oprócz pierwszego poziomu)
+        if (index > 0) {
+          const connector = document.createElement('div');
+          connector.className = 'connector vertical-connector';
+          level.appendChild(connector);
+        }
+        
+        // Główna umiejętność kategorii
+        const mainSkill = document.createElement('div');
+        const mainSkillLevel = userSkills[category.id] || 3; // Domyślnie poziom 3
+        mainSkill.className = `main-skill level${mainSkillLevel}`;
+        mainSkill.innerHTML = `
+          <div class="skill-name">${category.name}</div>
+          <div class="skill-level">${category.level}</div>
         `;
-        const sub = card.querySelector('.subgrid');
-        cat.skills
-          .filter(s=>filterSkill(cat, s, query))
-          .forEach(skill=>sub.appendChild(renderSkill(skill)));
-        grid.appendChild(card);
+        level.appendChild(mainSkill);
+        
+        // Renderuj gałęzie (lewa i prawa)
+        category.branches.forEach(branch => {
+          const branchDiv = document.createElement('div');
+          branchDiv.className = `branch branch-${branch.direction}`;
+          
+          // Licznik umiejętności w gałęzi
+          const totalSkills = branch.skills.length;
+          const unlockedSkills = branch.skills.filter(skill => {
+  const userLevel = userSkills[skill.id];
+  if (!userLevel || userLevel === 3) return false; // poziom 3 = niewidoczny
+  const reqs = skill.req || [];
+  return reqs.every(r => userSkills[r] && userSkills[r] < 3); // wszystkie wymagania odblokowane
+}).length;
+
+          
+          const counter = document.createElement('div');
+          counter.className = 'branch-counter';
+          counter.textContent = `${unlockedSkills}/${totalSkills}`;
+          branchDiv.appendChild(counter);
+          
+          // Łącznik gałęzi
+          const connector = document.createElement('div');
+          connector.className = 'branch-connector';
+          branchDiv.appendChild(connector);
+          
+          // Renderuj umiejętności w gałęzi
+branch.skills.forEach(skill => {
+  const userLevel = userSkills[skill.id]; // poziom użytkownika
+  let skillClass = '';
+  let levelText = '';
+
+if (!userLevel || userLevel === 3) {
+  // Poziom 3 lub brak → niewidoczny
+  return;
+}
+
+// Sprawdź wymagania
+const reqs = skill.req || [];
+const unlocked = reqs.every(r => userSkills[r] && userSkills[r] < 3);
+
+if (!unlocked) {
+  skillClass = 'locked'; // szary / zablokowany
+} else {
+  // Jeśli użytkownik ma poziom, ustaw level, jeśli nie ma – ustaw 3 (szary)
+  skillClass = `level${userLevel || 3}`; 
+}
+
+  const skillElement = document.createElement('div');
+  skillElement.className = `branch-skill ${skillClass}`;
+  skillElement.innerHTML = `
+    <div class="skill-name">${skill.name}</div>
+    <div class="skill-level">${levelText}</div>
+  `;
+  branchDiv.appendChild(skillElement);
+});
+
+          
+          level.appendChild(branchDiv);
+        });
+        
+        skillTree.appendChild(level);
       });
+      
+      // Aktualizuj postęp
+      updateProgress();
     }
-
-    function filterSkill(cat, skill, q){
-      if(!q) return true;
-      return [cat.name, skill.name, skill.level].some(t=>(t||'').toLowerCase().includes(q));
+    
+    // Aktualizuj pasek postępu
+    function updateProgress() {
+      const totalSkills = SKILL_TREE.reduce((total, category) => {
+        return total + category.branches.reduce((branchTotal, branch) => {
+          return branchTotal + branch.skills.length;
+        }, 0) + 1; // +1 dla głównej umiejętności kategorii
+      }, 0);
+      
+      // Umiejętności na poziomie 1 lub 2 są uznawane za opanowane
+      const unlockedSkills = Object.values(userSkills).filter(level => level === 1 || level === 2).length;
+      const progressPercent = (unlockedSkills / totalSkills) * 100;
+      
+      document.getElementById('progressFill').style.width = `${progressPercent}%`;
+      document.getElementById('progressText').textContent = 
+        `${unlockedSkills}/${totalSkills} umiejętności`;
     }
-
-    function renderSkill(skill){
-      const el = document.createElement('div');
-      const isUnlocked = !!unlocked[skill.id];
-      const prereqOk = (skill.req||[]).every(id=>unlocked[id]);
-      el.className = 'skill' + (isUnlocked ? ' unlocked' : '');
-      el.dataset.note = skill.req ? `Wymaga: ${skill.req.map(id=>id).join(', ')}` : '';
-      el.innerHTML = `
-        <div class="icons">${isUnlocked?unlockedIcon():lockedIcon(prereqOk)}</div>
-        <div>
-          <div class="name">${skill.name}</div>
-          <div class="level">${skill.level}</div>
-        </div>
-      `;
-      return el;
+    
+    // Funkcja do tłumaczenia kodów błędów Firebase
+    function getAuthErrorMessage(errorCode) {
+      switch (errorCode) {
+        case 'auth/email-already-in-use':
+          return 'Ten adres email jest już używany.';
+        case 'auth/invalid-email':
+          return 'Nieprawidłowy adres email.';
+        case 'auth/operation-not-allowed':
+          return 'Operacja nie jest dozwolona.';
+        case 'auth/weak-password':
+          return 'Hasło jest zbyt słabe. Użyj co najmniej 6 znaków.';
+        case 'auth/user-disabled':
+          return 'Konto zostało wyłączone.';
+        case 'auth/user-not-found':
+          return 'Nie znaleziono użytkownika.';
+        case 'auth/wrong-password':
+          return 'Nieprawidłowe hasło.';
+        default:
+          return 'Wystąpił nieznany błąd. Spróbuj ponownie.';
+      }
     }
-
-    function lockedIcon(prereqOk){
-      const stroke = prereqOk? '#aab0d8' : '#ffb0b0';
-      return `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 1 1 10 0v2" stroke="${stroke}"/><rect x="5" y="10" width="14" height="10" rx="2" stroke="${stroke}"/></svg>`;
+    
+    // Funkcja zwracająca tekst dla poziomu umiejętności
+    function getLevelText(level) {
+      switch(level) {
+        case 1: return "Poziom 1 (żółty)";
+        case 2: return "Poziom 2 (zielony)";
+        case 3: return "Poziom 3 (brak)";
+        default: return "Nieokreślony poziom";
+      }
     }
-    function unlockedIcon(){
-      return `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 9.5-2" stroke="#6df0c2"/><rect x="5" y="10" width="14" height="10" rx="2" stroke="#6df0c2"/><path d="M9 15l2 2 4-4" stroke="#6df0c2"/></svg>`;
-    }
-
-    // Interakcje
-    document.getElementById('search').addEventListener('input', render);
-    userSelect.addEventListener('change', e=>loadUserSkills(e.target.value));
-
-    // Start
-    loadUsers();
   </script>
 </body>
 </html>
