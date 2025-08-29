@@ -7,31 +7,56 @@
   <style>
     body { font-family: Inter, sans-serif; background:#0f1220; color:#f3f5ff; margin:0; padding:20px; }
     h1 { margin-bottom:20px; }
-    select, input, button { padding:8px 12px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff; margin-right:10px; }
+    input, button { padding:10px 12px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff; margin-bottom:10px; width:100%; }
+    button { cursor:pointer; border:none; }
+    #loginBtn { background:#214537; color:white; }
+    .admin-panel { margin: 20px 0; padding: 15px; background: #1a1f40; border-radius: 8px; }
+    select { padding:8px 12px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff; margin-right:10px; }
     .category { margin-top:20px; padding:16px; border-radius:12px; background:#151936; border:1px solid #2a2f62; }
-    .skill { padding:8px 12px; border-radius:8px; margin:6px 0; cursor:pointer; display:flex; justify-content:space-between; }
-    .skill.unlocked { background:#214537; border:1px solid #37765b; color:#dff8ef; }
-    .skill.locked { background:#2c315a; border:1px solid #2b315f; color:#aab0d8; }
-    .new-user { margin-top:20px; }
+    .skill { padding:8px 12px; border-radius:8px; margin:6px 0; display:flex; justify-content:space-between; }
+    .skill.level1 { background:#5e4d0e; border:1px solid #b89b35; color:#f8f0d0; }
+    .skill.level2 { background:#214537; border:1px solid #37765b; color:#dff8ef; }
+    .skill.level3 { background:#2c315a; border:1px solid #2b315f; color:#aab0d8; }
+    .level-buttons { display: flex; gap: 10px; margin-top: 5px; }
+    .level-btn { padding: 5px 10px; border-radius: 5px; cursor:pointer; }
+    .level1-btn { background:#b89b35; color:#000; }
+    .level2-btn { background:#37765b; color:#fff; }
+    .level3-btn { background:#2b315f; color:#fff; }
   </style>
 </head>
 <body>
-  <h1>Panel Admina – Drzewko umiejętności</h1>
-
-  <label>Wybierz użytkownika:
-    <select id="userSelect"></select>
-  </label>
-
-  <div class="new-user">
-    <input id="newUserName" placeholder="Nowy użytkownik" />
-    <button id="addUser">Dodaj użytkownika</button>
+  <div id="auth-container" style="max-width:400px; margin:100px auto;">
+    <h2>Logowanie</h2>
+    <input id="email" type="email" placeholder="Email" style="width:100%; margin:10px 0; padding:10px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff;">
+    <input id="password" type="password" placeholder="Hasło" style="width:100%; margin:10px 0; padding:10px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff;">
+    <button id="loginBtn" style="width:100%; padding:10px; border-radius:8px; background:#214537; color:white; border:none; cursor:pointer;">Zaloguj się</button>
+    <button id="registerBtn" style="width:100%; padding:10px; margin-top:10px; border-radius:8px; background:#2c315a; color:white; border:none; cursor:pointer;">Zarejestruj się</button>
   </div>
 
-  <div id="categories"></div>
+  <div id="app-container" style="display:none;">
+    <h1>Panel Admina – Drzewko umiejętności</h1>
+    
+    <div style="float:right;">
+      <span id="userEmail" style="margin-right:15px;"></span>
+      <span id="userRole" style="margin-right:15px; padding: 5px 10px; background: #2a2f62; border-radius: 12px;"></span>
+      <button id="logoutBtn" style="padding:8px 12px; border-radius:8px; background:#ff4444; color:white; border:none; cursor:pointer;">Wyloguj</button>
+    </div>
+
+    <div id="adminPanel" class="admin-panel" style="display:none;">
+      <h2>Panel Administratora</h2>
+      <label>Wybierz użytkownika:
+        <select id="userSelect"></select>
+      </label>
+
+
+
+    <div id="categories"></div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBdhMIiqetOfDGP85ERxtgwn3AXR50pBcE",
@@ -41,8 +66,29 @@
       messagingSenderId: "829161895559",
       appId: "1:829161895559:web:d832541aac05b35847ea22"
     };
+    
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Elementy DOM
+    const authContainer = document.getElementById('auth-container');
+    const appContainer = document.getElementById('app-container');
+    const adminPanel = document.getElementById('adminPanel');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const registerBtn = document.getElementById('registerBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userEmailSpan = document.getElementById('userEmail');
+    const userRoleSpan = document.getElementById('userRole');
+    const userSelect = document.getElementById("userSelect");
+    const categoriesDiv = document.getElementById("categories");
+    
+    let currentUserId = null;
+    let currentUserRole = null;
+    let usersData = {};
+    let selectedUserId = null;
 
     const TREE = [
       { id: "toprock", name: "Toprock", desc: "Podstawowe kroki wykonywane na stojąco.", skills: [
@@ -81,10 +127,149 @@
         ]}
     ];
 
-    const userSelect = document.getElementById("userSelect");
-    const categoriesDiv = document.getElementById("categories");
-    let currentUserId = null;
-    let usersData = {};
+    // Rejestracja
+    registerBtn.addEventListener('click', async () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      
+      if (!email || !password) {
+        alert('Proszę wypełnić wszystkie pola');
+        return;
+      }
+      
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Domyślnie ustawiamy rolę użytkownika, ale pierwszego użytkownika ustawiamy jako admina
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        let isFirstUser = usersSnapshot.empty;
+        
+        // Sprawdzamy czy użytkownik z tym emailem już istnieje w firestore
+        let userExists = false;
+        usersSnapshot.forEach(docSnap => {
+          if (docSnap.data().email === email) {
+            userExists = true;
+          }
+        });
+        
+        if (!userExists) {
+          // Dodajemy użytkownika do firestore
+          await setDoc(doc(db, "users", user.uid), {
+            name: email.split('@')[0],
+            email: email,
+            role: isFirstUser ? 'admin' : 'user',
+            skills: {}
+          });
+        }
+        
+        alert('Rejestracja udana! Zalogowano automatycznie.');
+      } catch (error) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            alert('❌ Ten adres email jest już zarejestrowany. Użyj przycisku "Zaloguj się".');
+            break;
+          case 'auth/weak-password':
+            alert('❌ Hasło jest zbyt słabe. Wymagane co najmniej 6 znaków.');
+            break;
+          case 'auth/invalid-email':
+            alert('❌ Nieprawidłowy format adresu email.');
+            break;
+          case 'auth/operation-not-allowed':
+            alert('❌ Rejestracja przez email/hasło nie jest włączona. Skontaktuj się z administratorem.');
+            break;
+          default:
+            alert('❌ Błąd rejestracji: ' + error.message);
+            console.error('Szczegóły błędu:', error);
+        }
+      }
+    });
+
+    // Logowanie
+    loginBtn.addEventListener('click', async () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        alert('Błąd logowania: ' + error.message);
+      }
+    });
+
+    // Wylogowanie
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        alert('Błąd wylogowania: ' + error.message);
+      }
+    });
+
+    // Obserwuj stan autentykacji
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Użytkownik zalogowany
+        authContainer.style.display = 'none';
+        appContainer.style.display = 'block';
+        userEmailSpan.textContent = user.email;
+        
+        // Pobierz dane użytkownika z Firestore
+        const userDoc = await getDocs(collection(db, "users"));
+        let userData = null;
+        
+        userDoc.forEach(docSnap => {
+          if (docSnap.id === user.uid) {
+            userData = docSnap.data();
+          }
+        });
+        
+        if (userData) {
+          currentUserRole = userData.role || 'user';
+          currentUserId = user.uid;
+          userRoleSpan.textContent = currentUserRole === 'admin' ? 'Administrator' : 'Użytkownik';
+          
+          // Pokaż panel admina tylko jeśli użytkownik jest administratorem
+          if (currentUserRole === 'admin') {
+            adminPanel.style.display = 'block';
+            loadUsers();
+          } else {
+            adminPanel.style.display = 'none';
+            // Dla zwykłych użytkowników pokaż ich własne umiejętności
+            selectedUserId = user.uid;
+            renderCategories();
+            
+            // Subskrybuj zmiany w danych użytkownika
+            const userRef = doc(db, "users", user.uid);
+            onSnapshot(userRef, snap => {
+              if (snap.exists()) {
+                usersData[user.uid] = snap.data();
+                renderCategories();
+              }
+            });
+          }
+        } else {
+          // Jeśli użytkownik nie ma danych w Firestore, utwórz je
+          await setDoc(doc(db, "users", user.uid), {
+            name: user.email.split('@')[0],
+            email: user.email,
+            role: 'user',
+            skills: {}
+          });
+          
+          currentUserRole = 'user';
+          currentUserId = user.uid;
+          userRoleSpan.textContent = 'Użytkownik';
+          adminPanel.style.display = 'none';
+        }
+      } else {
+        // Użytkownik wylogowany
+        authContainer.style.display = 'block';
+        appContainer.style.display = 'none';
+        userEmailSpan.textContent = '';
+        userRoleSpan.textContent = '';
+      }
+    });
 
     async function loadUsers(){
       const snap = await getDocs(collection(db,"users"));
@@ -94,73 +279,100 @@
         usersData[docSnap.id] = user;
         const opt = document.createElement("option");
         opt.value = docSnap.id;
-        opt.textContent = user.name;
+        opt.textContent = user.name + (user.role === 'admin' ? ' (admin)' : '');
         userSelect.appendChild(opt);
       });
     }
 
     userSelect.addEventListener("change", ()=>{
-      currentUserId = userSelect.value;
-      renderCategories();
-      if(currentUserId){
-        const userRef = doc(db,"users",currentUserId);
+      selectedUserId = userSelect.value;
+      if(selectedUserId){
+        const userRef = doc(db,"users",selectedUserId);
         onSnapshot(userRef, snap=>{
           if(snap.exists()){
-            usersData[currentUserId].skills = snap.data().skills || {};
+            usersData[selectedUserId] = snap.data();
             renderCategories();
           }
         });
       }
     });
 
-    async function addUser(){
-      const name = document.getElementById("newUserName").value.trim();
-      if(!name) return alert("Podaj nazwę użytkownika");
-      const docRef = await addDoc(collection(db,"users"), { name, skills: {} });
-      usersData[docRef.id] = { name, skills: {} };
-      const opt = document.createElement("option");
-      opt.value = docRef.id;
-      opt.textContent = name;
-      userSelect.appendChild(opt);
-      userSelect.value = docRef.id;
-      currentUserId = docRef.id;
-      renderCategories();
-      document.getElementById("newUserName").value = "";
-    }
 
-    document.getElementById("addUser").addEventListener("click", addUser);
+      
+
 
     function renderCategories(){
       categoriesDiv.innerHTML = "";
-      if(!currentUserId) return;
-      const userSkills = usersData[currentUserId].skills || {};
+      if(!selectedUserId || !usersData[selectedUserId]) return;
+      
+      const userSkills = usersData[selectedUserId].skills || {};
+      
       TREE.forEach(cat=>{
         const catDiv = document.createElement("div");
         catDiv.className = "category";
         catDiv.innerHTML = `<h2>${cat.name}</h2><p>${cat.desc}</p>`;
+        
         cat.skills.forEach(skill=>{
-          const div = document.createElement("div");
-          const unlocked = userSkills[skill.id];
-          div.className = "skill " + (unlocked?"unlocked":"locked");
-          div.textContent = skill.name + (unlocked ? " ✅":" ❌");
-          div.addEventListener("click", ()=>toggleSkill(skill.id));
-          catDiv.appendChild(div);
+          const skillDiv = document.createElement("div");
+          const skillLevel = userSkills[skill.id] || 3; // Domyślnie poziom 3 (brak)
+          
+          skillDiv.className = `skill level${skillLevel}`;
+          skillDiv.innerHTML = `
+            <div>${skill.name}</div>
+            <div>${getLevelText(skillLevel)}</div>
+          `;
+          
+          // Dodaj przyciski zmiany poziomu tylko dla administratora
+          if (currentUserRole === 'admin') {
+            const levelButtons = document.createElement("div");
+            levelButtons.className = "level-buttons";
+            
+levelButtons.innerHTML = `
+  <button class="level-btn level1-btn" data-skill="${skill.id}" data-level="1">Poziom 1</button>
+  <button class="level-btn level2-btn" data-skill="${skill.id}" data-level="2">Poziom 2</button>
+  <button class="level-btn level3-btn" data-skill="${skill.id}" data-level="3">Usuń postęp</button>
+`;
+            
+            // Dodaj nasłuchiwanie zdarzeń dla przycisków
+            levelButtons.querySelectorAll('.level-btn').forEach(btn => {
+              btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                setSkillLevel(btn.dataset.skill, parseInt(btn.dataset.level));
+              });
+            });
+            
+            skillDiv.appendChild(levelButtons);
+          }
+          
+          catDiv.appendChild(skillDiv);
         });
+        
         categoriesDiv.appendChild(catDiv);
       });
     }
 
-    async function toggleSkill(skillId){
-      if(!currentUserId) return;
-      const userRef = doc(db,"users",currentUserId);
-      const userSkills = usersData[currentUserId].skills || {};
-      userSkills[skillId] = !userSkills[skillId];
-      await updateDoc(userRef,{skills:userSkills});
-      usersData[currentUserId].skills = userSkills;
+function getLevelText(level) {
+  switch(level) {
+    case 1: return "Poziom 1 (żółty)";
+    case 2: return "Poziom 2 (zielony)";
+    case 3: return "Usuń postęp";
+    default: return "Nieokreślony";
+  }
+}
+
+    async function setSkillLevel(skillId, level) {
+      if(!selectedUserId) return;
+      
+      const userRef = doc(db, "users", selectedUserId);
+      const userSkills = {...(usersData[selectedUserId].skills || {})};
+      
+      userSkills[skillId] = level;
+      await updateDoc(userRef, { skills: userSkills });
+      
+      // Zaktualizuj dane lokalne
+      usersData[selectedUserId].skills = userSkills;
       renderCategories();
     }
-
-    loadUsers();
   </script>
 </body>
 </html>
