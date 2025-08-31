@@ -4,476 +4,501 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Drzewko Umiejętności Breaking - Widok Drzewa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-  
-        :root {
-            --bg: ; 
-            --panel: #151936; 
-            --text: #f3f5ff; 
-            --accent: #7c9dff; 
-            --accent-2: #6df0c2; 
-            --locked: bule; 
-            --unlocked: blue;
-            --connector: #4a5085;
-            
-            /* Zaktualizowane kolory */
-			/* Zaktualizowane kolory gradientowe */
-			--level1: #e6af89; /* Żółty gradient, energetyczny */
-			--level2: green; /* Zielony gradient, świeży i nowoczesny */
-			--level3: blue;           /* Subtelny szary → fiolet, elegancki *
-						
-            /* Nowe zmienne dla lepszej konsystencji */
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 16px;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
-            --transition: all 0.3s ease;
-        }
+    :root {
+      --bg: #0f1120; 
+      --panel: #151936; 
+      --text: #f3f5ff; 
+      --accent: #7c9dff; 
+      --accent-2: #6df0c2; 
+      --locked: #4a5085; 
+      --unlocked: #7c9dff;
+      --connector: #ffffff;
+      
+      --level1:  #FF8C00;
+      --level2: #06D6A0;
+      --level3: #118AB2;
+      --level4: #EF476F;
+      --level5: #9A6EE8;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s ease;
+    }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
 
-        body { 
-            font-family: 'Inter', 'SF Pro Text', Roboto, Arial, sans-serif; 
-            background: var(--bg); 
-            color: var(--text);
-            overflow-x: hidden;
-            padding: 20px;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+body { 
+    font-family: 'Inter', 'SF Pro Text', Roboto, Arial, sans-serif; 
+    background: linear-gradient(135deg, #1e3c72, #2a5298, #6a11cb, #2575fc);
+    color: var(--text);
+    overflow-x: hidden;
+    padding: 20px;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-        }
-
-        .subtitle {
-            color: #8a90b0;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Ekran logowania */
-        .auth-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            background: var(--panel);
-            border-radius: var(--radius-xl);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: var(--shadow-lg);
-            backdrop-filter: blur(10px);
-        }
-
-        .auth-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 12px 14px;
-            margin-bottom: 15px;
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
-            color: var(--text);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .auth-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(124, 157, 255, 0.3);
-        }
-
-        .auth-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: var(--radius-lg);
-            border: none;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            color: var(--bg);
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 10px;
-            transition: var(--transition);
-        }
-
-        .auth-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .auth-switch {
-            text-align: center;
-            color: #8a90b0;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .auth-switch:hover {
-            color: var(--accent);
-        }
-
-        .error-message {
-            color: #ff6b6b;
-            text-align: center;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-
-        /* Główna aplikacja */
-        .app-container {
-            display: none;
-        }
-
-        /* Drzewko umiejętności */
-        .skill-tree {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 1000px;
-            padding: 2rem 0;
-        }
-
-        /* Centralna oś drzewka */
-        .tree-axis {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 6px;
-            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
-            border-radius: 3px;
-            z-index: 1;
-        }
-
-        /* Poziomy drzewka */
-        .tree-level {
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 120px 0;
-            z-index: 2;
-            gap: 40px;
-        }
-
-        /* Główny skill na osi */
-        .main-skill {
-            position: relative;
-            padding: 18px 24px;
-            border-radius: var(--radius-xl);
-            text-align: center;
-            min-width: 180px;
-            z-index: 3;
-            box-shadow: var(--shadow-lg);
-            cursor: pointer;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .main-skill:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: var(--shadow-lg);
-        }
-
-.main-skill.level1 { 
-    background: linear-gradient(135deg, #FFD700, #FFA500); /* Złoty → pomarańczowy gradient, energetyczny i ciepły */
-    border: 2px solid rgba(255, 215, 0, 0.3); 
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
 }
 
-.main-skill.level2 { 
-    background: linear-gradient(135deg, #00E676, #1DE9B6); /* Jasny, świeży zielony → turkusowy, nowoczesny */
-    border: 2px solid rgba(0, 230, 118, 0.3); 
+    .subtitle {
+      color: #8a90b0;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Ekran logowania */
+    .auth-container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 30px;
+      background: var(--panel);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+    }
+
+    .auth-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 15px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(124, 157, 255, 0.3);
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius-lg);
+      border: none;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: var(--bg);
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: var(--transition);
+    }
+
+    .auth-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .auth-switch {
+      text-align: center;
+      color: #8a90b0;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .auth-switch:hover {
+      color: var(--accent);
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      text-align: center;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    /* Główna aplikacja */
+    .app-container {
+      display: none;
+    }
+
+    /* Drzewko umiejętności - UPROSZCZONE */
+    .skill-tree {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0;
+    }
+
+    /* Centralna oś drzewka */
+    .tree-axis {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--connector);
+      border-radius: 3px;
+      z-index: 1;
+    }
+
+    /* Poziomy drzewka */
+    .tree-level {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 80px 0;
+      z-index: 2;
+    }
+
+    /* Główny skill na osi */
+    .main-skill {
+      position: relative;
+      padding: 15px 20px;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      min-width: 150px;
+      z-index: 3;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .main-skill:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .main-skill.level1 { background: var(--level1); }
+    .main-skill.level2 { background: var(--level2); }
+    .main-skill.level3 { background: var(--level3); }
+    .main-skill.level4 { background: var(--level4); }
+    .main-skill.level5 { background: var(--level5); }
+    .main-skill.locked { background: var(--locked); opacity: 0.7; }
+
+    .skill-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    .skill-level {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    /* Gałęzie (lewa i prawa) - UPROSZCZONE */
+    .branch {
+      position: absolute;
+      top: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+.branch-left { right: calc(50% + 140px); }
+.branch-right { left: calc(50% + 140px); }
+
+.branch::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 140px; /* Zwiększ z 100px do 140px */
+    height: 2px;
+    background: var(--connector);
 }
 
-.main-skill.level3 { 
-    background: linear-gradient(135deg, #8E8E8E, #B39DDB); /* Szary → delikatny fiolet, elegancki i subtelny */
-    border: 2px solid rgba(142, 142, 142, 0.3); 
-}
+.branch-left::before { right: -140px; } /* Zwiększ z -100px do -140px */
+.branch-right::before { left: -140px; } /* Zwiększ z -100px do -140px */
 
-.main-skill.locked { 
-    background: #4a5085; 
-    border-color: #4a5085; 
-    opacity: 0.7; 
-}
+    /* Skill na gałęzi */
+    .branch-skill {
+      position: relative;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      min-width: 140px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        .skill-name {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
+    .branch-skill:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
 
-        .skill-level {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
+    .branch-skill.level1 { background: var(--level1); }
+    .branch-skill.level2 { background: var(--level2); }
+    .branch-skill.level3 { background: var(--level3); }
+    .branch-skill.level4 { background: var(--level4); }
+    .branch-skill.level5 { background: var(--level5); }
+    .branch-skill.locked { background: var(--locked); opacity: 0.7; }
 
-        /* Gałęzie (lewa i prawa) */
-        .branch {
-            position: absolute;
-            top: 50%;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            gap: 12px;
-        }
+    /* Pionowe linie łączące umiejętności w gałęzi - BIAŁE LINIE */
+    .branch-skill::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 20px;
+      background: var(--connector);
+    }
 
-        .branch-left { right: calc(50% + 120px); flex-direction: column-reverse; }
-        .branch-right { left: calc(50% + 120px); }
+    .branch-skill:first-of-type::before {
+      display: none;
+    }
 
-        /* Łącznik gałęzi */
-        .branch-connector {
-            width: 80px;
-            height: 2px;
-            background: var(--connector);
-            position: relative;
-        }
+    /* Panel użytkownika */
+    .user-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(21, 25, 54, 0.8);
+      padding: 15px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 200px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-md);
+    }
 
-        .branch-left .branch-connector::after,
-        .branch-right .branch-connector::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            top: -5px;
-            border: 2px solid var(--connector);
-            border-radius: 50%;
-            background: var(--panel);
-        }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        .branch-left .branch-connector::after { left: 0; }
-        .branch-right .branch-connector::after { right: 0; }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: var(--shadow-sm);
+    }
 
-        /* Skill na gałęzi */
-        .branch-skill {
-            padding: 14px 20px;
-            border-radius: var(--radius-xl);
-            min-width: 160px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    .user-name { font-weight: 600; }
 
-        .branch-skill:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: var(--shadow-lg);
-        }
+    .progress-bar {
+      height: 6px;
+      background: var(--locked);
+      border-radius: 3px;
+      overflow: hidden;
+    }
 
-        .branch-skill.level1 { 
-            background: linear-gradient(135deg, var(--level1), #FFB74D); 
-            border: 2px solid rgba(255, 209, 102, 0.3);
-        }
-        .branch-skill.level2 { 
-            background: linear-gradient(135deg, var(--level2), #05C191); 
-            border: 2px solid rgba(6, 214, 160, 0.3);
-        }
-        .branch-skill.level3 { 
-            background: linear-gradient(135deg, var(--level3), #7A6E7A); 
-            border: 2px solid rgba(154, 140, 152, 0.3);
-        }
-        .branch-skill.locked { 
-            background: var(--locked); 
-            border-color: #4a5085; 
-            opacity: 0.7; 
-        }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
 
-        /* Licznik umiejętności w gałęzi */
-        .branch-counter {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--panel);
-            padding: 3px 8px;
-            border-radius: var(--radius-lg);
-            font-size: 0.8rem;
-            border: 1px solid var(--connector);
-            backdrop-filter: blur(5px);
-        }
+    .progress-text {
+      font-size: 0.8rem;
+      text-align: center;
+      opacity: 0.8;
+    }
 
-        /* Linie łączące */
-        .connector {
-            position: absolute;
-            background: var(--connector);
-            z-index: 1;
-        }
+    .logout-btn {
+      padding: 8px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
 
-        .vertical-connector {
-            width: 2px;
-            height: 80px;
-            top: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+    .logout-btn:hover {
+      background: #ff5252;
+      transform: translateY(-1px);
+    }
 
-        /* Panel użytkownika */
-        .user-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(21, 25, 54, 0.8);
-            padding: 15px;
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 200px;
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-md);
-        }
+    /* Przyciski zwijania/rozwijania gałęzi na telefonach */
+    .toggle-branch {
+      display: none;
+      margin: 10px auto;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--connector);
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    /* Responsywność - ULEPSZONA */
+    @media (max-width: 1200px) {
+      .branch-left { right: calc(50% + 80px); }
+      .branch-right { left: calc(50% + 80px); }
+      
+      .branch::before {
+        width: 80px;
+      }
+      
+      .branch-left::before { right: -80px; }
+      .branch-right::before { left: -80px; }
+    }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            box-shadow: var(--shadow-sm);
-        }
+    @media (max-width: 900px) {
+      .branch-left { right: calc(50% + 60px); }
+      .branch-right { left: calc(50% + 60px); }
+      
+      .branch::before {
+        width: 60px;
+      }
+      
+      .branch-left::before { right: -60px; }
+      .branch-right::before { left: -60px; }
+      
+      .main-skill, .branch-skill {
+        min-width: 130px;
+        padding: 10px 14px;
+      }
+      
+      .skill-name {
+        font-size: 0.9rem;
+      }
+    }
 
-        .user-name { font-weight: 600; }
+    @media (max-width: 768px) {
+      .tree-level {
+        flex-direction: column;
+        align-items: center;
+        margin: 60px 0;
+        gap: 30px;
+      }
+      
+      .branch {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+        width: 100%;
+      }
+      
+      .branch::before {
+        display: none;
+      }
+      
+      .branch-skill::before {
+        display: none;
+      }
+      
+      .toggle-branch {
+        display: block;
+      }
+      
+      .branch.collapsed {
+        display: none;
+      }
+      
+      .user-panel {
+        position: relative;
+        top: unset;
+        right: unset;
+        margin: 0 auto 20px auto;
+        width: 100%;
+        max-width: 400px;
+      }
+    }
 
-        .progress-bar {
-            height: 6px;
-            background: var(--locked);
-            border-radius: 3px;
-            overflow: hidden;
-        }
+    @media (max-width: 640px) {
+      body {
+        padding: 15px;
+      }
+      
+      .auth-container {
+        margin: 50px auto;
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .main-skill, .branch-skill {
+        min-width: 120px;
+        padding: 10px 12px;
+      }
+      
+      .skill-name {
+        font-size: 0.85rem;
+      }
+      
+      .skill-level {
+        font-size: 0.75rem;
+      }
+    }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-text {
-            font-size: 0.8rem;
-            text-align: center;
-            opacity: 0.8;
-        }
-
-        .logout-btn {
-            padding: 8px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .logout-btn:hover {
-            background: #ff5252;
-            transform: translateY(-1px);
-        }
-
-        /* Responsywność */
-        @media (max-width: 1200px) {
-            .branch-left { right: calc(50% + 100px); }
-            .branch-right { left: calc(50% + 100px); }
-        }
-
-        @media (max-width: 900px) {
-            .branch { 
-                flex-direction: column !important; 
-                position: static; 
-                margin: 20px 0; 
-                justify-content: center; 
-            }
-            .branch-connector { 
-                width: 2px; 
-                height: 40px; 
-                margin: 10px 0; 
-            }
-            .branch-left .branch-connector::after,
-            .branch-right .branch-connector::after { 
-                left: 50%; 
-                transform: translateX(-50%) rotate(0); 
-            }
-            .tree-level { 
-                flex-direction: column; 
-                align-items: center; 
-                gap: 20px; 
-            }
-            
-            .user-panel {
-                position: relative;
-                top: unset;
-                right: unset;
-                margin-bottom: 20px;
-                width: 100%;
-                max-width: 400px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
-
-        @media (max-width: 640px) {
-            body {
-                padding: 1rem;
-            }
-            
-            .auth-container {
-                margin: 50px auto;
-                padding: 20px;
-            }
-            
-            .skill-tree {
-                padding: 1rem 0;
-            }
-            
-            .main-skill, .branch-skill {
-                min-width: 140px;
-                padding: 14px 16px;
-            }
-        }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .main-skill, .branch-skill {
+        min-width: 110px;
+        padding: 8px 10px;
+      }
+      
+      .skill-name {
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -558,7 +583,7 @@
     const auth = getAuth(app);
 
     // Struktura drzewka umiejętności
-        const SKILL_TREE = [
+    const SKILL_TREE = [
       {
         id: "toprock",
         name: "Toprock",
@@ -722,7 +747,7 @@
         await setDoc(doc(db, "users", user.uid), {
           name: name,
           email: email,
-          role: "user", // Domyślnie ustawiamy rolę "user"
+          role: "user",
           skills: {},
           createdAt: new Date()
         });
@@ -777,7 +802,6 @@
       try {
         const userDoc = await getDoc(doc(db, "users", currentUserId));
         if (userDoc.exists()) {
-          // Dla użytkownika ładujemy tylko poziom, nie pełne dane
           const userData = userDoc.data();
           userSkills = userData.skills || {};
         } else {
@@ -812,7 +836,7 @@
         
         // Główna umiejętność kategorii
         const mainSkill = document.createElement('div');
-        const mainSkillLevel = userSkills[category.id] || 3; // Domyślnie poziom 3
+        const mainSkillLevel = userSkills[category.id] || 3;
         mainSkill.className = `main-skill level${mainSkillLevel}`;
         mainSkill.innerHTML = `
           <div class="skill-name">${category.name}</div>
@@ -820,62 +844,44 @@
         `;
         level.appendChild(mainSkill);
         
+        // Przycisk do zwijania/rozwijania gałęzi (tylko na urządzeniach mobilnych)
+        if (window.innerWidth <= 768) {
+          const toggleBtn = document.createElement('button');
+          toggleBtn.className = 'toggle-branch';
+          toggleBtn.textContent = 'Pokaż umiejętności';
+          toggleBtn.onclick = function() {
+            const branches = level.querySelectorAll('.branch');
+            branches.forEach(branch => {
+              branch.classList.toggle('collapsed');
+            });
+            toggleBtn.textContent = branch.classList.contains('collapsed') ? 'Pokaż umiejętności' : 'Ukryj umiejętności';
+          };
+          level.appendChild(toggleBtn);
+        }
+        
         // Renderuj gałęzie (lewa i prawa)
         category.branches.forEach(branch => {
           const branchDiv = document.createElement('div');
-          branchDiv.className = `branch branch-${branch.direction}`;
-          
-          // Licznik umiejętności w gałęzi
-          const totalSkills = branch.skills.length;
-          const unlockedSkills = branch.skills.filter(skill => {
-  const userLevel = userSkills[skill.id];
-  if (!userLevel || userLevel === 3) return false; // poziom 3 = niewidoczny
-  const reqs = skill.req || [];
-  return reqs.every(r => userSkills[r] && userSkills[r] < 3); // wszystkie wymagania odblokowane
-}).length;
-
-          
-          const counter = document.createElement('div');
-          counter.className = 'branch-counter';
-          counter.textContent = `${unlockedSkills}/${totalSkills}`;
-          branchDiv.appendChild(counter);
-          
-          // Łącznik gałęzi
-          const connector = document.createElement('div');
-          connector.className = 'branch-connector';
-          branchDiv.appendChild(connector);
+          branchDiv.className = `branch branch-${branch.direction} ${window.innerWidth <= 768 ? 'collapsed' : ''}`;
           
           // Renderuj umiejętności w gałęzi
-branch.skills.forEach(skill => {
-  const userLevel = userSkills[skill.id]; // poziom użytkownika
-  let skillClass = '';
-  let levelText = '';
-
-if (!userLevel || userLevel === 3) {
-  // Poziom 3 lub brak → niewidoczny
-  return;
-}
-
-// Sprawdź wymagania
-const reqs = skill.req || [];
-const unlocked = reqs.every(r => userSkills[r] && userSkills[r] < 3);
-
-if (!unlocked) {
-  skillClass = 'locked'; // szary / zablokowany
-} else {
-  // Jeśli użytkownik ma poziom, ustaw level, jeśli nie ma – ustaw 3 (szary)
-  skillClass = `level${userLevel || 3}`; 
-}
-
-  const skillElement = document.createElement('div');
-  skillElement.className = `branch-skill ${skillClass}`;
-  skillElement.innerHTML = `
-    <div class="skill-name">${skill.name}</div>
-    <div class="skill-level">${levelText}</div>
-  `;
-  branchDiv.appendChild(skillElement);
-});
-
+          branch.skills.forEach(skill => {
+            const userLevel = userSkills[skill.id];
+            if (!userLevel || userLevel === 3) return;
+            
+            const reqs = skill.req || [];
+            const unlocked = reqs.every(r => userSkills[r] && userSkills[r] < 3);
+            
+            const skillClass = unlocked ? `level${userLevel || 3}` : 'locked';
+            
+            const skillElement = document.createElement('div');
+            skillElement.className = `branch-skill ${skillClass}`;
+            skillElement.innerHTML = `
+              <div class="skill-name">${skill.name}</div>
+              <div class="skill-level">${getLevelText(userLevel)}</div>
+            `;
+            branchDiv.appendChild(skillElement);
+          });
           
           level.appendChild(branchDiv);
         });
@@ -892,10 +898,9 @@ if (!unlocked) {
       const totalSkills = SKILL_TREE.reduce((total, category) => {
         return total + category.branches.reduce((branchTotal, branch) => {
           return branchTotal + branch.skills.length;
-        }, 0) + 1; // +1 dla głównej umiejętności kategorii
+        }, 0) + 1;
       }, 0);
       
-      // Umiejętności na poziomie 1 lub 2 są uznawane za opanowane
       const unlockedSkills = Object.values(userSkills).filter(level => level === 1 || level === 2).length;
       const progressPercent = (unlockedSkills / totalSkills) * 100;
       
@@ -929,9 +934,8 @@ if (!unlocked) {
     // Funkcja zwracająca tekst dla poziomu umiejętności
     function getLevelText(level) {
       switch(level) {
-        case 1: return "Poziom 1 (żółty)";
-        case 2: return "Poziom 2 (zielony)";
-        case 3: return "Poziom 3 (brak)";
+        case 1: return "Poziom 1";
+        case 2: return "Poziom 2";
         default: return "Nieokreślony poziom";
       }
     }
