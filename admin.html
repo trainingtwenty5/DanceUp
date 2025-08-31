@@ -5,375 +5,206 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panel Admina – Drzewko umiejętności</title>
   <style>
-    /* Podstawowe style */
-    * {
-      box-sizing: border-box;
-    }
-    
-    body { 
-      font-family: Inter, sans-serif; 
-      background:#0f1220; 
-      color:#f3f5ff; 
-      margin:0; 
-      padding:16px; 
-      line-height: 1.5;
-    }
-    
-    h1, h2 { 
-      margin-bottom:20px; 
-      color: #ffffff;
-    }
-    
-    h1 {
-      font-size: 1.5rem;
-    }
-    
-    input, button { 
-      padding:14px 16px; 
-      border-radius:8px; 
-      border:1px solid #2a2f62; 
-      background:#151936; 
-      color:#f3f5ff; 
-      margin-bottom:12px; 
-      width:100%; 
-      font-size: 16px; /* Zapobiega zoomowaniu na iOS */
-    }
-    
-    button { 
-      cursor:pointer; 
-      border:none; 
-      font-weight: 600;
-      transition: opacity 0.2s;
-    }
-    
-    button:active {
-      opacity: 0.8;
-    }
-    
-    #loginBtn { 
-      background:#214537; 
-      color:white; 
-    }
-    
-    .admin-panel { 
-      margin: 20px 0; 
-      padding: 15px; 
-      background: #1a1f40; 
-      border-radius: 8px; 
-    }
-    
-    select { 
-      padding:12px 14px; 
-      border-radius:8px; 
-      border:1px solid #2a2f62; 
-      background:#151936; 
-      color:#f3f5ff; 
-      margin-right:10px; 
-      width: 100%;
-      margin-bottom: 12px;
-      font-size: 16px;
-    }
-    
-    .category { 
-      margin-top:20px; 
-      padding:16px; 
-      border-radius:12px; 
-      background:#151936; 
-      border:1px solid #2a2f62; 
-    }
-    
-    .skill { 
-      padding:12px 14px; 
-      border-radius:8px; 
-      margin:10px 0; 
-      display:flex; 
-      flex-direction: column;
-      justify-content:space-between; 
-      position: relative;
-    }
-    
+    body { font-family: Inter, sans-serif; background:#0f1220; color:#f3f5ff; margin:0; padding:20px; }
+    h1 { margin-bottom:20px; }
+    input, button { padding:10px 12px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff; margin-bottom:10px; width:100%; }
+    button { cursor:pointer; border:none; }
+    #loginBtn { background:#214537; color:white; }
+    .admin-panel { margin: 20px 0; padding: 15px; background: #1a1f40; border-radius: 8px; }
+    select { padding:8px 12px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff; margin-right:10px; }
+    .category { margin-top:20px; padding:16px; border-radius:12px; background:#151936; border:1px solid #2a2f62; }
+    .skill { padding:8px 12px; border-radius:8px; margin:6px 0; display:flex; justify-content:space-between; }
     .skill.level1 { background:#5e4d0e; border:1px solid #b89b35; color:#f8f0d0; }
     .skill.level2 { background:#214537; border:1px solid #37765b; color:#dff8ef; }
     .skill.level3 { background:#2c315a; border:1px solid #2b315f; color:#aab0d8; }
-    
-    .level-buttons { 
-      display: flex; 
-      flex-wrap: wrap;
-      gap: 8px; 
-      margin-top: 10px; 
-    }
-    
-    .level-btn { 
-      padding: 10px 14px; 
-      border-radius: 6px; 
-      cursor:pointer; 
-      border: none;
-      font-weight: 600;
-      flex: 1;
-      min-width: 100px;
-    }
-    
+    .level-buttons { display: flex; gap: 10px; margin-top: 5px; }
+    .level-btn { padding: 5px 10px; border-radius: 5px; cursor:pointer; }
     .level1-btn { background:#b89b35; color:#000; }
     .level2-btn { background:#37765b; color:#fff; }
     .level3-btn { background:#2b315f; color:#fff; }
+	
+	
+	/* Responsywność dla telefonów */
+@media (max-width: 767px) {
+    body {
+        padding: 12px;
+    }
     
-    /* Panel logowania - poprawiona wersja */
-    #auth-container {
-        max-width: 400px;
-        margin: 40px auto;
-        padding: 24px;
-        background: #1a1f40;
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-
-    #auth-container h2 {
-        text-align: center;
-        margin-bottom: 24px;
-        color: #ffffff;
-        font-size: 1.8rem;
-    }
-
-    #email, #password {
-        padding: 16px;
-        border: 1px solid #3a4080;
-        background: #151936;
-        color: #f3f5ff;
-        border-radius: 12px;
+    h1 {
+        font-size: 1.5rem;
         margin-bottom: 16px;
-        font-size: 16px;
-        transition: border-color 0.3s;
-    }
-
-    #email:focus, #password:focus {
-        outline: none;
-        border-color: #5c66cc;
-        box-shadow: 0 0 0 2px rgba(92, 102, 204, 0.2);
-    }
-
-    #loginBtn {
-        background: linear-gradient(to right, #214537, #2a6b53);
-        color: white;
-        padding: 16px;
-        border-radius: 12px;
-        font-weight: 600;
-        margin-bottom: 12px;
-        transition: transform 0.2s, background 0.3s;
-    }
-
-    #loginBtn:active {
-        transform: scale(0.98);
-    }
-
-    #registerBtn {
-        background: transparent;
-        color: #aab0d8;
-        padding: 16px;
-        border-radius: 12px;
-        border: 1px solid #3a4080;
-        transition: background 0.3s;
-    }
-
-    #registerBtn:active {
-        background: rgba(58, 64, 128, 0.2);
     }
     
-    /* Responsywność */
-    #auth-container {
-      max-width:400px; 
-      margin:60px auto;
+    input, button {
+        padding: 16px;
+        margin-bottom: 12px;
+        font-size: 16px; /* Zapobiega zoomowaniu na iOS */
     }
     
     .user-info {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding: 16px;
-      background: #1a1f40;
-      border-radius: 12px;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding: 16px;
+        background: #1a1f40;
+        border-radius: 12px;
     }
     
-    /* Informacja o podwójnym kliknięciu */
-    .skill-hint {
-        display: none;
-        font-size: 0.8rem;
-        opacity: 0.7;
-        font-style: italic;
-        margin-top: 8px;
-    }
-    
-    @media (min-width: 768px) {
-      .user-info {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      h1 {
-        font-size: 2rem;
-      }
-      
-      select {
-        width: auto;
-        margin-bottom: 0;
-      }
-      
-      .skill {
-        flex-direction: row;
-        align-items: center;
-      }
-      
-      .level-buttons {
-        flex-wrap: nowrap;
-        margin-top: 0;
-        justify-content: flex-end;
-      }
-      
-      .skill-hint {
-        display: none !important;
-      }
-    }
-    
-    /* Dodatkowe style dla lepszego wyglądu na telefonach */
     .user-role {
-      padding: 6px 12px; 
-      background: #2a2f62; 
-      border-radius: 12px;
-      font-size: 0.9rem;
-      text-align: center;
+        padding: 8px 12px;
+        text-align: center;
     }
     
     .user-actions {
-      display: flex;
-      gap: 10px;
+        width: 100%;
     }
     
     #logoutBtn {
-      padding:10px 16px;
-      flex: 1;
+        width: 100%;
+        padding: 12px;
     }
     
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
+    .admin-panel {
+        padding: 12px;
     }
     
-    /* Responsywność dla telefonów */
-    @media (max-width: 767px) {
-        body {
-            padding: 12px;
-        }
-        
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-        }
-        
-        input, button {
-            padding: 16px;
-            margin-bottom: 12px;
-            font-size: 16px;
-        }
-        
-        .user-info {
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding: 16px;
-            background: #1a1f40;
-            border-radius: 12px;
-        }
-        
-        .user-role {
-            padding: 8px 12px;
-            text-align: center;
-        }
-        
-        .user-actions {
-            width: 100%;
-        }
-        
-        #logoutBtn {
-            width: 100%;
-            padding: 12px;
-        }
-        
-        .admin-panel {
-            padding: 12px;
-        }
-        
-        select {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-        
-        .category {
-            padding: 12px;
-            margin-top: 16px;
-        }
-        
-        .skill {
-            padding: 12px;
-            flex-direction: column;
-            margin: 8px 0;
-        }
-        
-        /* Ukryj przyciski zmiany statusu na telefonach */
-        .level-buttons {
-            display: none !important;
-        }
-        
-        /* Pokazuj informację o podwójnym kliknięciu tylko na telefonach */
-        .skill-hint {
-            display: block;
-        }
-        
-        /* Dodatkowe style dla panelu logowania na telefonach */
-        #auth-container {
-            margin: 20px auto;
-            padding: 20px;
-        }
-        
-        #auth-container h2 {
-            font-size: 1.5rem;
-        }
+    select {
+        width: 100%;
+        padding: 14px;
+        margin-bottom: 12px;
     }
+    
+    .category {
+        padding: 12px;
+        margin-top: 16px;
+    }
+    
+    .skill {
+        padding: 12px;
+        flex-direction: column;
+        margin: 8px 0;
+    }
+    
+    /* Ukryj przyciski zmiany statusu na telefonach */
+    .level-buttons {
+        display: none !important;
+    }
+    
+    /* Dodatkowe informacje w miejsce przycisków */
+    .skill:after {
+        content: "Dotknij dwukrotnie, aby edytować (tylko admin)";
+        display: block;
+        font-size: 0.8rem;
+        margin-top: 8px;
+        opacity: 0.7;
+        font-style: italic;
+    }
+}
+
+/* Panel logowania - poprawiona wersja */
+#auth-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #1a1f40;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+#auth-container h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #ffffff;
+    font-size: 1.8rem;
+}
+
+#email, #password {
+    padding: 16px;
+    border: 1px solid #3a4080;
+    background: #151936;
+    color: #f3f5ff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+#email:focus, #password:focus {
+    outline: none;
+    border-color: #5c66cc;
+    box-shadow: 0 0 0 2px rgba(92, 102, 204, 0.2);
+}
+
+#loginBtn {
+    background: linear-gradient(to right, #214537, #2a6b53);
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    transition: transform 0.2s, background 0.3s;
+}
+
+#loginBtn:active {
+    transform: scale(0.98);
+}
+
+#registerBtn {
+    background: transparent;
+    color: #aab0d8;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #3a4080;
+    transition: background 0.3s;
+}
+
+#registerBtn:active {
+    background: rgba(58, 64, 128, 0.2);
+}
+
+/* Dodatkowe style dla lepszego wyglądu na telefonach */
+@media (max-width: 480px) {
+    #auth-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    
+    #auth-container h2 {
+        font-size: 1.5rem;
+    }
+}
   </style>
 </head>
 <body>
-  <div id="auth-container">
+  <div id="auth-container" style="max-width:400px; margin:100px auto;">
     <h2>Logowanie</h2>
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Hasło">
-    <button id="loginBtn">Zaloguj się</button>
-    <button id="registerBtn">Zarejestruj się</button>
+    <input id="email" type="email" placeholder="Email" style="width:100%; margin:10px 0; padding:10px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff;">
+    <input id="password" type="password" placeholder="Hasło" style="width:100%; margin:10px 0; padding:10px; border-radius:8px; border:1px solid #2a2f62; background:#151936; color:#f3f5ff;">
+    <button id="loginBtn" style="width:100%; padding:10px; border-radius:8px; background:#214537; color:white; border:none; cursor:pointer;">Zaloguj się</button>
+    <button id="registerBtn" style="width:100%; padding:10px; margin-top:10px; border-radius:8px; background:#2c315a; color:white; border:none; cursor:pointer;">Zarejestruj się</button>
   </div>
 
   <div id="app-container" style="display:none;">
     <h1>Panel Admina – Drzewko umiejętności</h1>
     
-    <div class="user-info">
-      <span id="userEmail"></span>
-      <span id="userRole" class="user-role"></span>
-      <div class="user-actions">
-        <button id="logoutBtn">Wyloguj</button>
-      </div>
+    <div style="float:right;">
+      <span id="userEmail" style="margin-right:15px;"></span>
+      <span id="userRole" style="margin-right:15px; padding: 5px 10px; background: #2a2f62; border-radius: 12px;"></span>
+      <button id="logoutBtn" style="padding:8px 12px; border-radius:8px; background:#ff4444; color:white; border:none; cursor:pointer;">Wyloguj</button>
     </div>
 
     <div id="adminPanel" class="admin-panel" style="display:none;">
       <h2>Panel Administratora</h2>
-      <label>Wybierz użytkownika:</label>
-      <select id="userSelect"></select>
-    </div>
+      <label>Wybierz użytkownika:
+        <select id="userSelect"></select>
+      </label>
+
+
 
     <div id="categories"></div>
   </div>
 
   <script type="module">
-    // Kod JavaScript z dodaną obsługą dwukrotnego kliknięcia
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -409,7 +240,6 @@
     let currentUserRole = null;
     let usersData = {};
     let selectedUserId = null;
-    let lastTap = 0; // Do obsługi podwójnego kliknięcia
 
     const TREE = [
       { id: "toprock", name: "Toprock", desc: "Podstawowe kroki wykonywane na stojąco.", skills: [
@@ -618,6 +448,10 @@
       }
     });
 
+
+      
+
+
     function renderCategories(){
       categoriesDiv.innerHTML = "";
       if(!selectedUserId || !usersData[selectedUserId]) return;
@@ -634,12 +468,9 @@
           const skillLevel = userSkills[skill.id] || 3; // Domyślnie poziom 3 (brak)
           
           skillDiv.className = `skill level${skillLevel}`;
-          skillDiv.dataset.skillId = skill.id;
-          
           skillDiv.innerHTML = `
             <div>${skill.name}</div>
             <div>${getLevelText(skillLevel)}</div>
-            <div class="skill-hint">Dotknij dwukrotnie, aby zmienić status</div>
           `;
           
           // Dodaj przyciski zmiany poziomu tylko dla administratora
@@ -647,11 +478,11 @@
             const levelButtons = document.createElement("div");
             levelButtons.className = "level-buttons";
             
-            levelButtons.innerHTML = `
-              <button class="level-btn level1-btn" data-skill="${skill.id}" data-level="1">Poziom 1</button>
-              <button class="level-btn level2-btn" data-skill="${skill.id}" data-level="2">Poziom 2</button>
-              <button class="level-btn level3-btn" data-skill="${skill.id}" data-level="3">Usuń postęp</button>
-            `;
+levelButtons.innerHTML = `
+  <button class="level-btn level1-btn" data-skill="${skill.id}" data-level="1">Poziom 1</button>
+  <button class="level-btn level2-btn" data-skill="${skill.id}" data-level="2">Poziom 2</button>
+  <button class="level-btn level3-btn" data-skill="${skill.id}" data-level="3">Usuń postęp</button>
+`;
             
             // Dodaj nasłuchiwanie zdarzeń dla przycisków
             levelButtons.querySelectorAll('.level-btn').forEach(btn => {
@@ -662,9 +493,6 @@
             });
             
             skillDiv.appendChild(levelButtons);
-            
-            // Dodaj obsługę dwukrotnego kliknięcia na telefonach
-            skillDiv.addEventListener('click', handleSkillTap);
           }
           
           catDiv.appendChild(skillDiv);
@@ -674,38 +502,14 @@
       });
     }
 
-    // Funkcja obsługująca podwójne kliknięcie/dotknięcie
-    function handleSkillTap(event) {
-      // Sprawdź, czy jesteśmy na urządzeniu mobilnym
-      const isMobile = window.matchMedia("(max-width: 767px)").matches;
-      
-      if (isMobile && currentUserRole === 'admin') {
-        const currentTime = new Date().getTime();
-        const tapLength = currentTime - lastTap;
-        
-        if (tapLength < 500 && tapLength > 0) {
-          // To jest podwójne kliknięcie - zmień poziom umiejętności
-          const skillId = event.currentTarget.dataset.skillId;
-          const userSkills = usersData[selectedUserId].skills || {};
-          const currentLevel = userSkills[skillId] || 3;
-          
-          // Zmiana poziomu (cyklicznie: 1 -> 2 -> 3 -> 1)
-          const newLevel = currentLevel === 1 ? 2 : currentLevel === 2 ? 3 : 1;
-          setSkillLevel(skillId, newLevel);
-        }
-        
-        lastTap = currentTime;
-      }
-    }
-
-    function getLevelText(level) {
-      switch(level) {
-        case 1: return "Poziom 1 (żółty)";
-        case 2: return "Poziom 2 (zielony)";
-        case 3: return "Brak postępu";
-        default: return "Nieokreślony";
-      }
-    }
+function getLevelText(level) {
+  switch(level) {
+    case 1: return "Poziom 1 (żółty)";
+    case 2: return "Poziom 2 (zielony)";
+    case 3: return "Usuń postęp";
+    default: return "Nieokreślony";
+  }
+}
 
     async function setSkillLevel(skillId, level) {
       if(!selectedUserId) return;
