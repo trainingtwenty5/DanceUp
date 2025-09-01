@@ -668,6 +668,8 @@ h1 {
     }
 
 // Funkcja do renderowania drzewka
+// Funkcja do renderowania drzewka
+// Funkcja do renderowania drzewka
 function renderSkillTree() {
   skillTree.innerHTML = '';
   
@@ -698,56 +700,75 @@ function renderSkillTree() {
     // Przycisk do zwijania/rozwijania gałęzi (tylko na urządzeniach mobilnych)
     if (window.innerWidth <= 768) {
       const toggleBtn = document.createElement('i');
-      toggleBtn.className = 'fas fa-eye toggle-branch';
+      toggleBtn.className = 'fas fa-eye-slash toggle-branch';
       toggleBtn.onclick = function() {
-        const branches = level.querySelectorAll('.branch');
-        branches.forEach(branch => branch.classList.toggle('collapsed'));
-        toggleBtn.classList.toggle('fa-eye');
-        toggleBtn.classList.toggle('fa-eye-slash');
-      };
+  const branches = level.querySelectorAll('.branch');
+  branches.forEach(branch => branch.classList.toggle('collapsed'));
+  toggleBtn.classList.toggle('fa-eye-slash');
+  toggleBtn.classList.toggle('fa-eye');
+};
       level.appendChild(toggleBtn);
     }
     
     // Renderuj gałęzie (lewa i prawa)
     category.branches.forEach(branch => {
       const branchDiv = document.createElement('div');
-      branchDiv.className = `branch branch-${branch.direction} ${window.innerWidth <= 768 ? 'collapsed' : ''}`;
+      branchDiv.className = `branch branch-${branch.direction}`;
       
       let totalSkillsInBranch = branch.skills.length;
       let unlockedSkillsInBranch = 0;
+      let hasVisibleSkills = false;
       
+      // Najpierw policz wszystkie umiejętności (w tym z filmem)
       branch.skills.forEach(skill => {
-  const userLevel = userSkills[skill.id] || 0; // 0 = zablokowane
-  const reqs = skill.req || [];
-  const unlocked = reqs.every(r => userSkills[r] && userSkills[r] < 3);
-  
-  const skillElement = document.createElement('div');
-  skillElement.className = `branch-skill level${userLevel}`;
-  
-  // TYLKO nazwa umiejętności - UKRYJ POZIOM
-  skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
-  
-  // Jeśli skill ma videoUrl, dodaj iframe
-  if (skill.videoUrl) {
-    const iframe = document.createElement('iframe');
-    iframe.src = skill.videoUrl;
-    iframe.allowFullscreen = true;
-    iframe.style.width = '100%';
-    iframe.style.height = '100px';
-    iframe.style.marginTop = '5px';
-    skillElement.appendChild(iframe);
-  }
-  
-  branchDiv.appendChild(skillElement);
-});
+        const userLevel = userSkills[skill.id] || 0;
+        
+        // Umiejętność jest odblokowana jeśli ma poziom 1 lub 2
+        if (userLevel === 1 || userLevel === 2) {
+          unlockedSkillsInBranch++;
+        }
+      });
       
-      // Dodaj licznik postępu dla gałęzi
-      const branchProgress = document.createElement('div');
-      branchProgress.className = 'branch-progress';
-      branchProgress.innerHTML = `<div class="progress-text">${unlockedSkillsInBranch}/${totalSkillsInBranch}</div>`;
-      branchDiv.appendChild(branchProgress);
+      // Teraz renderuj umiejętności
+      branch.skills.forEach(skill => {
+        const userLevel = userSkills[skill.id] || 0; // 0 = zablokowane
+        
+        // UKRYJ KAFELKI BEZ POZIOMU 1 ANI 2
+        if (userLevel !== 1 && userLevel !== 2) {
+          return; // Pomijamy renderowanie tego kafelka
+        }
+        
+        hasVisibleSkills = true;
+        
+        const skillElement = document.createElement('div');
+        skillElement.className = `branch-skill level${userLevel}`;
+        
+        // TYLKO nazwa umiejętności - UKRYJ POZIOM
+        skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
+        
+        // Jeśli skill ma videoUrl, dodaj iframe
+        if (skill.videoUrl) {
+          const iframe = document.createElement('iframe');
+          iframe.src = skill.videoUrl;
+          iframe.allowFullscreen = true;
+          iframe.style.width = '100%';
+          iframe.style.height = '100px';
+          iframe.style.marginTop = '5px';
+          skillElement.appendChild(iframe);
+        }
+        
+        branchDiv.appendChild(skillElement);
+      });
       
-      level.appendChild(branchDiv);
+      // Dodaj licznik postępu dla gałęzi tylko jeśli są widoczne umiejętności
+      if (hasVisibleSkills) {
+        const branchProgress = document.createElement('div');
+        branchProgress.className = 'branch-progress';
+        branchProgress.innerHTML = `<div class="progress-text">${unlockedSkillsInBranch}/${totalSkillsInBranch}</div>`;
+        branchDiv.appendChild(branchProgress);
+        
+        level.appendChild(branchDiv);
+      }
     });
     
     skillTree.appendChild(level);
