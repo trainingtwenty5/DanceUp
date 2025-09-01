@@ -11,13 +11,16 @@
   --bg: white;
   --panel: #151936;
   --text: #000000;
-  --accent: #7c9dff;
+  --accent: #ffffff;
   --accent-2: #6df0c2;
   --locked: #0215c0;
   --unlocked: rgb(0, 247, 255);
   --connector: rgb(0, 247, 255);
-  --level1: #4CAF50;
-  --level2: #FFD700;
+  --level1: #FFD700;  /* Żółty dla poziomu 1 */
+  --level2: #4CAF50;  /* Zielony dla poziomu 2 */
+  --level0: #4CAF50;  /* Czerwony dla zablokowanych (poziom 0) */
+
+  
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -28,7 +31,17 @@
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
   --transition: all 0.3s ease;
 }
+/* Style dla branch-skill */
+.branch-skill.level0 { background: var(--level0); }
+.branch-skill.level1 { background: var(--level1); }
+.branch-skill.level2 { background: var(--level2); }
+.branch-skill.level3 { background: var(--level3); }
 
+/* Style dla main-skill */
+.main-skill.level0 { background: var(--level0); }
+.main-skill.level1 { background: var(--level1); }
+.main-skill.level2 { background: var(--level2); }
+.main-skill.level3 { background: var(--level3); }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -51,8 +64,8 @@ header { text-align: center; margin-bottom: 30px; padding: 20px; }
   text-align: center;
   margin-top: 10px;
   font-size: 0.8rem;
-  color: var(--text);
-  background: rgba(0, 0, 0, 0.3);
+  color: rgb(255, 255, 255);/* --text = #000000 czyli czarny */
+  background: rgb(0, 0, 0); /* lekko przezroczysty ciemny pasek */
   padding: 4px 8px;
   border-radius: var(--radius-md);
 }
@@ -171,7 +184,7 @@ h1 {
 
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 3px; transition: width 0.5s ease; }
 
-.progress-text { font-size: 0.8rem; text-align: center; opacity: 0.8; }
+.progress-text { font-size: 0.8rem; text-align: center; opacity: 0.8; z-index: 100;}
 
 .logout-btn {
   padding: 8px;
@@ -704,31 +717,29 @@ function renderSkillTree() {
       let unlockedSkillsInBranch = 0;
       
       branch.skills.forEach(skill => {
-        const userLevel = userSkills[skill.id] || 3;
-        const reqs = skill.req || [];
-        const unlocked = reqs.every(r => userSkills[r] && userSkills[r] < 3);
-        
-        const skillElement = document.createElement('div');
-        skillElement.className = `branch-skill level${userLevel}`;
-        
-        // Zawsze wyświetl kafelek z nazwą
-        skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
-        
-        // Jeśli skill ma videoUrl, dodaj iframe
-        if (skill.videoUrl) {
-          const iframe = document.createElement('iframe');
-          iframe.src = skill.videoUrl;
-          iframe.allowFullscreen = true;
-          iframe.style.width = '100%';
-          iframe.style.height = '100px';
-          iframe.style.marginTop = '5px';
-          skillElement.appendChild(iframe);
-        }
-        
-        branchDiv.appendChild(skillElement);
-        
-        if (unlocked) unlockedSkillsInBranch++;
-      });
+  const userLevel = userSkills[skill.id] || 0; // 0 = zablokowane
+  const reqs = skill.req || [];
+  const unlocked = reqs.every(r => userSkills[r] && userSkills[r] < 3);
+  
+  const skillElement = document.createElement('div');
+  skillElement.className = `branch-skill level${userLevel}`;
+  
+  // TYLKO nazwa umiejętności - UKRYJ POZIOM
+  skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
+  
+  // Jeśli skill ma videoUrl, dodaj iframe
+  if (skill.videoUrl) {
+    const iframe = document.createElement('iframe');
+    iframe.src = skill.videoUrl;
+    iframe.allowFullscreen = true;
+    iframe.style.width = '100%';
+    iframe.style.height = '100px';
+    iframe.style.marginTop = '5px';
+    skillElement.appendChild(iframe);
+  }
+  
+  branchDiv.appendChild(skillElement);
+});
       
       // Dodaj licznik postępu dla gałęzi
       const branchProgress = document.createElement('div');
