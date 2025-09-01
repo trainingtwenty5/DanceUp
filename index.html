@@ -94,7 +94,7 @@ h1 {
   padding: 30px;
   background: var(--panel);
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.308);
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(10px);
 }
@@ -107,7 +107,7 @@ h1 {
   margin-bottom: 15px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgb(255, 255, 255);
   color: var(--text);
   font-size: 1rem;
   transition: var(--transition);
@@ -116,7 +116,7 @@ h1 {
 .auth-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(124, 157, 255, 0.3);
+  box-shadow: 0 0 0 2px rgb(255, 255, 255);
 }
 
 .auth-button {
@@ -188,8 +188,8 @@ h1 {
 
 .logout-btn {
   padding: 8px;
-  background: #ff6b6b;
-  color: white;
+  background: rgba(128, 17, 17, 0.322);
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -197,7 +197,7 @@ h1 {
   transition: var(--transition);
 }
 
-.logout-btn:hover { background: #ff5252; transform: translateY(-1px); }
+.logout-btn:hover { background: #000000ab;; transform: translateY(-1px); }
 
 /* Przyciski zwijania/rozwijania gałęzi na telefonach */
 .toggle-branch {
@@ -271,7 +271,24 @@ h1 {
 .skill-tree { position: relative; display: flex; flex-direction: column; align-items: center; padding: 2rem 0; }
 
 /* Centralna oś drzewka */
-.tree-axis { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--connector); border-radius: 3px; z-index: 1; }
+.tree-axis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--connector); /* seledynowy kolor z :root */
+  border-radius: 3px;
+  z-index: 9999; /* Zwiększ z-index aby oś była na wierzchu */
+  left: 50%;
+  transform: translateX(-50%) scale(1.25); /* Kompensuj skalowanie body */
+  pointer-events: none; /* Zapobiega zakłócaniu interakcji z elementami */
+}
+
+/* Usuń lub zmodyfikuj regułę, która chowa oś w widoku grywalizacji */
+.app-container.gamification-view .tree-axis {
+  display: block !important; /* Nadpisz ukrywanie osi */
+}
+
 
 /* Poziomy drzewka */
 .tree-level { position: relative; display: flex; justify-content: center; margin: 60px 0; z-index: 2; }
@@ -361,6 +378,31 @@ h1 {
 }
 
 
+/* Dodaj to do sekcji CSS */
+.app-container.gamification-view .tree-axis {
+  display: none;
+}
+
+.app-container.gamification-view .skill-tree {
+  display: none;
+}
+
+.app-container.gamification-view #gamification-section {
+  display: block;
+}
+
+.tree-axis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--connector); /* seledynowy kolor z :root */
+  border-radius: 3px;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 </style>
 
 
@@ -371,13 +413,13 @@ h1 {
 <body>
   <!-- Ekran logowania -->
   <div id="auth-container" class="auth-container">
-    <h2>Logowanie do Drzewka Umiejętności</h2>
+    <h2 style="color:white">Logowanie do Umiejętności Breaking</h2>
     <div id="login-form">
       <input type="email" id="login-email" class="auth-input" placeholder="Adres email">
       <input type="password" id="login-password" class="auth-input" placeholder="Hasło">
       <div id="login-error" class="error-message"></div>
-      <button id="login-btn" class="auth-button">Zaloguj się</button>
-      <div class="auth-switch" id="show-register">Nie masz konta? Zarejestruj się</div>
+      <button id="login-btn" style="color:black" class="auth-button">Zaloguj się</button>
+      <div class="auth-switch" style="color:white" id="show-register">Nie masz konta? Zarejestruj się</div>
     </div>
     
     <div id="register-form" style="display: none;">
@@ -385,8 +427,8 @@ h1 {
       <input type="email" id="register-email" class="auth-input" placeholder="Adres email">
       <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)">
       <div id="register-error" class="error-message"></div>
-      <button id="register-btn" class="auth-button">Zarejestruj się</button>
-      <div class="auth-switch" id="show-login">Masz już konto? Zaloguj się</div>
+      <button id="register-btn" class="auth-button" style="color:white">Zarejestruj się</button>
+      <div class="auth-switch" id="show-login" style="color:white">Masz już konto? Zaloguj się</div>
     </div>
   </div>
 
@@ -394,11 +436,12 @@ h1 {
   <div id="app-container" class="app-container">
     <div class="container">
       <header>
-        <h1>Drzewko Umiejętności Breaking</h1>
-        <p class="subtitle">Śledź swoje postępy w nauce breakdance</p>
+        <h1>Zdobyte umiejętności Breakingu</h1>
+        <p class="subtitle">Postępy w nauce breakdance</p>
       </header>
       
       <div class="skill-tree" id="skillTree">
+        <div class="tree-axis"></div>
         <!-- Drzewko będzie generowane dynamicznie -->
       </div>
     </div>
@@ -413,8 +456,14 @@ h1 {
       </div>
       <div class="progress-text" id="progressText">0/25 umiejętności</div>
       <button class="logout-btn" id="logoutBtn">Wyloguj</button>
+      <!-- W user-panel, pod logout-btn -->
+<button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
+
     </div>
   </div>
+
+
+
 
   <!-- Firebase SDK -->
   <script type="module">
@@ -448,6 +497,16 @@ h1 {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+
+        // Zmienne globalne
+    let userSkills = {};
+    let currentUserId = null;
+    let allUsers = [];
+    let isGamificationView = false;
+    let usersData = {};
+    let currentUserData = null;
+
 
     // Struktura drzewka umiejętności
     const SKILL_TREE = [
@@ -515,6 +574,8 @@ h1 {
           {
             direction: "right",
             skills: [
+              { id: "backspin", name: "Backspin", level: "Poziom 1" },
+              { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] },
               { id: "flare", name: "Flare", level: "Poziom 2", req: ["windmill"] },
               { id: "headspin", name: "Headspin", level: "Poziom 2", req: ["windmill"] },
               { id: "airflare", name: "Airflare", level: "Poziom 3", req: ["flare","headspin"] }
@@ -532,16 +593,16 @@ h1 {
             direction: "left",
             skills: [
               { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
-              { id: "musicality", name: "Muzykalność", level: "Poziom 2", req: ["rhythm"] }
+              { id: "musicality", name: "Muzykalność", level: "Poziom 2", req: ["rhythm"] },
+              { id: "transitions", name: "Płynne przejścia", level: "Poziom 2", req: ["musicality"] },
+              { id: "personal-style", name: "Własny styl", level: "Poziom 3", req: ["transitions"] }
             ]
           }
         ]
       }
     ];
 
-    // Zmienne globalne
-    let userSkills = {};
-    let currentUserId = null;
+
 
     // Referencje do elementów DOM
     const authContainer = document.getElementById('auth-container');
@@ -554,6 +615,8 @@ h1 {
     const userName = document.getElementById('userName');
     const logoutBtn = document.getElementById('logoutBtn');
     const skillTree = document.getElementById('skillTree');
+
+
 
     // Przełączanie między formularzami
     document.getElementById('show-register').addEventListener('click', () => {
@@ -623,49 +686,56 @@ h1 {
     });
 
     // Obserwuj stan autentykacji
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Użytkownik zalogowany
-        currentUserId = user.uid;
-        authContainer.style.display = 'none';
-        appContainer.style.display = 'block';
-        
-        // Pobierz dane użytkownika
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        let userData = userDoc.exists() ? userDoc.data() : {};
-        
-        // Ustaw informacje o użytkowniku
-        userAvatar.textContent = userData.name ? userData.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
-        userName.textContent = userData.name || user.email;
-        
-        // Załaduj umiejętności użytkownika
-        await loadUserSkills();
-        renderSkillTree();
-      } else {
-        // Użytkownik wylogowany
-        currentUserId = null;
-        authContainer.style.display = 'block';
-        appContainer.style.display = 'none';
-      }
-    });
+   // Obserwuj stan autentykacji
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // Użytkownik zalogowany
+    currentUserId = user.uid;
+    authContainer.style.display = 'none';
+    appContainer.style.display = 'block';
+    
+    // Pobierz dane użytkownika
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    currentUserData = userDoc.exists() ? userDoc.data() : {};
+    
+    // Ustaw informacje o użytkowniku
+    userAvatar.textContent = currentUserData.name ? currentUserData.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+    userName.textContent = currentUserData.name || user.email;
+    
+    // Załaduj umiejętności użytkownika
+    await loadUserSkills();
+    renderSkillTree();
+    
+    // Załaduj wszystkich użytkowników
+    await loadAllUsers();
+  } else {
+    // Użytkownik wylogowany
+    currentUserId = null;
+    currentUserData = null;
+    authContainer.style.display = 'block';
+    appContainer.style.display = 'none';
+  }
+});
 
     // Załaduj umiejętności użytkownika z Firestore
-    async function loadUserSkills() {
-      if (!currentUserId) return;
-      
-      try {
-        const userDoc = await getDoc(doc(db, "users", currentUserId));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          userSkills = userData.skills || {};
-        } else {
-          userSkills = {};
-        }
-      } catch (error) {
-        console.error("Błąd ładowania umiejętności:", error);
-        userSkills = {};
-      }
+// Załaduj umiejętności użytkownika z Firestore
+async function loadUserSkills() {
+  if (!currentUserId) return;
+  
+  try {
+    const userDoc = await getDoc(doc(db, "users", currentUserId));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      userSkills = userData.skills || {};
+      usersData[currentUserId] = userData; // Zapisz dane bieżącego użytkownika
+    } else {
+      userSkills = {};
     }
+  } catch (error) {
+    console.error("Błąd ładowania umiejętności:", error);
+    userSkills = {};
+  }
+}
 
 // Funkcja do renderowania drzewka
 // Funkcja do renderowania drzewka
@@ -674,9 +744,9 @@ function renderSkillTree() {
   skillTree.innerHTML = '';
   
   // Dodaj centralną oś
-  const axis = document.createElement('div');
-  axis.className = 'tree-axis';
-  skillTree.appendChild(axis);
+    //const axis = document.createElement('div');
+    //axis.className = 'tree-axis';
+    //skillTree.appendChild(axis);
   
   // Renderuj każdy poziom drzewka
   SKILL_TREE.forEach((category, index) => {
@@ -828,6 +898,168 @@ function renderSkillTree() {
     }
 
     
+
+
+// Funkcja do ładowania wszystkich użytkowników
+// Funkcja do ładowania wszystkich użytkowników
+async function loadAllUsers() {
+  try {
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    allUsers = [];
+    
+    usersSnapshot.forEach(doc => {
+      const userData = doc.data();
+      usersData[doc.id] = userData;
+      
+      // Wyklucz obecnego użytkownika i adminów
+      if (doc.id !== currentUserId && userData.role !== 'admin') {
+        allUsers.push({
+          id: doc.id,
+          ...userData
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Błąd ładowania użytkowników:", error);
+  }
+}
+
+// Funkcja do renderowania kafelków użytkowników
+function renderUsersGrid() {
+  const usersGrid = document.getElementById('users-grid');
+  usersGrid.innerHTML = '';
+  
+  allUsers.forEach(user => {
+    const userCard = document.createElement('div');
+    userCard.className = 'user-card';
+    userCard.style.cssText = `
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 2px solid #ddd;
+    `;
+    
+    userCard.innerHTML = `
+      <div style="font-size: 24px; margin-bottom: 10px;">${user.name?.charAt(0)?.toUpperCase() || 'U'}</div>
+      <h3 style="margin: 5px 0; color: #333;">${user.name || 'Użytkownik'}</h3>
+      <p style="color: #666; font-size: 12px;">${calculateProgress(user.skills || {})}% ukończonych</p>
+    `;
+    
+    userCard.addEventListener('click', () => {
+      viewUserSkills(user.id, user.name);
+    });
+    
+    userCard.addEventListener('mouseenter', () => {
+      userCard.style.transform = 'translateY(-5px)';
+      userCard.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+    });
+    
+    userCard.addEventListener('mouseleave', () => {
+      userCard.style.transform = 'translateY(0)';
+      userCard.style.boxShadow = 'none';
+    });
+    
+    usersGrid.appendChild(userCard);
+  });
+}
+
+// Funkcja obliczająca postęp
+function calculateProgress(skills) {
+  const totalSkills = SKILL_TREE.reduce((total, category) => {
+    return total + category.branches.reduce((branchTotal, branch) => {
+      return branchTotal + branch.skills.length;
+    }, 0) + 1;
+  }, 0);
+  
+  const unlockedSkills = Object.values(skills).filter(level => level === 1 || level === 2).length;
+  return Math.round((unlockedSkills / totalSkills) * 100);
+}
+
+// Funkcja do podglądu umiejętności innego użytkownika
+// Funkcja do podglądu umiejętności innego użytkownika
+async function viewUserSkills(userId, userName) {
+  try {
+    // Ukryj grywalizację i pokaż drzewko
+    document.getElementById('gamification-section').style.display = 'none';
+    document.getElementById('skillTree').style.display = 'block';
+    isGamificationView = false;
+    
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      userSkills = userDoc.data().skills || {};
+      document.getElementById('userName').textContent = `${userName} (podgląd)`;
+      renderSkillTree();
+      
+      // Dodaj przycisk powrotu (jeśli jeszcze nie istnieje)
+      let backButton = document.getElementById('backButton');
+      if (!backButton) {
+        backButton = document.createElement('button');
+        backButton.id = 'backButton';
+        backButton.textContent = 'Powrót do mojego widoku';
+        backButton.style.cssText = `
+          padding: 10px 15px;
+          background: #ff6b6b;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          margin: 10px 0;
+          width: 100%;
+        `;
+        
+        backButton.onclick = async () => {
+          await loadUserSkills();
+          document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+          renderSkillTree();
+          backButton.remove();
+        };
+        
+        const userPanel = document.querySelector('.user-panel');
+        userPanel.appendChild(backButton);
+      }
+    }
+  } catch (error) {
+    console.error("Błąd ładowania umiejętności użytkownika:", error);
+  }
+}
+
+
+
+
+// Obsługa przycisku Grywalizacja
+document.getElementById('gamificationBtn').addEventListener('click', async () => {
+  isGamificationView = !isGamificationView;
+  
+  if (isGamificationView) {
+    await loadAllUsers();
+    document.getElementById('gamification-section').style.display = 'block';
+    document.getElementById('skillTree').style.display = 'none';
+    
+    // Usuń przycisk powrotu jeśli istnieje
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+      backButton.remove();
+    }
+    
+    renderUsersGrid();
+  } else {
+    document.getElementById('gamification-section').style.display = 'none';
+    document.getElementById('skillTree').style.display = 'block';
+  }
+});
+
   </script>
+
+  <!-- W app-container, pod header ale przed skill-tree -->
+<div id="gamification-section" style="margin: 20px 0; display: none;">
+  <h2>Grywalizacja</h2>
+  <div id="users-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;"></div>
+</div>
+
+
+
 </body>
 </html>
