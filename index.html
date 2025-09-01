@@ -6,85 +6,72 @@
   <title>Drzewko Umiejętności Breaking</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-
 :root {
-  --bg: white;
-  --panel: #151936;
-  --text: #000000;
-  --accent: #ffffff;
-  --accent-2: #6df0c2;
-  --locked: #0215c0;
-  --unlocked: rgb(0, 247, 255);
-  --connector: rgb(0, 247, 255);
-  --level1: #FFD700;  /* Żółty dla poziomu 1 */
-  --level2: #4CAF50;  /* Zielony dla poziomu 2 */
-  --level0: #4CAF50;  /* Czerwony dla zablokowanych (poziom 0) */
+  /* Kolory bazowe */
+  --bg: #0d1117;               /* główne tło */
+  --panel: #161b22;            /* panele/kafelki */
+  --text: #e6edf3;             /* podstawowy tekst */
+  --muted: #8b949e;            /* tekst poboczny */
+  --accent: #00d4ff;           /* akcent główny */
+  --accent-2: #4df0b8;         /* akcent gradientowy */
+  --danger: #ff6b6b;
 
-  
+  /* Poziomy umiejętności */
+  --level0: #30363d;           /* zablokowane */
+  --level1: #f1c40f;           /* złoty */
+  --level2: #2ecc71;           /* zielony */
+  --level3: #9b59b6;           /* fioletowy */
 
+  /* Łączniki */
+  --connector: #00d4ff;
+
+  /* Style ogólne */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.35);
   --transition: all 0.3s ease;
 }
-/* Style dla branch-skill */
-.branch-skill.level0 { background: var(--level0); }
-.branch-skill.level1 { background: var(--level1); }
-.branch-skill.level2 { background: var(--level2); }
-.branch-skill.level3 { background: var(--level3); }
 
-/* Style dla main-skill */
-.main-skill.level0 { background: var(--level0); }
-.main-skill.level1 { background: var(--level1); }
-.main-skill.level2 { background: var(--level2); }
-.main-skill.level3 { background: var(--level3); }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   font-family: 'Inter', 'SF Pro Text', Roboto, Arial, sans-serif;
-  background: white;
+  background: var(--bg);
   color: var(--text);
-  overflow-x: hidden;
-  padding: 20px;
-  min-height: 100vh;
   line-height: 1.6;
-  transform: scale(0.8);
-  transform-origin: top center; /* zaczyna skalowanie od góry i środka ekranu */
+  padding: 20px;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transform: scale(0.85);
+  transform-origin: top center;
 }
 
+/* Kontenery */
 .container { max-width: 1400px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 30px; }
 
-header { text-align: center; margin-bottom: 30px; padding: 20px; }
-
-.branch-progress {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: rgb(255, 255, 255);/* --text = #000000 czyli czarny */
-  background: rgb(0, 0, 0); /* lekko przezroczysty ciemny pasek */
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-}
-
+/* Nagłówki */
 h1 {
   font-size: 2.5rem;
+  font-weight: 800;
   margin-bottom: 10px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 800;
 }
 
 .subtitle {
-  color: #8a90b0;
   font-size: 1.1rem;
-  max-width: 600px;
-  margin: 0 auto;
+  color: var(--muted);
 }
 
 /* Ekran logowania */
@@ -94,20 +81,18 @@ h1 {
   padding: 30px;
   background: var(--panel);
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.308);
   box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(10px);
 }
 
-.auth-container h2 { text-align: center; margin-bottom: 20px; font-weight: 700; }
+.auth-container h2 { text-align: center; margin-bottom: 20px; }
 
 .auth-input {
   width: 100%;
   padding: 12px 14px;
   margin-bottom: 15px;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgb(255, 255, 255);
+  border: 1px solid #30363d;
+  background: #0d1117;
   color: var(--text);
   font-size: 1rem;
   transition: var(--transition);
@@ -116,19 +101,18 @@ h1 {
 .auth-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgb(255, 255, 255);
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
 }
 
 .auth-button {
   width: 100%;
   padding: 12px;
-  border-radius: var(--radius-lg);
   border: none;
+  border-radius: var(--radius-lg);
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: var(--bg);
+  color: #000;
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 10px;
   transition: var(--transition);
 }
 
@@ -136,271 +120,174 @@ h1 {
 
 .auth-switch {
   text-align: center;
-  color: #000000;
   margin-top: 20px;
+  color: var(--muted);
   cursor: pointer;
   transition: var(--transition);
 }
-
 .auth-switch:hover { color: var(--accent); }
 
-.error-message { color: #ff6b6b; text-align: center; margin: 10px 0; font-size: 14px; }
+.error-message { color: var(--danger); text-align: center; font-size: 14px; }
 
 /* Panel użytkownika */
 .user-panel {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.301);
+  background: var(--panel);
   padding: 15px;
   border-radius: var(--radius-lg);
-  border: 1px solid rgb(0, 0, 0);
-  z-index: 10;
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-width: 200px;
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-md);
 }
 
 .user-info { display: flex; align-items: center; gap: 10px; }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #000;
 }
 
 .user-name { font-weight: 600; }
 
-.progress-bar { height: 6px; background: var(--locked); border-radius: 3px; overflow: hidden; }
-
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 3px; transition: width 0.5s ease; }
-
-.progress-text { font-size: 0.8rem; text-align: center; opacity: 0.8; z-index: 100;}
+.progress-bar {
+  height: 6px; background: #30363d;
+  border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.4s ease;
+}
+.progress-text { font-size: 0.8rem; color: var(--muted); text-align: center; }
 
 .logout-btn {
   padding: 8px;
-  background: rgba(128, 17, 17, 0.322);
-  color: rgb(0, 0, 0);
   border: none;
   border-radius: var(--radius-md);
-  cursor: pointer;
+  background: #21262d;
+  color: var(--text);
   font-weight: 600;
+  cursor: pointer;
   transition: var(--transition);
 }
-
-.logout-btn:hover { background: #000000ab;; transform: translateY(-1px); }
-
-/* Przyciski zwijania/rozwijania gałęzi na telefonach */
-.toggle-branch {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  font-size: 1.3rem;
-  color: var(--text);
-  cursor: pointer;
-  z-index: 10;
-}
-
-.level { position: relative; }
-
-/* Responsywność - ULEPSZONA */
-@media (max-width: 1200px) {
-  .branch-left { right: calc(50% + 80px); }
-  .branch-right { left: calc(50% + 80px); }
-  .branch::before { width: 80px; }
-  .branch-left::before { right: -80px; }
-  .branch-right::before { left: -80px; }
-}
-
-@media (max-width: 900px) {
-  .branch-left { right: calc(50% + 60px); }
-  .branch-right { left: calc(50% + 60px); }
-  .branch::before { width: 60px; }
-  .branch-left::before { right: -60px; }
-  .branch-right::before { left: -60px; }
-  .main-skill, .branch-skill { min-width: 130px; padding: 10px 14px; }
-  .skill-name { font-size: 0.9rem; }
-}
-
-@media (max-width: 768px) {
-  .tree-level { flex-direction: column; align-items: center; margin: 60px 0; gap: 30px; }
-  .branch {
-    position: static;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 20px;
-    width: 100%;
-  }
-  .branch::before, .branch-skill::before { display: none; }
-  .toggle-branch { display: block; }
-  .branch.collapsed { display: none; }
-  .user-panel { position: relative; top: unset; right: unset; margin: 0 auto 20px auto; width: 100%; max-width: 400px; }
-}
-
-@media (max-width: 640px) {
-  body { padding: 15px; }
-  .auth-container { margin: 50px auto; padding: 20px; }
-  h1 { font-size: 2rem; }
-  .main-skill, .branch-skill { min-width: 120px; padding: 10px 12px; }
-  .skill-name { font-size: 0.85rem; }
-  .skill-level { font-size: 0.75rem; }
-}
-
-@media (max-width: 480px) {
-  h1 { font-size: 1.8rem; }
-  .subtitle { font-size: 1rem; }
-  .main-skill, .branch-skill { min-width: 110px; padding: 8px 10px; }
-  .skill-name { font-size: 0.8rem; }
-}
-
-/* Główna aplikacja */
-.app-container { display: none; }
+.logout-btn:hover { background: #30363d; }
 
 /* Drzewko umiejętności */
-.skill-tree { position: relative; display: flex; flex-direction: column; align-items: center; padding: 2rem 0; }
-
-/* Centralna oś drzewka */
+.skill-tree {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0;
+}
 .tree-axis {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 0; bottom: 0;
   width: 3px;
-  background: var(--connector); /* seledynowy kolor z :root */
-  border-radius: 3px;
-  z-index: 9999; /* Zwiększ z-index aby oś była na wierzchu */
-  left: 50%;
-  transform: translateX(-50%) scale(1.25); /* Kompensuj skalowanie body */
-  pointer-events: none; /* Zapobiega zakłócaniu interakcji z elementami */
+  background: var(--connector);
+  left: 50%; transform: translateX(-50%);
 }
 
-/* Usuń lub zmodyfikuj regułę, która chowa oś w widoku grywalizacji */
-.app-container.gamification-view .tree-axis {
-  display: block !important; /* Nadpisz ukrywanie osi */
-}
-
-
-/* Poziomy drzewka */
-.tree-level { position: relative; display: flex; justify-content: center; margin: 60px 0; z-index: 2; }
-
-/* Główny skill na osi */
-.main-skill {
+.tree-level {
+  display: flex;
+  justify-content: center;
   position: relative;
+  margin: 60px 0;
+  gap: 30px;
+}
+
+/* Główne kafelki */
+.main-skill, .branch-skill {
   padding: 12px 16px;
-  border-radius: var(--radius-lg);
+  min-width: 130px;
   text-align: center;
-  min-width: 120px;
-  z-index: 3;
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  border: 1px solid #30363d;
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: var(--transition);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-.main-skill:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-
-
-
-/* Skill na gałęzi */
-.branch-skill {
-  position: relative;
-  padding: 12px 16px;
-  border-radius: var(--radius-lg);
-  min-width: 140px;
-  text-align: center;
-  cursor: pointer;
+.main-skill:hover, .branch-skill:hover {
+  transform: translateY(-3px);
   box-shadow: var(--shadow-md);
-  transition: var(--transition);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgb(0, 0, 0);
 }
 
-.branch-skill:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+/* Poziomy */
+.main-skill.level0, .branch-skill.level0 { background: var(--level0); }
+.main-skill.level1, .branch-skill.level1 { background: var(--level1); color: #000; }
+.main-skill.level2, .branch-skill.level2 { background: var(--level2); }
+.main-skill.level3, .branch-skill.level3 { background: var(--level3); }
 
-.branch-skill.level1 { background: var(--level1); }
-.branch-skill.level2 { background: var(--level2); }
-
-/* Gałęzie (lewa i prawa) - układ poziomy */
-.branch { position: absolute; top: 50%; display: flex; flex-direction: row; align-items: center; gap: 40px; transform: translateY(-50%); }
-.branch-left { right: calc(50% + 100px); flex-direction: row-reverse; align-items: center; }
-.branch-right { left: calc(50% + 100px); flex-direction: row; align-items: center; }
-.branch::before { content: ""; position: absolute; top: 50%; width: 100px; height: 2px; background: #000000; }
-.branch-left::before { right: -100px; }
-.branch-right::before { left: -100px; }
-
-/* Responsywność mobilna dodatkowa */
-@media (max-width: 768px) {
-  .branch { position: relative; top: auto; left: auto; right: auto; transform: none; flex-direction: row; align-items: center; gap: 20px; }
-  .branch-left, .branch-right { flex-direction: row; align-items: center; }
-  .branch::before { position: absolute; top: 50%; width: 60px; height: 2px; background: #000000; }
-  .branch-left::before { right: -60px; }
-  .branch-right::before { left: -60px; }
-  .branch-skill::before { top: 50%; left: -30px; width: 30px; height: 2px; }
+/* Łączniki */
+.branch {
+  display: flex; align-items: center;
+  gap: 30px; position: relative;
+}
+.branch::before {
+  content: ""; position: absolute; top: 50%;
+  width: 80px; height: 2px;
+  background: var(--connector);
 }
 
-
-/* Mini-kafelki z filmami */
+/* Mini-video */
 .branch-skill.mini-video {
-    min-width: 180px;
-    padding: 6px;
-    cursor: pointer;
-    border-radius: var(--radius-md);
-    border: 1px solid rgb(0, 0, 0);
-    background: rgba(255, 193, 7, 0.2); /* lekko żółty, pasujący do Poziomu 2 */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background: #21262d;
+  border: 1px solid #30363d;
+  padding: 6px;
+}
+.branch-skill.mini-video:hover { background: #2a2f3a; }
+
+/* Progress gałęzi */
+.branch-progress {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  background: #21262d;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  color: var(--muted);
 }
 
-.branch-skill.mini-video iframe {
-    width: 100%;
-    height: 200px;
-    border: none;
-    border-radius: 6px;
+/* Grywalizacja */
+.user-card {
+  background: var(--panel);
+  border: 1px solid #30363d;
+  border-radius: var(--radius-lg);
+  padding: 15px;
+  transition: var(--transition);
+}
+.user-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
-.branch-skill.mini-video:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+/* Responsywność */
+@media (max-width: 768px) {
+  .tree-level { flex-direction: column; }
+  .user-panel { position: relative; margin: 0 auto 20px; }
 }
 
 
-/* Dodaj to do sekcji CSS */
-.app-container.gamification-view .tree-axis {
-  display: none;
-}
 
-.app-container.gamification-view .skill-tree {
-  display: none;
-}
 
-.app-container.gamification-view #gamification-section {
-  display: block;
-}
 
-.tree-axis {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--connector); /* seledynowy kolor z :root */
-  border-radius: 3px;
-  z-index: 1;
-  left: 50%;
-  transform: translateX(-50%);
+
+.branch-skill.level0 {
+  color: #777;          /* szary kolor ikony */
+  font-size: 24px;      /* większa kłódka */
+}
+.branch-skill.level0 i {
+  margin: 0;            /* usuń odstępy */
+}
+.hidden {
+  display: none !important;
 }
 
 </style>
@@ -437,7 +324,9 @@ h1 {
     <div class="container">
       <header>
         <h1>Zdobyte umiejętności Breakingu</h1>
-        <p class="subtitle">Postępy w nauce breakdance</p>
+        <p style="text-align:center; color:#fff; margin-bottom:10px; font-weight:500;">
+          Kliknij w kategorię, aby zobaczyć zdobyte umiejętności
+        </p>
       </header>
       
       <div class="skill-tree" id="skillTree">
@@ -455,9 +344,11 @@ h1 {
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
       <div class="progress-text" id="progressText">0/25 umiejętności</div>
-      <button class="logout-btn" id="logoutBtn">Wyloguj</button>
       <!-- W user-panel, pod logout-btn -->
-<button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
+      <button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
+
+      <button class="logout-btn" id="logoutBtn">Wyloguj</button>
+
 
     </div>
   </div>
@@ -738,133 +629,139 @@ async function loadUserSkills() {
 }
 
 // Funkcja do renderowania drzewka
-// Funkcja do renderowania drzewka
-// Funkcja do renderowania drzewka
 function renderSkillTree() {
   skillTree.innerHTML = '';
-  
-  // Dodaj centralną oś
-    //const axis = document.createElement('div');
-    //axis.className = 'tree-axis';
-    //skillTree.appendChild(axis);
-  
-  // Renderuj każdy poziom drzewka
-  SKILL_TREE.forEach((category, index) => {
-    const level = document.createElement('div');
-    level.className = 'tree-level';
-    
-    // Dodaj łącznik (oprócz pierwszego poziomu)
-    if (index > 0) {
-      const connector = document.createElement('div');
-      connector.className = 'connector vertical-connector';
-      level.appendChild(connector);
-    }
-    
-    // Główna umiejętność kategorii
+
+  SKILL_TREE.forEach((category) => {
+    const levelContainer = document.createElement('div');
+    levelContainer.className = 'tree-level';
+
+    // --- KATEGORIA GŁÓWNA ---
     const mainSkill = document.createElement('div');
-    const mainSkillLevel = userSkills[category.id] || 3;
-    mainSkill.className = `main-skill level${mainSkillLevel}`;
+    mainSkill.className = 'main-skill';
     mainSkill.innerHTML = `<div class="skill-name">${category.name}</div>`;
-    level.appendChild(mainSkill);
-    
-    // Przycisk do zwijania/rozwijania gałęzi (tylko na urządzeniach mobilnych)
-    if (window.innerWidth <= 768) {
-      const toggleBtn = document.createElement('i');
-      toggleBtn.className = 'fas fa-eye-slash toggle-branch';
-      toggleBtn.onclick = function() {
-  const branches = level.querySelectorAll('.branch');
-  branches.forEach(branch => branch.classList.toggle('collapsed'));
-  toggleBtn.classList.toggle('fa-eye-slash');
-  toggleBtn.classList.toggle('fa-eye');
-};
-      level.appendChild(toggleBtn);
-    }
-    
-    // Renderuj gałęzie (lewa i prawa)
+
+    // --- NOWY STYL DLA KATEGORII ---
+    mainSkill.style.cssText = `
+      font-size: 20px;           /* większy napis */
+      font-weight: 700;
+      padding: 20px 24px;        /* większe kafelki */
+      border: 2px solid black;   
+      background: white;          /* białe tło */
+      color: black;               /* czarny tekst */
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    `;
+
+    levelContainer.appendChild(mainSkill);
+
+    // --- KONTAINER NA UMIEJĘTNOŚCI ---
+    const skillsContainer = document.createElement('div');
+    skillsContainer.className = 'skills-container hidden';
+    skillsContainer.style.display = 'flex';
+    skillsContainer.style.flexDirection = 'column';
+    skillsContainer.style.gap = '12px';
+    skillsContainer.style.marginTop = '12px';
+
+    let highestLevel = 0;
+
     category.branches.forEach(branch => {
-      const branchDiv = document.createElement('div');
-      branchDiv.className = `branch branch-${branch.direction}`;
-      
-      let totalSkillsInBranch = branch.skills.length;
-      let unlockedSkillsInBranch = 0;
-      let hasVisibleSkills = false;
-      
-      // Najpierw policz wszystkie umiejętności (w tym z filmem)
       branch.skills.forEach(skill => {
-        const userLevel = userSkills[skill.id] || 0;
-        
-        // Umiejętność jest odblokowana jeśli ma poziom 1 lub 2
+        let userLevel = userSkills[skill.id] || 0;
+
+        // Sprawdź wymagania: jeśli któryś z wymaganych skill.id nie został odblokowany, level = 0
+        if (skill.req && skill.req.some(reqId => !userSkills[reqId] || userSkills[reqId] === 0)) {
+          userLevel = 0;
+        }
+
+        // Aktualizuj najwyższy poziom kategorii (tylko dla poziomów 1-2)
         if (userLevel === 1 || userLevel === 2) {
-          unlockedSkillsInBranch++;
+          if (userLevel > highestLevel) highestLevel = userLevel;
         }
-      });
-      
-      // Teraz renderuj umiejętności
-      branch.skills.forEach(skill => {
-        const userLevel = userSkills[skill.id] || 0; // 0 = zablokowane
-        
-        // UKRYJ KAFELKI BEZ POZIOMU 1 ANI 2
-        if (userLevel !== 1 && userLevel !== 2) {
-          return; // Pomijamy renderowanie tego kafelka
-        }
-        
-        hasVisibleSkills = true;
-        
+
         const skillElement = document.createElement('div');
-        skillElement.className = `branch-skill level${userLevel}`;
-        
-        // TYLKO nazwa umiejętności - UKRYJ POZIOM
-        skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
-        
-        // Jeśli skill ma videoUrl, dodaj iframe
-        if (skill.videoUrl) {
-          const iframe = document.createElement('iframe');
-          iframe.src = skill.videoUrl;
-          iframe.allowFullscreen = true;
-          iframe.style.width = '100%';
-          iframe.style.height = '100px';
-          iframe.style.marginTop = '5px';
-          skillElement.appendChild(iframe);
+
+        // Jeśli poziom 0 lub 3 -> kłódka
+        if (userLevel === 0 || userLevel === 3) {
+          skillElement.className = 'branch-skill level0';
+          skillElement.innerHTML = `<i class="fas fa-lock"></i>`;
+          skillElement.style.display = "flex";
+          skillElement.style.alignItems = "center";
+          skillElement.style.justifyContent = "center";
+          skillElement.style.height = "60px";
+        } else {
+          // Odblokowane poziomy 1 i 2
+          skillElement.className = `branch-skill level${userLevel}`;
+          skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
+
+          // Ikona wideo jeśli jest
+          if (skill.videoUrl) {
+            const videoIcon = document.createElement('i');
+            videoIcon.className = 'fab fa-youtube';
+            videoIcon.style.position = 'absolute';
+            videoIcon.style.top = '8px';
+            videoIcon.style.right = '8px';
+            videoIcon.style.fontSize = '20px';
+            videoIcon.style.color = '#ff0000';
+            videoIcon.style.cursor = 'pointer';
+            videoIcon.title = 'Zobacz film';
+            videoIcon.addEventListener('click', (e) => {
+              e.stopPropagation();
+              window.open(skill.videoUrl, '_blank');
+            });
+            skillElement.appendChild(videoIcon);
+          }
         }
-        
-        branchDiv.appendChild(skillElement);
+
+        skillElement.style.position = 'relative';
+        skillElement.style.padding = '12px';
+        skillElement.style.borderRadius = '8px';
+        skillElement.style.fontWeight = '600';
+        skillElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15)';
+
+        skillsContainer.appendChild(skillElement);
       });
-      
-      // Dodaj licznik postępu dla gałęzi tylko jeśli są widoczne umiejętności
-      if (hasVisibleSkills) {
-        const branchProgress = document.createElement('div');
-        branchProgress.className = 'branch-progress';
-        branchProgress.innerHTML = `<div class="progress-text">${unlockedSkillsInBranch}/${totalSkillsInBranch}</div>`;
-        branchDiv.appendChild(branchProgress);
-        
-        level.appendChild(branchDiv);
-      }
     });
-    
-    skillTree.appendChild(level);
+
+    mainSkill.addEventListener('click', () => {
+      skillsContainer.classList.toggle('hidden');
+    });
+
+    levelContainer.appendChild(skillsContainer);
+    skillTree.appendChild(levelContainer);
   });
-  
-  // Aktualizuj postęp
+
   updateProgress();
 }
 
 
-    
-    // Aktualizuj pasek postępu
-    function updateProgress() {
-      const totalSkills = SKILL_TREE.reduce((total, category) => {
-        return total + category.branches.reduce((branchTotal, branch) => {
-          return branchTotal + branch.skills.length;
-        }, 0) + 1;
-      }, 0);
-      
-      const unlockedSkills = Object.values(userSkills).filter(level => level === 1 || level === 2).length;
-      const progressPercent = (unlockedSkills / totalSkills) * 100;
-      
-      document.getElementById('progressFill').style.width = `${progressPercent}%`;
-      document.getElementById('progressText').textContent = 
-        `${unlockedSkills}/${totalSkills} umiejętności`;
-    }
+
+// Aktualizuj pasek postępu (fioletowe ignorowane)
+function updateProgress() {
+  const totalSkills = SKILL_TREE.reduce((total, category) => {
+    const skillsInCategory = category.branches.reduce((branchTotal, branch) => {
+      // Liczymy tylko umiejętności poziomu 1 i 2
+      return branchTotal + branch.skills.filter(skill => skill.level !== "Poziom 3").length;
+    }, 0);
+    return total + skillsInCategory + 1; // +1 za kategorię
+  }, 0);
+
+  const unlockedSkills = Object.entries(userSkills)
+    .filter(([skillId, level]) => {
+      const skill = SKILL_TREE.flatMap(c => c.branches.flatMap(b => b.skills))
+                     .find(s => s.id === skillId);
+      return skill && skill.level !== "Poziom 3" && level > 0;
+    }).length;
+
+  const progressPercent = (unlockedSkills / totalSkills) * 100;
+
+  document.getElementById('progressFill').style.width = `${progressPercent}%`;
+  document.getElementById('progressText').textContent = `${unlockedSkills}/${totalSkills} umiejętności`;
+}
+
+
     
     // Funkcja do tłumaczenia kodów błędów Firebase
     function getAuthErrorMessage(errorCode) {
@@ -928,55 +825,97 @@ async function loadAllUsers() {
 function renderUsersGrid() {
   const usersGrid = document.getElementById('users-grid');
   usersGrid.innerHTML = '';
-  
+
   allUsers.forEach(user => {
     const userCard = document.createElement('div');
     userCard.className = 'user-card';
     userCard.style.cssText = `
-      background: #f5f5f5;
+      background: #161b22;
       padding: 15px;
       border-radius: 12px;
-      text-align: center;
+      text-align: left;
       cursor: pointer;
       transition: transform 0.2s;
-      border: 2px solid #ddd;
+      border: 1px solid #30363d;
+      color: #e6edf3;
     `;
-    
+
+    const userSkillsData = user.skills || {};
+
+    // Całkowity procent
+    const totalPercent = calculateProgress(userSkillsData);
+
+    // Procent dla każdej dziedziny
+    const categoryPercents = SKILL_TREE.map(category => {
+      const skillsInCategory = category.branches.flatMap(b => b.skills);
+      const unlockedCount = skillsInCategory.filter(skill => {
+        const level = userSkillsData[skill.id] || 0;
+        return level === 1 || level === 2; // tylko poziomy odblokowane
+      }).length;
+      return {
+        name: category.name,
+        percent: Math.round((unlockedCount / skillsInCategory.length) * 100)
+      };
+    });
+
+    // Tworzenie HTML kategorii z wyróżnieniem
+    let categoryHTML = '';
+    categoryPercents.forEach(cat => {
+      categoryHTML += `
+        <div style="
+          font-size: 14px; 
+          font-weight: 700; 
+          color: #ffffff; 
+          background: #30363d; 
+          padding: 6px 8px; 
+          margin-bottom: 4px; 
+          border-radius: 8px;
+        ">
+          ${cat.name}: ${cat.percent}%
+        </div>
+      `;
+    });
+
     userCard.innerHTML = `
-      <div style="font-size: 24px; margin-bottom: 10px;">${user.name?.charAt(0)?.toUpperCase() || 'U'}</div>
-      <h3 style="margin: 5px 0; color: #333;">${user.name || 'Użytkownik'}</h3>
-      <p style="color: #666; font-size: 12px;">${calculateProgress(user.skills || {})}% ukończonych</p>
+      <h3 style="margin: 5px 0; color: #00d4ff;">${user.name || 'Użytkownik'}</h3>
+      <div style="font-size: 14px; margin-bottom: 8px;">Całkowity postęp: ${totalPercent}%</div>
+      ${categoryHTML}
     `;
-    
-    userCard.addEventListener('click', () => {
-      viewUserSkills(user.id, user.name);
-    });
-    
-    userCard.addEventListener('mouseenter', () => {
-      userCard.style.transform = 'translateY(-5px)';
-      userCard.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
-    });
-    
-    userCard.addEventListener('mouseleave', () => {
-      userCard.style.transform = 'translateY(0)';
-      userCard.style.boxShadow = 'none';
-    });
-    
+
+    usersCardEvents(userCard, user.id, user.name);
+
     usersGrid.appendChild(userCard);
   });
 }
 
-// Funkcja obliczająca postęp
+// Funkcja do obsługi kliknięcia i efektów hover
+function usersCardEvents(card, userId, userName) {
+  card.addEventListener('click', () => {
+    viewUserSkills(userId, userName);
+  });
+
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-5px)';
+    card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(0)';
+    card.style.boxShadow = 'none';
+  });
+}
+
+// Funkcja do obliczenia całkowitego postępu
 function calculateProgress(skills) {
   const totalSkills = SKILL_TREE.reduce((total, category) => {
-    return total + category.branches.reduce((branchTotal, branch) => {
-      return branchTotal + branch.skills.length;
-    }, 0) + 1;
+    const count = category.branches.flatMap(b => b.skills).length;
+    return total + count;
   }, 0);
-  
+
   const unlockedSkills = Object.values(skills).filter(level => level === 1 || level === 2).length;
   return Math.round((unlockedSkills / totalSkills) * 100);
 }
+
 
 // Funkcja do podglądu umiejętności innego użytkownika
 // Funkcja do podglądu umiejętności innego użytkownika
@@ -1029,27 +968,57 @@ async function viewUserSkills(userId, userName) {
 
 
 
-// Obsługa przycisku Grywalizacja
 document.getElementById('gamificationBtn').addEventListener('click', async () => {
-  isGamificationView = !isGamificationView;
-  
-  if (isGamificationView) {
+  if (!isGamificationView) { // jeśli nie jesteśmy jeszcze w widoku grywalizacji
+    isGamificationView = true;
     await loadAllUsers();
+    
     document.getElementById('gamification-section').style.display = 'block';
     document.getElementById('skillTree').style.display = 'none';
-    
-    // Usuń przycisk powrotu jeśli istnieje
-    const backButton = document.getElementById('backButton');
-    if (backButton) {
+
+    // Usuń istniejący przycisk powrotu, jeśli jest
+    const oldBackButton = document.getElementById('backButton');
+    if (oldBackButton) oldBackButton.remove();
+
+    // Dodaj przycisk powrotu
+    // Dodaj przycisk powrotu
+    const backButton = document.createElement('button');
+    backButton.id = 'backButton';
+    backButton.textContent = 'Powrót do moich umiejętności';
+    backButton.style.cssText = `
+      padding: 10px 15px;
+      background: white;
+      color: black;
+      border: 2px solid black;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px 0;
+      width: 100%;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    `;
+    backButton.onmouseenter = () => {
+      backButton.style.background = '#f0f0f0';
+    };
+    backButton.onmouseleave = () => {
+      backButton.style.background = 'white';
+    };
+    backButton.onclick = async () => {
+      await loadUserSkills(); // załaduj własne umiejętności
+      document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+      renderSkillTree();
+      document.getElementById('gamification-section').style.display = 'none';
+      document.getElementById('skillTree').style.display = 'block';
       backButton.remove();
-    }
-    
+      isGamificationView = false;
+    };
+
+    document.querySelector('.user-panel').appendChild(backButton);
+
     renderUsersGrid();
-  } else {
-    document.getElementById('gamification-section').style.display = 'none';
-    document.getElementById('skillTree').style.display = 'block';
   }
 });
+
 
   </script>
 
