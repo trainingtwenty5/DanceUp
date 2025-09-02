@@ -121,19 +121,19 @@ h1 {
 /* Panel użytkownika */
 .user-panel {
   position: fixed;
-  top: 80px;
+  top: 160px;   /* zamiast top: 80px */
   right: 20px;
-  background: var(--panel);
+ 
   padding: 15px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-width: 200px;
   z-index: 1000;
-  color: #ffffff; 
+  color: #000000; 
 }
+
 
 /* Styl na telefon */
 @media (max-width: 768px) {
@@ -141,9 +141,9 @@ h1 {
     position: relative;         /* żeby nie przyklejało do rogu */
     top: auto;
     right: auto;
-    margin: 20px auto;          /* wyśrodkowanie */
+    margin: 60px 60px;          /* wyśrodkowanie */
     width: 100%;
-    max-width: 400px;           /* panel nie większy niż 400px */
+    max-width: 320px;           /* panel nie większy niż 400px */
     display: flex;
     flex-direction: column;
     align-items: center;        /* wyśrodkowanie zawartości */
@@ -195,6 +195,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   padding: 2rem 0;
+  top:5%;
 }
 .tree-axis {
   position: absolute;
@@ -208,7 +209,7 @@ h1 {
   display: flex;
   justify-content: center;
   position: relative;
-  margin: 60px 0;
+  margin: 15px 0;
   gap: 30px;
   flex-direction: column-reverse; /* Odwrócona kolejność - kategorie na górze */
 }
@@ -224,6 +225,7 @@ h1 {
 @media (max-width: 768px) {
   .tree-level {
     flex-direction: column; /* 🔹 elementy jeden pod drugim */
+    top:20%px;
   }
 
   .skills-container {
@@ -242,22 +244,122 @@ h1 {
 }
 
 
-/* Główne kafelki */
-.main-skill, .branch-skill {
-  padding: 12px 16px;
-  min-width: 130px;
-  text-align: center;
-  border-radius: var(--radius-lg);
-  background: var(--panel);
-  border: 1px solid #30363d;
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  transition: var(--transition);
+/* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
+/* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
+
+/* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
+.main-skill {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  padding: 22px 26px !important;
+  border: 2px solid black !important;
+  background: white !important;
+  color: black !important;
+  border-radius: 12px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  min-width: 200px !important;
+  min-height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
 }
-.main-skill:hover, .branch-skill:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+
+/* STANDARDOWY STYL DLA WSZYSTKICH POZIOMÓW - ZAWSZE TAKI SAM ROZMIAR */
+.main-skill.level0, .branch-skill.level0, 
+.main-skill.level1, .branch-skill.level1, 
+.main-skill.level2, .branch-skill.level2, 
+.main-skill.level3, .branch-skill.level3 {
+  padding: 16px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
+  min-width: 160px !important;
+  min-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  font-size: 16px !important;
 }
+
+/* KOLORY DLA POSZCZEGÓLNYCH POZIOMÓW */
+.main-skill.level0, .branch-skill.level0 { 
+  background: var(--level0) !important; 
+}
+.main-skill.level1, .branch-skill.level1 { 
+  background: var(--level1) !important; 
+  color: #000 !important; 
+}
+.main-skill.level2, .branch-skill.level2 { 
+  background: var(--level2) !important; 
+}
+.main-skill.level3, .branch-skill.level3 { 
+  background: var(--level3) !important; 
+}
+
+/* SPECJALNY STYL DLA KŁÓDEK (LEVEL0) */
+.branch-skill.level0 {
+  color: #777 !important;
+  font-size: 28px !important;
+}
+.branch-skill.level0 i {
+  margin: 0 !important;
+}
+
+/* STYL DLA IKONY YOUTUBE - WYRÓWNANA Z TEKSTEM */
+.branch-skill .fab.fa-youtube {
+  position: absolute !important;
+  top: 50% !important;
+  right: 10px !important;
+  transform: translateY(-50%) !important;
+  font-size: 20px !important;
+  color: #ff0000 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+}
+
+/* Efekt hover dla kategorii */
+.main-skill:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Responsywność - na mniejszych ekranach */
+@media (max-width: 768px) {
+  .main-skill {
+    font-size: 20px !important;
+    padding: 18px 22px !important;
+    min-width: 180px !important;
+    min-height: 70px !important;
+  }
+  
+  .main-skill.level0, .branch-skill.level0, 
+  .main-skill.level1, .branch-skill.level1, 
+  .main-skill.level2, .branch-skill.level2, 
+  .main-skill.level3, .branch-skill.level3 {
+    min-width: 140px !important;
+    min-height: 55px !important;
+    font-size: 15px !important;
+    padding: 14px !important;
+  }
+  
+  .branch-skill.level0 {
+    font-size: 24px !important;
+  }
+  
+  .branch-skill .fab.fa-youtube {
+    font-size: 18px !important;
+    right: 8px !important;
+  }
+}
+
+
+
 
 /* Poziomy */
 .main-skill.level0, .branch-skill.level0 { background: var(--level0); }
@@ -1152,7 +1254,87 @@ h1 {
     animation-delay: 0.6s;
   }
 
-  
+  /* Sub-navbar */
+.sub-navbar {
+  position: fixed;
+  top: 60px; /* pod głównym headerem */
+  left: 0;
+  width: 100%;
+  background: #f9fafb;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
+  z-index: 999;
+  padding: 0.75rem 0;
+}
+
+.sub-navbar-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sub-navbar .user-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--darker);
+}
+
+.sub-navbar .progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  width: 200px;
+}
+
+.sub-navbar .progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sub-navbar .progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: width 0.4s ease;
+}
+
+.sub-navbar .progress-text {
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+/* Na telefonach */
+@media (max-width: 768px) {
+  .sub-navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .sub-navbar .progress-wrapper {
+    width: 100%;
+    align-items: flex-start;
+  }
+}
+.sub-navbar-actions .nav-link {
+  color: var(--dark);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  background: #e5e7eb;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.sub-navbar-actions .nav-link:hover {
+  background: #d1d5db;
+  color: var(--darker);
+}
 </style>
 
 
@@ -1162,19 +1344,20 @@ h1 {
 <!-- Header -->
 <header>
   <div class="container header-container">
-    <a href="/" class="logo">
-      <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Training 25">
-      <span>Zdobyte umiejętności Breakingu</span>
+    <a href="#" class="logo">
+      <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo">
+      <span>Breakingu</span>
     </a>
     
     <nav class="nav-menu">
-      <a href="/" class="nav-link">Home</a>
-      <a href="#price" class="nav-link">Get Started</a>
-      <a href="#features" class="nav-link">Features</a>
+    
+      <a id="gamificationBtn" class="nav-link">Grywalizacja</a> 
+      <a href="https://test.glovesmaker.pl/admin" class="nav-link">Admin</a>
       <a href="#course" class="nav-link">Course</a>
       <a href="#instructor" class="nav-link">Instructor</a>
-      <a href="#faq" class="nav-link">FAQ</a>
+      
       <a href="#contact" class="nav-link">Contact</a>
+      <a id="logoutBtn" class="nav-link">Wyloguj</a>
     </nav>
     
     <button class="mobile-menu-btn">
@@ -1216,15 +1399,40 @@ h1 {
 
     <div class="container">
 
-   
+   <br>   <br>   <br>   <br>    <br>
       <div class="skill-tree" id="skillTree">
    
         <div class="tree-axis"></div>
      
       </div>
 
+
+<div class="sub-navbar">
+  <div class="sub-navbar-container">
+    <div class="user-info">
+      <div class="user-avatar" id="userAvatar">U</div>
+      <div class="user-name" id="userName">Użytkownik</div>
+    </div>
+    <div class="progress-wrapper">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">0/25 umiejętności</div>
+    </div>
+    <div class="sub-navbar-actions">
+      <a href="#" id="backToMySkillsNav" class="nav-link" style="display:none; margin-right: 10px;">Powrót do moich umiejętności</a>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
   <!-- W app-container, pod header ale przed skill-tree -->
-  <div id="gamification-section" style="margin: 20px 0; display: none;">
+  <div id="gamification-section" style="margin: 170px 0; display: none;">
     <h2>Grywalizacja</h2>
     <div id="users-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;"></div>
   </div>
@@ -1232,7 +1440,7 @@ h1 {
     </div>
     
     <div class="user-panel">
-      <div class="user-info">
+      <!-- <div class="user-info">
         <div class="user-avatar" id="userAvatar">U</div>
         <div class="user-name" id="userName">Użytkownik</div>
       </div>
@@ -1240,10 +1448,10 @@ h1 {
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
       <div class="progress-text" id="progressText">0/25 umiejętności</div>
-      <!-- W user-panel, pod logout-btn -->
+   
       <button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
 
-      <button class="logout-btn" id="logoutBtn">Wyloguj</button>
+      <button class="logout-btn" id="logoutBtn">Wyloguj</button>-->
 
 
     </div>
@@ -1589,7 +1797,7 @@ function renderSkillTree() {
           skillElement.style.display = "flex";
           skillElement.style.alignItems = "center";
           skillElement.style.justifyContent = "center";
-          skillElement.style.height = "60px";
+          skillElement.style.height = "45px";
         } else {
           // Odblokowane poziomy 1 i 2
           skillElement.className = `branch-skill level${userLevel}`;
@@ -1762,8 +1970,8 @@ function renderUsersGrid() {
     categoryPercents.forEach(cat => {
       categoryHTML += `
         <div style="
-          font-size: 14px; 
-          font-weight: 700; 
+          font-size: 12px; 
+          font-weight: 200; 
           color: #ffffff; 
           background: #30363d; 
           padding: 6px 8px; 
@@ -1776,7 +1984,7 @@ function renderUsersGrid() {
     });
 
     userCard.innerHTML = `
-      <h3 style="margin: 5px 0; color: #00d4ff;">${user.name || 'Użytkownik'}</h3>
+      <h1 style="margin: 5px 0; color: #00d4ff; font-size:18px;">${user.name || 'Użytkownik'}</h1>
       <div style="font-size: 14px; margin-bottom: 8px;">Całkowity postęp: ${totalPercent}%</div>
       ${categoryHTML}
     `;
@@ -1823,6 +2031,7 @@ async function viewUserSkills(userId, userName) {
     // Ukryj grywalizację i pokaż drzewko
     document.getElementById('gamification-section').style.display = 'none';
     document.getElementById('skillTree').style.display = 'block';
+  document.getElementById('backToMySkillsNav').style.display = 'none';
     isGamificationView = false;
     
     const userDoc = await getDoc(doc(db, "users", userId));
@@ -1864,7 +2073,21 @@ async function viewUserSkills(userId, userName) {
   }
 }
 
-
+document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
+  e.preventDefault();
+  // Ta sama logika co w backButton.onclick
+  await loadUserSkills();
+  document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+  renderSkillTree();
+  document.getElementById('gamification-section').style.display = 'none';
+  document.getElementById('skillTree').style.display = 'block';
+  // Ukryj przycisk w panelu użytkownika jeśli istnieje
+  const backButton = document.getElementById('backButton');
+  if (backButton) backButton.remove();
+  isGamificationView = false;
+  // Ukryj link w navbarze
+  document.getElementById('backToMySkillsNav').style.display = 'none';
+});
 
 
 document.getElementById('gamificationBtn').addEventListener('click', async () => {
@@ -1930,13 +2153,13 @@ document.getElementById('gamificationBtn').addEventListener('click', async () =>
       <div class="footer-about">
         <a href="/" class="footer-logo">
           <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="logo">
-          <span>xxxx</span>
+          <h1 style="font-size: 20px;">XXX</h1>
         </a>
         <p>test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test</p>
       </div>
       
       <div class="footer-links">
-        <h3>Quick Links</h3>
+        <h1 style="font-size: 20px;">Quick Links</h1>
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="#features">Features</a></li>
@@ -1947,7 +2170,7 @@ document.getElementById('gamificationBtn').addEventListener('click', async () =>
       </div>
       
       <div class="footer-contact">
-        <h3>Contact Us</h3>
+        <h1 style="font-size: 20px;">Contact Us</h1>
         <p><i class="fas fa-envelope"></i> xxx@xx.pl</p>
         <p><i class="fas fa-map-marker-alt"></i> xxx 7, 57-372 Wrocław, Poland</p>
       </div>
@@ -2006,6 +2229,41 @@ document.getElementById('gamificationBtn').addEventListener('click', async () =>
       }
     });
   });
+
+
+
+
+
+  // Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    const targetId = this.getAttribute('href');
+    if (targetId === '#') return;
+    
+    // Jeśli użytkownik nie jest zalogowany, przekieruj do logowania
+    if (!currentUserId && targetId !== '#') {
+      authContainer.style.display = 'block';
+      appContainer.style.display = 'none';
+      return;
+    }
+    
+    const targetElement = document.querySelector(targetId);
+    if (targetElement) {
+      window.scrollTo({
+        top: targetElement.offsetTop - 80,
+        behavior: 'smooth'
+      });
+      
+      // Close mobile menu if open
+      if (navMenu.classList.contains('active')) {
+        navMenu.classList.remove('active');
+        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+      }
+    }
+  });
+});
 </script>
 </body>
 </html>
