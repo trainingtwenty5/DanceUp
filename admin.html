@@ -5,124 +5,310 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panel Admina – Drzewko umiejętności</title>
   <style>
+    :root {
+      --bg-primary: #0f1220;
+      --bg-secondary: #151936;
+      --bg-tertiary: #1a1f40;
+      --accent-primary: #214537;
+      --accent-secondary: #2a6b53;
+      --accent-tertiary: #3a4080;
+      --text-primary: #f3f5ff;
+      --text-secondary: #aab0d8;
+      --border-color: #2a2f62;
+      --success: #37765b;
+      --warning: #b89b35;
+      --info: #2b315f;
+      --error: #ff4444;
+    }
+    
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    
     body { 
-      font-family: Inter, sans-serif; 
-      background:#0f1220; 
-      color:#f3f5ff; 
-      margin:0; 
-      padding:20px; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: var(--bg-primary); 
+      color: var(--text-primary); 
+      margin: 0; 
+      padding: 20px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    h1, h2, h3 {
+      font-weight: 600;
+      margin-top: 0;
     }
     
     h1 { 
-      margin-bottom:20px; 
+      margin-bottom: 20px; 
+      font-size: 2rem;
+      text-align: center;
     }
     
-    input, button { 
-      padding:10px 12px; 
-      border-radius:8px; 
-      border:1px solid #2a2f62; 
-      background:#151936; 
-      color:#f3f5ff; 
-      margin-bottom:10px; 
-      width:100%; 
+    input, button, select { 
+      padding: 12px 16px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
+      background: var(--bg-secondary); 
+      color: var(--text-primary); 
+      margin-bottom: 12px; 
+      width: 100%; 
+      font-size: 16px;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #5c66cc;
+      box-shadow: 0 0 0 2px rgba(92, 102, 204, 0.2);
     }
     
     button { 
-      cursor:pointer; 
-      border:none; 
+      cursor: pointer; 
+      border: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     #loginBtn { 
-      background:#214537; 
-      color:white; 
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary)); 
+      color: white; 
+    }
+    
+    #registerBtn {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    
+    #registerBtn:hover {
+      background: rgba(58, 64, 128, 0.2);
     }
     
     .admin-panel { 
       margin: 20px 0; 
-      padding: 15px; 
-      background: #1a1f40; 
-      border-radius: 8px; 
+      padding: 20px; 
+      background: var(--bg-tertiary); 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     
     select { 
-      padding:8px 12px; 
-      border-radius:8px; 
-      border:1px solid #2a2f62; 
-      background:#151936; 
-      color:#f3f5ff; 
-      margin-right:10px; 
+      padding: 10px 12px; 
+      margin-right: 10px; 
+      cursor: pointer;
     }
     
     .category { 
-      margin-top:20px; 
-      padding:16px; 
-      border-radius:12px; 
-      background:#151936; 
-      border:1px solid #2a2f62; 
+      margin-top: 24px; 
+      padding: 20px; 
+      border-radius: 12px; 
+      background: var(--bg-secondary); 
+      border: 1px solid var(--border-color); 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category h2 {
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .category p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
     }
     
     .skill { 
-      padding:8px 12px; 
-      border-radius:8px; 
-      margin:6px 0; 
-      display:flex; 
-      justify-content:space-between; 
+      padding: 12px 16px; 
+      border-radius: 8px; 
+      margin: 8px 0; 
+      display: flex; 
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
     }
     
-    .skill.level1 { background:#5e4d0e; border:1px solid #b89b35; color:#f8f0d0; }
-    .skill.level2 { background:#214537; border:1px solid #37765b; color:#dff8ef; }
-    .skill.level3 { background:#2c315a; border:1px solid #2b315f; color:#aab0d8; }
+    .skill:hover {
+      transform: translateX(4px);
+    }
+    
+    .skill.level1 { background: rgba(94, 77, 14, 0.3); border: 1px solid var(--warning); color: #f8f0d0; }
+    .skill.level2 { background: rgba(33, 69, 55, 0.3); border: 1px solid var(--success); color: #dff8ef; }
+    .skill.level3 { background: rgba(44, 49, 90, 0.3); border: 1px solid var(--info); color: #aab0d8; }
     
     .level-buttons { 
       display: flex; 
       gap: 10px; 
-      margin-top: 5px; 
+      margin-top: 8px; 
     }
     
     .level-btn { 
-      padding: 5px 10px; 
-      border-radius: 5px; 
-      cursor:pointer; 
+      padding: 8px 12px; 
+      border-radius: 6px; 
+      cursor: pointer; 
       border: none;
       font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
     }
     
-    .level1-btn { background:#b89b35; color:#000; }
-    .level2-btn { background:#37765b; color:#fff; }
-    .level3-btn { background:#2b315f; color:#fff; }
+    .level-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .level1-btn { background: var(--warning); color: #000; }
+    .level2-btn { background: var(--success); color: #fff; }
+    .level3-btn { background: var(--info); color: #fff; }
+    
+    /* Panel logowania */
+    #auth-container {
+      max-width: 440px;
+      margin: 60px auto;
+      padding: 32px;
+      background: var(--bg-tertiary);
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    #auth-container h2 {
+      text-align: center;
+      margin-bottom: 28px;
+      color: var(--text-primary);
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    #email, #password {
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    #email:focus, #password:focus {
+      outline: none;
+      border-color: #5c66cc;
+      box-shadow: 0 0 0 3px rgba(92, 102, 204, 0.2);
+    }
+
+    #loginBtn {
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      padding: 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    #loginBtn:hover {
+      background: linear-gradient(to right, #2a5743, #327a5d);
+      box-shadow: 0 4px 12px rgba(33, 69, 55, 0.4);
+    }
+
+    #registerBtn {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    #registerBtn:hover {
+      background: rgba(58, 64, 128, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* User info section */
+    .user-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    #userEmail {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .user-role {
+      padding: 8px 16px;
+      background: var(--accent-tertiary);
+      border-radius: 20px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    #logoutBtn {
+      background: var(--error);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      width: auto;
+      margin: 0;
+    }
+    
+    #logoutBtn:hover {
+      background: #ff3333;
+      box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+    }
     
     /* Responsywność dla telefonów */
     @media (max-width: 767px) {
       body {
-        padding: 12px;
+        padding: 16px;
       }
       
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         margin-bottom: 16px;
       }
       
-      input, button {
+      input, button, select {
         padding: 14px 16px;
-        margin-bottom: 12px;
-        font-size: 16px;
+        margin-bottom: 14px;
+        font-size: 16px; /* Zapobiega powiększaniu na iOS */
       }
       
       .user-info {
-        display: flex;
         flex-direction: column;
         gap: 12px;
         margin-bottom: 20px;
         padding: 16px;
-        background: #1a1f40;
-        border-radius: 12px;
+        text-align: center;
       }
       
       .user-role {
-        padding: 8px 12px;
-        background: #2a2f62;
-        border-radius: 12px;
-        text-align: center;
+        width: 100%;
       }
       
       .user-actions {
@@ -132,13 +318,11 @@
       #logoutBtn {
         width: 100%;
         padding: 12px;
-        background: #ff4444;
-        color: white;
-        border-radius: 8px;
       }
       
       .admin-panel {
-        padding: 12px;
+        padding: 16px;
+        margin: 16px 0;
       }
       
       select {
@@ -149,112 +333,116 @@
       }
       
       .category {
-        padding: 12px;
-        margin-top: 16px;
+        padding: 16px;
+        margin-top: 20px;
       }
       
       .skill {
-        padding: 12px;
+        padding: 14px;
         flex-direction: column;
-        margin: 8px 0;
+        align-items: flex-start;
+        margin: 10px 0;
       }
       
-      /* Mniejsze przyciski na telefonach */
       .level-buttons {
         display: flex !important;
-        gap: 6px;
-        margin-top: 8px;
+        gap: 8px;
+        margin-top: 10px;
         flex-wrap: wrap;
+        width: 100%;
       }
       
       .level-btn {
-        padding: 6px 8px;
-        font-size: 11px;
+        padding: 8px 10px;
+        font-size: 12px;
         flex: 1;
         min-width: 70px;
       }
       
-      /* Ukryj podwójne kliknięcie */
-      .skill:after {
-        display: none;
-      }
-    }
-
-    /* Panel logowania - poprawiona wersja */
-    #auth-container {
-      max-width: 400px;
-      margin: 40px auto;
-      padding: 24px;
-      background: #1a1f40;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-
-    #auth-container h2 {
-      text-align: center;
-      margin-bottom: 24px;
-      color: #ffffff;
-      font-size: 1.8rem;
-    }
-
-    #email, #password {
-      padding: 16px;
-      border: 1px solid #3a4080;
-      background: #151936;
-      color: #f3f5ff;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-
-    #email:focus, #password:focus {
-      outline: none;
-      border-color: #5c66cc;
-      box-shadow: 0 0 0 2px rgba(92, 102, 204, 0.2);
-    }
-
-    #loginBtn {
-      background: linear-gradient(to right, #214537, #2a6b53);
-      color: white;
-      padding: 16px;
-      border-radius: 12px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      transition: transform 0.2s;
-    }
-
-    #loginBtn:active {
-      transform: scale(0.98);
-    }
-
-    #registerBtn {
-      background: transparent;
-      color: #aab0d8;
-      padding: 16px;
-      border-radius: 12px;
-      border: 1px solid #3a4080;
-      transition: background 0.3s;
-    }
-
-    #registerBtn:active {
-      background: rgba(58, 64, 128, 0.2);
-    }
-
-    /* Dodatkowe style dla lepszego wyglądu na telefonach */
-    @media (max-width: 480px) {
+      /* Panel logowania na mobile */
       #auth-container {
-        margin: 20px auto;
-        padding: 20px;
+        margin: 30px auto;
+        padding: 24px;
+        border-radius: 14px;
       }
       
       #auth-container h2 {
         font-size: 1.5rem;
+        margin-bottom: 24px;
       }
     }
+
+    /* Bardzo małe ekrany */
+    @media (max-width: 360px) {
+      body {
+        padding: 12px;
+      }
+      
+      #auth-container {
+        padding: 20px;
+      }
+      
+      .level-buttons {
+        flex-direction: column;
+      }
+      
+      .level-btn {
+        width: 100%;
+      }
+    }
+    
+    /* Animacje */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    #auth-container, #app-container {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    .category {
+      animation: fadeIn 0.4s ease-out;
+    }
+    
+    /* Dostępność - focus styles */
+    button:focus-visible, 
+    input:focus-visible, 
+    select:focus-visible {
+      outline: 2px solid #5c66cc;
+      outline-offset: 2px;
+    }
+    
+    /* Placeholder styling */
+    ::placeholder {
+      color: #aab0d8;
+      opacity: 0.7;
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-tertiary);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #5c66cc;
+    }
   </style>
+
 </head>
+
+
 <body>
+
   <div id="auth-container">
     <h2>Logowanie</h2>
     <input id="email" type="email" placeholder="Email">
@@ -264,7 +452,7 @@
   </div>
 
   <div id="app-container" style="display:none;">
-    <h1>Panel Admina – Drzewko umiejętności</h1>
+    <h1>Panel Admina </h1>
     
     <div class="user-info">
       <span id="userEmail"></span>
