@@ -1255,77 +1255,363 @@
       animation-delay: 0.6s;
     }
 
-  .sub-navbar {
-    position: fixed;   /* przyklejony do ekranu */
-    top: 60px;            /* górna krawędź */
-    left: 50%;         /* środek ekranu */
-    transform: translateX(90%); /* przesuwa o połowę szerokości */
-    z-index: 1000;     /* nad innymi elementami */
-    background: white; /* opcjonalnie */
-    padding: 10px;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
+  /* Pasek użytkownika na górze */
+/* Reset stylów */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-  .sub-navbar-container {
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Navbar główny */
+.main-navbar {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
-  }
+    justify-content: space-between;
+    padding: 10px 20px;
+    
+    color: rgb(0, 0, 0);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+}
 
-  .user-info {
+/* Logo po lewej */
+.logo {
     display: flex;
     align-items: center;
-  }
-
-  .user-avatar {
-    width: 35px;
-    top:60px; 
-    border-radius: 50%;
-    background: #007bff;
+    text-decoration: none;
     color: white;
+    font-weight: bold;
+    font-size: 20px;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Użytkownik wyśrodkowany */
+/* Navbar główny */
+.main-navbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #ffffff; /* białe tło */
+    color: #000000; /* czarny tekst */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* delikatny cień */
+    flex-wrap: wrap;
+}
+
+/* Logo po lewej */
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000000; /* czarny */
+    font-weight: bold;
+    font-size: 20px;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Użytkownik wyśrodkowany */
+.user-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ff6b6b, #ff9a3d);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-  }
+    font-size: 20px;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
+.user-name {
+    font-weight: bold;
+    font-size: 16px;
+}
 
+.progress-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-  @media (max-width: 768px) {
-    .sub-navbar {
-    position: fixed;   /* przyklejony do ekranu */
-    top: 60px;            /* górna krawędź */
-    left: 50%;         /* środek ekranu */
-    transform: translateX(0%); /* przesuwa o połowę szerokości */
-    z-index: 10;     /* nad innymi elementami */
-    background: white; /* opcjonalnie */
-    padding: 10px;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+.progress-bar {
+    width: 150px;
+    height: 8px;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ecdc4, #00c6ff);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 12px;
+    color: #000000;
+}
+
+/* Menu po prawej */
+.nav-menu {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-link {
+    color: #000000; /* czarny tekst */
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Hover i aktywna strona */
+.nav-link:hover,
+.nav-link.active {
+    background-color: rgba(0,0,0,0.1); /* efekt hover dla aktywnej */
+    transform: translateY(-2px);
+}
+
+/* Przycisk mobilny */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #000000; /* czarny */
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Responsywność */
+@media (max-width: 992px) {
+    .main-navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 10px;
     }
-
-    .sub-navbar-container {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
+    .user-info-wrapper {
+        position: relative;
+        left: auto;
+        transform: none;
+        justify-content: center;
+        margin: 5px 0;
     }
-
-    .sub-navbar .progress-wrapper {
-      width: 100%;
-      align-items: flex-start;
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        top: 120px;
+        text-align: center;
+        z-index: 100;
     }
-  }
+    .nav-menu.active {
+        display: flex;
+    }
+    .mobile-menu-btn {
+        display: block;
+        margin-left: auto;
+    }
+}
+
+#auth-container, #app-container {
+    display: none;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: black;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Responsywność */
+@media (max-width: 992px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        text-align: center;
+    }
+    .nav-menu.active {
+        display: flex;
+    }
+    .mobile-menu-btn {
+        display: block;
+        margin-left: auto;
+    }
+}
+.nav-menu {
+    display: flex;
+    gap: 10px;
+}
+
+.mobile-menu-btn {
+    display: none;
+}
+
+/* Responsywność */
+@media (max-width: 992px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .nav-menu.active {
+        display: flex;
+    }
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
   </style>
 
 
 
   </head>
   <body>
+
+<div class="main-navbar">
+    <!-- Logo po lewej -->
+    <a href="/" class="logo">
+        <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo">
+        <span>Breakingu</span>
+    </a>
+
+    <!-- Użytkownik na środku -->
+    <div class="user-info-wrapper">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <a id="/"><div class="user-details"></a>
+            <div class="user-name" id="userName">Użytkownik</div>
+            <div class="progress-wrapper">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 50%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0/25 umiejętności</div>
+            </div>
+        </div>
+        <div class="user-actions">
+            <a href="#" id="backToMySkillsNav" class="nav-link" style="display: none;">Powrót</a>
+        </div>
+    </div>
+
+    <!-- Menu po prawej -->
+    <nav class="nav-menu">
+        <a id="/" class="nav-link">Home</a>
+        <a id="gamificationBtn" class="nav-link">Grywalizacja</a>
+        <a href="#course" class="nav-link">Course</a>
+        <a href="#instructor" class="nav-link">Instructor</a>
+        <a id="logoutBtn" class="nav-link">Wyloguj</a>
+    </nav>
+
+    <!-- Przycisk mobilny -->
+    <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
+
+
+<script>
+// Pobierz wszystkie linki w menu
+const navLinks = document.querySelectorAll('.nav-menu .nav-link');
+
+function updateActiveNav(selectedLink) {
+    navLinks.forEach(link => link.classList.remove('active'));
+    if (selectedLink) selectedLink.classList.add('active');
+}
+
+// Obsługa kliknięcia w menu
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+
+        // Jeśli kliknięto "Wyloguj"
+        if (link.id === 'logoutBtn') {
+            e.preventDefault();
+            signOut(auth);
+            updateActiveNav(null); // usuń active po wylogowaniu
+            return;
+        }
+
+        // Inne linki sekcji
+        updateActiveNav(link);
+    });
+});
+
+// Wylogowanie (Firebase)
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // zalogowany
+        authContainer.style.display = 'none';
+        appContainer.style.display = 'block';
+    } else {
+        // wylogowany
+        authContainer.style.display = 'block';
+        appContainer.style.display = 'none';
+    }
+});
+
+
+
+</script>
+
+
   <!-- Header -->
-  <header>
-    <div class="container header-container">
+  <!---- <header>
+   <div class="container header-container">
       <a href="#" class="logo">
         <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo">
         <span>Breakingu</span>
@@ -1346,11 +1632,13 @@
       <button class="mobile-menu-btn">
         <i class="fas fa-bars"></i>
       </button>
-    </div>
+    </div>--  
+  
+  </header>>
 
 
     
-  </header>
+
 
 
     <!-- Ekran logowania -->
@@ -1375,7 +1663,7 @@
     </div>
 
     <!-- Główna aplikacja -->
-    <div id="app-container" class="app-container" style="margin: 120px 0; display: none;">
+    <div id="app-container" class="app-container" style="margin: 20px 0; display: none;">
 
 
       <div class="container">
@@ -1387,7 +1675,7 @@
         </div>
 
 
-  <div class="sub-navbar">
+  <!--<div class="sub-navbar">
     <div class="sub-navbar-container">
       <div class="user-info">
         <div class="user-avatar" id="userAvatar">U</div>
@@ -1406,7 +1694,7 @@
         <a href="#" id="backToMySkillsNav" class="nav-link" ></a>
       </div>
     </div>
-  </div>
+  </div>-->
 
 
 
@@ -2001,52 +2289,25 @@ document.getElementById('progressText').textContent = `${percent}% umiejętnośc
 
   // Funkcja do podglądu umiejętności innego użytkownika
   // Funkcja do podglądu umiejętności innego użytkownika
-  async function viewUserSkills(userId, userName) {
-    try {
-      // Ukryj grywalizację i pokaż drzewko
-      document.getElementById('gamification-section').style.display = 'none';
-      document.getElementById('skillTree').style.display = 'block';
+async function viewUserSkills(userId, userName) {
+  try {
+    // Ukryj grywalizację i pokaż drzewko
+    document.getElementById('gamification-section').style.display = 'none';
+    document.getElementById('skillTree').style.display = 'block';
     document.getElementById('backToMySkillsNav').style.display = 'none';
-      isGamificationView = false;
-      
-      const userDoc = await getDoc(doc(db, "users", userId));
-      if (userDoc.exists()) {
-        userSkills = userDoc.data().skills || {};
-        document.getElementById('userName').textContent = `${userName} (podgląd)`;
-        renderSkillTree();
-        
-        // Dodaj przycisk powrotu (jeśli jeszcze nie istnieje)
-        let backButton = document.getElementById('backButton');
-        if (!backButton) {
-          backButton = document.createElement('button');
-          backButton.id = 'backButton';
-          backButton.textContent = 'Powrót do mojego widoku';
-          backButton.style.cssText = `
-            padding: 10px 15px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 10px 0;
-            width: 100%;
-          `;
-          
-          backButton.onclick = async () => {
-            await loadUserSkills();
-            document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
-            renderSkillTree();
-            backButton.remove();
-          };
-          
-          const userPanel = document.querySelector('.user-panel');
-          userPanel.appendChild(backButton);
-        }
-      }
-    } catch (error) {
-      console.error("Błąd ładowania umiejętności użytkownika:", error);
+    isGamificationView = false;
+    
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      userSkills = userDoc.data().skills || {};
+      document.getElementById('userName').textContent = `${userName} (podgląd)`;
+      renderSkillTree();
     }
+  } catch (error) {
+    console.error("Błąd ładowania umiejętności użytkownika:", error);
   }
+}
+
 
   document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
     e.preventDefault();
@@ -2065,61 +2326,25 @@ document.getElementById('progressText').textContent = `${percent}% umiejętnośc
   });
 
 
-  document.getElementById('gamificationBtn').addEventListener('click', async () => {
-    if (!isGamificationView) { // jeśli nie jesteśmy jeszcze w widoku grywalizacji
-      isGamificationView = true;
-      await loadAllUsers();
-      
-      document.getElementById('gamification-section').style.display = 'block';
-      document.getElementById('skillTree').style.display = 'none';
+document.getElementById('gamificationBtn').addEventListener('click', async () => {
+  if (!isGamificationView) {
+    isGamificationView = true;
+    await loadAllUsers();
 
-      // Usuń istniejący przycisk powrotu, jeśli jest
-      const oldBackButton = document.getElementById('backButton');
-      if (oldBackButton) oldBackButton.remove();
+    document.getElementById('gamification-section').style.display = 'block';
+    document.getElementById('skillTree').style.display = 'none';
 
-      // Dodaj przycisk powrotu
-      // Dodaj przycisk powrotu
-      const backButton = document.createElement('button');
-      backButton.id = 'backButton';
-      backButton.textContent = 'Powrót do moich umiejętności';
-      backButton.style.cssText = `
-        padding: 10px 15px;
-        background: white;
-        color: black;
-        border: 2px solid black;
-        border-radius: 8px;
-        cursor: pointer;
-        
-        width: 100%;
-        font-weight: 600;
-        transition: all 0.3s ease;
-      `;
-      backButton.onmouseenter = () => {
-        backButton.style.background = '#f0f0f0';
-      };
-      backButton.onmouseleave = () => {
-        backButton.style.background = 'white';
-      };
-      backButton.onclick = async () => {
-        await loadUserSkills(); // załaduj własne umiejętności
-        document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
-        renderSkillTree();
-        document.getElementById('gamification-section').style.display = 'none';
-        document.getElementById('skillTree').style.display = 'block';
-        backButton.remove();
-        isGamificationView = false;
-      };
+    // ❌ usunięte dodawanie backButton
 
-      document.querySelector('.user-panel').appendChild(backButton);
+    renderUsersGrid();
+  }
 
-      renderUsersGrid();
-    }
-      // 🔽 DODANE: zamknij menu mobilne po kliknięciu
-    if (navMenu.classList.contains('active')) {
-      navMenu.classList.remove('active');
-      mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-    }
-  });
+  // zamknij menu mobilne po kliknięciu
+  if (navMenu.classList.contains('active')) {
+    navMenu.classList.remove('active');
+    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+  }
+});
 
 
     </script>
@@ -2165,16 +2390,37 @@ document.getElementById('progressText').textContent = `${percent}% umiejętnośc
 
   <script>
     // Mobile menu toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    mobileMenuBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-      mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
-        ? '<i class="fas fa-times"></i>' 
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+const navMenu = document.querySelector('.nav-menu');
+
+mobileMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active'); // pokaz/ukryj menu
+    mobileMenuBtn.innerHTML = navMenu.classList.contains('active')
+        ? '<i class="fas fa-times"></i>'
         : '<i class="fas fa-bars"></i>';
+});
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+
+        // Wylogowanie
+        if (link.id === "logoutBtn") {
+            e.preventDefault();
+            signOut(auth);
+            navMenu.classList.remove('active'); // zamknij menu po wylogowaniu
+            return;
+        }
+
+        // zamknij menu mobilne po kliknięciu w każdy link
+        if (navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
     });
-    
+});
+
+
     // FAQ accordion
     const faqItems = document.querySelectorAll('.faq-item');
     
@@ -2244,6 +2490,29 @@ document.getElementById('progressText').textContent = `${percent}% umiejętnośc
       }
     });
   });
+
+
+
+
+// Funkcja ustawiająca active na podstawie aktualnego URL
+function setActiveLink() {
+    navLinks.forEach(link => {
+        // Usuń klasę active ze wszystkich
+        link.classList.remove('active');
+
+        // Jeśli href linku pasuje do aktualnej strony, dodaj active
+        if (link.getAttribute('href') === window.location.hash) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Wywołaj funkcję przy ładowaniu strony
+setActiveLink();
+
+// Możesz też nasłuchiwać zmiany hash, jeśli używasz nawigacji po sekcjach
+window.addEventListener('hashchange', setActiveLink);
+
   </script>
   </body>
   </html>
