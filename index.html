@@ -1517,11 +1517,12 @@ body {
 }
 
   </style>
+ </head>
 
 
 
-  </head>
-  <body>
+ 
+<body>
 
 <div class="main-navbar">
     <!-- Logo po lewej -->
@@ -1533,7 +1534,7 @@ body {
     <!-- Użytkownik na środku -->
     <div class="user-info-wrapper">
         <div class="user-avatar" id="userAvatar">U</div>
-        <a id="/"><div class="user-details"></a>
+        <a href="/"><div class="user-details"></a>
             <div class="user-name" id="userName">Użytkownik</div>
             <div class="progress-wrapper">
                 <div class="progress-bar">
@@ -1609,34 +1610,6 @@ onAuthStateChanged(auth, (user) => {
 </script>
 
 
-  <!-- Header -->
-  <!---- <header>
-   <div class="container header-container">
-      <a href="#" class="logo">
-        <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo">
-        <span>Breakingu</span>
-      </a>
-      
-      <nav class="nav-menu">
-      
-        <a id="gamificationBtn" class="nav-link">Grywalizacja</a> 
-        
-        <a href="#course" class="nav-link">Course</a>
-        <a href="#instructor" class="nav-link">Instructor</a>
-        
-        <a href="#contact" class="nav-link">Contact</a>
-        <a href="https://test.glovesmaker.pl/admin" class="nav-link">Admin</a>
-        <a id="logoutBtn" class="nav-link">Wyloguj</a>
-      </nav>
-      
-      <button class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>--  
-  
-  </header>>
-
-
     
 
 
@@ -1662,74 +1635,41 @@ onAuthStateChanged(auth, (user) => {
       </div>
     </div>
 
-    <!-- Główna aplikacja -->
-    <div id="app-container" class="app-container" style="margin: 20px 0; display: none;">
+<!-- Główna aplikacja -->
+<div id="app-container" class="app-container" style="margin: 20px 0; display: none;">
+  <div class="container">
 
-
-      <div class="container">
-
-    
-        <div class="skill-tree" id="skillTree">
-          <div class="tree-axis"></div>
-      
-        </div>
-
-
-  <!--<div class="sub-navbar">
-    <div class="sub-navbar-container">
-      <div class="user-info">
-        <div class="user-avatar" id="userAvatar">U</div>
-        <div class="user-section">
-          <div class="user-name" id="userName">Użytkownik</div>
-          <div class="progress-wrapper">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-            </div>
-            <div class="progress-text" id="progressText">0/25 umiejętności</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sub-navbar-actions">
-        <a href="#" id="backToMySkillsNav" class="nav-link" ></a>
-      </div>
+    <!-- OTHER-USER-PREVIEW PRZENIESIONY PRZED SKILL-TREE -->
+    <div id="other-user-preview" 
+         style="display: none; 
+                margin: 0 auto 0px auto; 
+                padding: 5px; 
+                background: #161b22; 
+                border-radius: 12px; 
+                color: #fff; 
+                width: 200px; 
+                text-align: center;">
+      <h3 id="otherUserName">Użytkownik</h3>
+      <p id="otherUserProgress">Postęp: 0%</p>
     </div>
-  </div>-->
 
+    <!-- DRZEWKO UMIEJĘTNOŚCI -->
+    <div class="skill-tree" id="skillTree">
+      <div class="tree-axis"></div>
+    </div>
 
-
-
-
-
-    <!-- W app-container, pod header ale przed skill-tree -->
+    <!-- SEKCJA GRYWALIZACJI -->
     <div id="gamification-section" style="margin: 20px 0; display: none;">
       <h2>Grywalizacja</h2>
       <div id="users-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;"></div>
     </div>
 
-      </div>
-      
-      <div class="user-panel">
-        <!-- <div class="user-info">
-          <div class="user-avatar" id="userAvatar">U</div>
-          <div class="user-name" id="userName">Użytkownik</div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-        </div>
-        <div class="progress-text" id="progressText">0/25 umiejętności</div>
-    
-        <button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
-
-        <button class="logout-btn" id="logoutBtn">Wyloguj</button>-->
-
-
-      </div>
-
-
-    
-
-    </div>
+  </div>
+  
+  <div class="user-panel">
+    <!-- Panel użytkownika -->
+  </div>
+</div>
 
 
 
@@ -2005,8 +1945,9 @@ onAuthStateChanged(auth, (user) => {
     }
   }
 
-  // Funkcja do renderowania drzewka
-  function renderSkillTree() {
+// Funkcja do renderowania drzewka (oryginalna)
+function renderSkillTree(skillsToRender = null) {
+  const skills = skillsToRender || userSkills; // jeśli brak, używamy zalogowanego
   skillTree.innerHTML = '';
 
   SKILL_TREE.forEach((category) => {
@@ -2015,47 +1956,33 @@ onAuthStateChanged(auth, (user) => {
 
     // policz progres w tej kategorii
     const skillsInCategory = category.branches.flatMap(b => b.skills)
-      .filter(skill => skill.level !== "Poziom 3"); // ignorujemy poziom 3
+      .filter(skill => skill.level !== "Poziom 3"); 
     const unlockedInCategory = skillsInCategory.filter(skill => {
-      const level = userSkills[skill.id] || 0;
+      const level = skills[skill.id] || 0;
       return level === 1 || level === 2;
     }).length;
     const categoryPercent = Math.round((unlockedInCategory / skillsInCategory.length) * 100);
 
-    // --- KATEGORIA GŁÓWNA ---
+    // KATEGORIA GŁÓWNA
     const mainSkill = document.createElement('div');
     mainSkill.className = 'main-skill';
-mainSkill.innerHTML = `
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div class="skill-name">${category.name}</div>
-    <div style="
-      font-size: 16px; 
-      font-weight: 600; 
-      color: #black; 
-      margin-left: 10px;
-  
-    ">
-      ${categoryPercent}%
-    </div>
-  </div>
-`;
-
+    mainSkill.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="skill-name">${category.name}</div>
+        <div style="font-size: 16px; font-weight: 600; margin-left: 10px;">
+          ${categoryPercent}%
+        </div>
+      </div>
+    `;
     mainSkill.style.cssText = `
-      font-size: 20px;
-      font-weight: 700;
-      padding: 20px 24px;
-      border: 2px solid black;   
-      background: white;
-      color: black;
-      border-radius: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      font-size: 20px; font-weight: 700;
+      padding: 20px 24px; border: 2px solid black;   
+      background: white; color: black; border-radius: 12px;
+      text-align: center; cursor: pointer; transition: all 0.3s ease;
     `;
 
     levelContainer.appendChild(mainSkill);
 
-    // --- KONTAINER NA UMIEJĘTNOŚCI ---
     const skillsContainer = document.createElement('div');
     skillsContainer.className = 'skills-container hidden';
     skillsContainer.style.display = 'flex';
@@ -2065,8 +1992,8 @@ mainSkill.innerHTML = `
 
     category.branches.forEach(branch => {
       branch.skills.forEach(skill => {
-        let userLevel = userSkills[skill.id] || 0;
-        if (skill.req && skill.req.some(reqId => !userSkills[reqId] || userSkills[reqId] === 0)) {
+        let userLevel = skills[skill.id] || 0;
+        if (skill.req && skill.req.some(reqId => !skills[reqId] || skills[reqId] === 0)) {
           userLevel = 0;
         }
 
@@ -2101,8 +2028,11 @@ mainSkill.innerHTML = `
     skillTree.appendChild(levelContainer);
   });
 
-  updateProgress();
+  // tylko dla zalogowanego użytkownika aktualizujemy pasek postępu
+  if (!skillsToRender) updateProgress();
 }
+
+
 
 
 
@@ -2287,43 +2217,125 @@ document.getElementById('progressText').textContent = `${percent}% umiejętnośc
   }
 
 
-  // Funkcja do podglądu umiejętności innego użytkownika
-  // Funkcja do podglądu umiejętności innego użytkownika
+// Funkcja do podglądu umiejętności innego użytkownika
+let isViewingOtherUser = false;
+let currentViewedUserId = null;
+
+// Podgląd innego użytkownika
 async function viewUserSkills(userId, userName) {
   try {
-    // Ukryj grywalizację i pokaż drzewko
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (!userDoc.exists()) return;
+
+    const otherUserSkills = userDoc.data().skills || {};
+    const total = SKILL_TREE.flatMap(c => c.branches.flatMap(b => b.skills)).length;
+    const unlocked = Object.values(otherUserSkills).filter(l => l === 1 || l === 2).length;
+    const percent = Math.round((unlocked / total) * 100);
+
+    // Użyj istniejącego elementu other-user-preview do wyświetlenia nazwy NAD drzewkiem
+    document.getElementById('otherUserName').textContent = userName;
+    document.getElementById('otherUserProgress').textContent = `Postęp: ${percent}%`;
+    document.getElementById('other-user-preview').style.display = 'block';
+
+    renderSkillTree(otherUserSkills);  // render drzewka innego użytkownika
+    document.getElementById('backToMySkillsNav').style.display = 'inline-block';
+    
+    // Ukryj sekcję grywalizacji i pokaż drzewko
     document.getElementById('gamification-section').style.display = 'none';
     document.getElementById('skillTree').style.display = 'block';
-    document.getElementById('backToMySkillsNav').style.display = 'none';
-    isGamificationView = false;
     
-    const userDoc = await getDoc(doc(db, "users", userId));
-    if (userDoc.exists()) {
-      userSkills = userDoc.data().skills || {};
-      document.getElementById('userName').textContent = `${userName} (podgląd)`;
-      renderSkillTree();
-    }
+    isViewingOtherUser = true;
+    currentViewedUserId = userId;
   } catch (error) {
-    console.error("Błąd ładowania umiejętności użytkownika:", error);
+    console.error(error);
   }
 }
 
+// Powrót do własnego drzewka
+document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
+  e.preventDefault();
+  
+  if (!isViewingOtherUser) return;
 
-  document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
+  // Ukryj podgląd innego użytkownika (niebieski box z nazwą)
+  document.getElementById('other-user-preview').style.display = 'none';
+  document.getElementById('backToMySkillsNav').style.display = 'none';
+  
+  // Wczytaj i wyrenderuj własne umiejętności
+  await loadUserSkills();
+  renderSkillTree();
+  updateProgress();
+  
+  isViewingOtherUser = false;
+  currentViewedUserId = null;
+});
+
+// Obsługa przycisku grywalizacji - ZMIENIONA
+document.getElementById('gamificationBtn').addEventListener('click', async () => {
+  // Jeśli aktualnie oglądamy innego użytkownika, wróć do swojego drzewka
+  if (isViewingOtherUser) {
+    document.getElementById('backToMySkillsNav').click();
+    return;
+  }
+  
+  // Standardowe przejście do grywalizacji
+  isGamificationView = true;
+  await loadAllUsers();
+
+  document.getElementById('gamification-section').style.display = 'block';
+  document.getElementById('skillTree').style.display = 'none';
+  document.getElementById('other-user-preview').style.display = 'none';
+  document.getElementById('backToMySkillsNav').style.display = 'none';
+
+  renderUsersGrid();
+
+  // zamknij menu mobilne po kliknięciu
+  if (navMenu.classList.contains('active')) {
+    navMenu.classList.remove('active');
+    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+  }
+});
+
+
+// Powrót do własnego drzewka
+document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  if (!isViewingOtherUser) return;
+
+  renderSkillTree(); // domyślnie renderuje zalogowanego użytkownika
+  updateProgress(); // aktualizuje pasek postępu zalogowanego użytkownika
+
+  document.getElementById('other-user-preview').style.display = 'none';
+  document.getElementById('backToMySkillsNav').style.display = 'none';
+  isViewingOtherUser = false;
+});
+
+// Obsługa przycisku powrotu
+document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  await loadUserSkills(); // wczytaj własne umiejętności
+  document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+  renderSkillTree(); // teraz renderuje drzewko zalogowanego użytkownika
+
+  document.getElementById('other-user-preview').style.display = 'none';
+  document.getElementById('backToMySkillsNav').style.display = 'none';
+});
+
+
+
+document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
     e.preventDefault();
-    // Ta sama logika co w backButton.onclick
-    await loadUserSkills();
+
+    await loadUserSkills(); // wczytaj własne umiejętności
     document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
     renderSkillTree();
-    document.getElementById('gamification-section').style.display = 'none';
-    document.getElementById('skillTree').style.display = 'block';
-    // Ukryj przycisk w panelu użytkownika jeśli istnieje
-    const backButton = document.getElementById('backButton');
-    if (backButton) backButton.remove();
-    isGamificationView = false;
-    // Ukryj link w navbarze
+
+    // Ukryj kafelek innego użytkownika
+    document.getElementById('other-user-preview').style.display = 'none';
     document.getElementById('backToMySkillsNav').style.display = 'none';
-  });
+});
 
 
 document.getElementById('gamificationBtn').addEventListener('click', async () => {
@@ -2512,6 +2524,17 @@ setActiveLink();
 
 // Możesz też nasłuchiwać zmiany hash, jeśli używasz nawigacji po sekcjach
 window.addEventListener('hashchange', setActiveLink);
+
+
+
+
+
+
+
+
+
+
+
 
   </script>
   </body>
