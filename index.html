@@ -1259,7 +1259,7 @@
     position: fixed;   /* przyklejony do ekranu */
     top: 60px;            /* górna krawędź */
     left: 50%;         /* środek ekranu */
-    transform: translateX(-50%); /* przesuwa o połowę szerokości */
+    transform: translateX(90%); /* przesuwa o połowę szerokości */
     z-index: 1000;     /* nad innymi elementami */
     background: white; /* opcjonalnie */
     padding: 10px;
@@ -1298,8 +1298,8 @@
     position: fixed;   /* przyklejony do ekranu */
     top: 60px;            /* górna krawędź */
     left: 50%;         /* środek ekranu */
-    transform: translateX(-50%); /* przesuwa o połowę szerokości */
-    z-index: -10;     /* nad innymi elementami */
+    transform: translateX(0%); /* przesuwa o połowę szerokości */
+    z-index: 10;     /* nad innymi elementami */
     background: white; /* opcjonalnie */
     padding: 10px;
     border-radius: 0 0 10px 10px;
@@ -1745,7 +1745,7 @@ mainSkill.innerHTML = `
       font-weight: 600; 
       color: #black; 
       margin-left: 10px;
-      z-index: -20;
+  
     ">
       ${categoryPercent}%
     </div>
