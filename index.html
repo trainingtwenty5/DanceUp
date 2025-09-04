@@ -1,440 +1,658 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Drzewko Umiejętności Breaking</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  /* Kolory bazowe */
-  --bg: #0d1117;               /* główne tło */
-  --panel: #161b22;            /* panele/kafelki */
-  --text: #e6edf3;             /* podstawowy tekst */
-  --muted: #8b949e;            /* tekst poboczny */
-  --accent: #00d4ff;           /* akcent główny */
-  --accent-2: #4df0b8;         /* akcent gradientowy */
-  --danger: #ff6b6b;
+  <!DOCTYPE html>
+  <html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Drzewko Umiejętności Breaking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+  :root {
+    /* Kolory bazowe */
+    --bg: #0d1117;               /* główne tło */
+    --panel: #161b22;            /* panele/kafelki */
+    --text: #e6edf3;             /* podstawowy tekst */
+    --muted: #8b949e;            /* tekst poboczny */
+    --accent: #00d4ff;           /* akcent główny */
+    --accent-2: #4df0b8;         /* akcent gradientowy */
+    --danger: #ff6b6b;
 
-  /* Poziomy umiejętności */
-  --level0: #30363d67;           /* zablokowane */
-  --level1: #f1c40f;           /* złoty */
-  --level2: #2ecc71;           /* zielony */
-  --level3: #9b59b6;           /* fioletowy */
+    /* Poziomy umiejętności */
+    --level0: #181a1a56;           /* zablokowane */
+    --level1: #c0a01ebb;           /* złoty */
+    --level2: #26bd65ad;           /* zielony */
+    --level3: #9b59b6;           /* fioletowy */
 
-  /* Łączniki */
-  --connector: #00d4ff;
+    /* Łączniki */
+    --connector: #00d4ff;
 
-  /* Style ogólne */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.35);
-  --transition: all 0.3s ease;
-}
+    /* Style ogólne */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.35);
+    --transition: all 0.3s ease;
+  }
 
-/* Reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-
-/* Kontenery */
-.container { max-width: 1400px; margin: 0 auto; }
-header { text-align: center; margin-bottom: 30px; }
-
-/* Nagłówki */
-h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 10px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.subtitle {
-  font-size: 1.1rem;
-  color: var(--muted);
-}
-
-/* Ekran logowania */
-.auth-container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 30px;
-  background: var(--panel);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-}
-
-.auth-container h2 { text-align: center; margin-bottom: 20px; }
-
-.auth-input {
-  width: 100%;
-  padding: 12px 14px;
-  margin-bottom: 15px;
-  border-radius: var(--radius-lg);
-  border: 1px solid #30363d;
-  background: #0d1117;
-  color: var(--text);
-  font-size: 1rem;
-  transition: var(--transition);
-}
-
-.auth-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
-}
-
-.auth-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.auth-button:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-
-.auth-switch {
-  text-align: center;
-  margin-top: 20px;
-  color: var(--muted);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.auth-switch:hover { color: var(--accent); }
-
-.error-message { color: var(--danger); text-align: center; font-size: 14px; }
-
-/* Panel użytkownika */
-.user-panel {
-  position: fixed;
-  top: 160px;   /* zamiast top: 80px */
-  right: 20px;
- 
-  padding: 15px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 200px;
-  z-index: 1000;
-  color: #000000; 
-}
+  /* Reset */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
 
-/* Styl na telefon */
-@media (max-width: 768px) {
-  .user-panel {
-    position: relative;         /* żeby nie przyklejało do rogu */
-    top: auto;
-    right: auto;
-    margin: 60px 60px;          /* wyśrodkowanie */
+  /* Kontenery */
+  .container { max-width: 1400px; margin: 0 auto; }
+  header { text-align: center;}
+
+  /* Nagłówki */
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+
+  /* Ekran logowania */
+  .auth-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    background: var(--panel);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .auth-container h2 { text-align: center; margin-bottom: 20px; }
+
+  .auth-input {
     width: 100%;
-    max-width: 320px;           /* panel nie większy niż 400px */
+    padding: 12px 14px;
+    margin-bottom: 15px;
+    border-radius: var(--radius-lg);
+    border: 1px solid #30363d;
+    background: #0d1117;
+    color: var(--text);
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+
+  .auth-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+  }
+
+  .auth-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .auth-button:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  .auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .auth-switch:hover { color: var(--accent); }
+
+  .error-message { color: var(--danger); text-align: center; font-size: 14px; }
+
+  /* Panel użytkownika */
+  .user-panel {
+    position: fixed;
+    top: 160px;   /* zamiast top: 80px */
+    right: 20px;
+  
+    padding: 15px;
+
     display: flex;
     flex-direction: column;
-    align-items: center;        /* wyśrodkowanie zawartości */
-    justify-content: center;
-    text-align: center;
-    color: #ffffff; 
+    gap: 10px;
+    min-width: 200px;
+    z-index: 1000;
+    color: #000000; 
   }
-}
 
-.user-info { display: flex; align-items: center; gap: 10px; }
 
-.user-avatar {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  display: flex; align-items: center; justify-content: center;
-  font-weight: bold; color: #000;
-}
+  /* Styl na telefon */
+  @media (max-width: 768px) {
+    .user-panel {
+      position: relative;         /* żeby nie przyklejało do rogu */
+      top: auto;
+      right: auto;
+      margin: 60px 60px;          /* wyśrodkowanie */
+      width: 100%;
+      max-width: 320px;           /* panel nie większy niż 400px */
+      display: flex;
+      flex-direction: column;
+      align-items: center;        /* wyśrodkowanie zawartości */
+      justify-content: center;
+      text-align: center;
+      color: #ffffff; 
+    }
+  }
 
-.user-name { font-weight: 600; }
+  .user-info { display: flex; align-items: center; gap: 10px; }
 
-.progress-bar {
-  height: 6px; background: #30363d;
-  border-radius: 3px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  transition: width 0.4s ease;
-}
-.progress-text { font-size: 0.8rem; color: var(--muted); text-align: center; }
+  .user-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #000;
+  }
 
-.logout-btn {
-  padding: 8px;
-  border: none;
-  border-radius: var(--radius-md);
-  background: #21262d;
-  color: var(--text);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.logout-btn:hover { background: #30363d; }
+  .user-name { font-weight: 600; }
 
-/* Drzewko umiejętności */
-.skill-tree {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 0;
-  
+  .progress-bar {
+    height: 6px; background: #30363d;
+    border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.4s ease;
+  }
+  .progress-text { font-size: 0.8rem; color: var(--muted); text-align: center; }
 
-}
-.tree-axis {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 3px;
-  background: var(--connector);
-  left: 50%; transform: translateX(-50%);
-}
+  .logout-btn {
+    padding: 8px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: #21262d;
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .logout-btn:hover { background: #30363d; }
 
-.tree-level {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  margin: 15px 0;
-  gap: 30px;
-  flex-direction: column-reverse; /* Odwrócona kolejność - kategorie na górze */
-}
+  /* Drzewko umiejętności */
+  .skill-tree {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 0;
+    
 
-.skills-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  margin-bottom: 5px; /* Odstęp od kategorii poniżej */
-  order: -1; /* Umieszczamy powyżej kategorii */
-}
-/* Styl dla telefonu */
-@media (max-width: 768px) {
+  }
+  .tree-axis {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: var(--connector);
+    left: 50%; transform: translateX(-50%);
+  }
+
   .tree-level {
-    flex-direction: column; /* 🔹 elementy jeden pod drugim */
-    top:20%px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: 15px 0;
+    gap: 30px;
+    flex-direction: column-reverse; /* Odwrócona kolejność - kategorie na górze */
   }
 
   .skills-container {
-    order: 0; /* 🔹 normalna kolejność (nie odwrócona) */
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    margin-bottom: 5px; /* Odstęp od kategorii poniżej */
+    order: -1; /* Umieszczamy powyżej kategorii */
   }
-}
-/* Efekt hover dla kategorii */
-.main-skill:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
+  /* Styl dla telefonu */
+  @media (max-width: 768px) {
+    .tree-level {
+      flex-direction: column; /* 🔹 elementy jeden pod drugim */
+      top:20%px;
+    }
 
-/* Ukrywanie/pokazywanie umiejętności */
-.skills-container.hidden {
-  display: none;
-}
+    .skills-container {
+      order: 0; /* 🔹 normalna kolejność (nie odwrócona) */
+    }
+  }
+  /* Efekt hover dla kategorii */
+  .main-skill:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Ukrywanie/pokazywanie umiejętności */
+  .skills-container.hidden {
+    display: none;
+  }
 
 
-/* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
-/* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
+  /* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
+  /* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
 
-/* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
-.main-skill {
-  font-size: 22px !important;
-  font-weight: 700 !important;
-  padding: 22px 26px !important;
-  border: 2px solid black !important;
-  background: white !important;
-  color: black !important;
-  border-radius: 12px !important;
-  text-align: center !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  min-width: 200px !important;
-  min-height: 80px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin: 0 auto !important;
-}
-
-/* STANDARDOWY STYL DLA WSZYSTKICH POZIOMÓW - ZAWSZE TAKI SAM ROZMIAR */
-.main-skill.level0, .branch-skill.level0, 
-.main-skill.level1, .branch-skill.level1, 
-.main-skill.level2, .branch-skill.level2, 
-.main-skill.level3, .branch-skill.level3 {
-  padding: 16px !important;
-  border-radius: 10px !important;
-  font-weight: 600 !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
-  min-width: 160px !important;
-  min-height: 60px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  margin: 0 auto !important;
-  position: relative !important;
-  font-size: 16px !important;
-}
-
-/* KOLORY DLA POSZCZEGÓLNYCH POZIOMÓW */
-.main-skill.level0, .branch-skill.level0 { 
-  background: var(--level0) !important; 
-}
-.main-skill.level1, .branch-skill.level1 { 
-  background: var(--level1) !important; 
-  color: #000 !important; 
-}
-.main-skill.level2, .branch-skill.level2 { 
-  background: var(--level2) !important; 
-}
-.main-skill.level3, .branch-skill.level3 { 
-  background: var(--level3) !important; 
-}
-
-/* SPECJALNY STYL DLA KŁÓDEK (LEVEL0) */
-.branch-skill.level0 {
-  color: #777 !important;
-  font-size: 28px !important;
-}
-.branch-skill.level0 i {
-  margin: 0 !important;
-}
-
-/* STYL DLA IKONY YOUTUBE - WYRÓWNANA Z TEKSTEM */
-.branch-skill .fab.fa-youtube {
-  position: absolute !important;
-  top: 50% !important;
-  right: 10px !important;
-  transform: translateY(-50%) !important;
-  font-size: 20px !important;
-  color: #ff0000 !important;
-  cursor: pointer !important;
-  margin: 0 !important;
-}
-
-/* Efekt hover dla kategorii */
-.main-skill:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: var(--shadow-md) !important;
-}
-
-/* Responsywność - na mniejszych ekranach */
-@media (max-width: 768px) {
+  /* STANDARDOWY STYL BIAŁYCH KAFELKÓW KATEGORII - ZAWSZE TAKI SAM */
   .main-skill {
-    font-size: 20px !important;
-    padding: 18px 22px !important;
-    min-width: 180px !important;
-    min-height: 70px !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    padding: 22px 26px !important;
+    border: 2px solid black !important;
+    background: white !important;
+    color: black !important;
+    border-radius: 12px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    min-width: 200px !important;
+    min-height: 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
   }
-  
+
+  /* STANDARDOWY STYL DLA WSZYSTKICH POZIOMÓW - ZAWSZE TAKI SAM ROZMIAR */
   .main-skill.level0, .branch-skill.level0, 
   .main-skill.level1, .branch-skill.level1, 
   .main-skill.level2, .branch-skill.level2, 
   .main-skill.level3, .branch-skill.level3 {
-    min-width: 140px !important;
-    min-height: 55px !important;
-    font-size: 15px !important;
-    padding: 14px !important;
+    padding: 16px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
+    min-width: 160px !important;
+    min-height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    font-size: 16px !important;
   }
-  
+
+  /* KOLORY DLA POSZCZEGÓLNYCH POZIOMÓW */
+  .main-skill.level0, .branch-skill.level0 { 
+    background: var(--level0) !important; 
+  }
+  .main-skill.level1, .branch-skill.level1 { 
+    background: var(--level1) !important; 
+    color: #000 !important; 
+  }
+  .main-skill.level2, .branch-skill.level2 { 
+    background: var(--level2) !important; 
+  }
+  .main-skill.level3, .branch-skill.level3 { 
+    background: var(--level3) !important; 
+  }
+
+  /* SPECJALNY STYL DLA KŁÓDEK (LEVEL0) */
   .branch-skill.level0 {
-    font-size: 24px !important;
+    color: #777 !important;
+    font-size: 28px !important;
   }
-  
+  .branch-skill.level0 i {
+    margin: 0 !important;
+  }
+
+  /* STYL DLA IKONY YOUTUBE - WYRÓWNANA Z TEKSTEM */
   .branch-skill .fab.fa-youtube {
-    font-size: 18px !important;
-    right: 8px !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 10px !important;
+    transform: translateY(-50%) !important;
+    font-size: 20px !important;
+    color: #ff0000 !important;
+    cursor: pointer !important;
+    margin: 0 !important;
   }
-}
+
+  /* Efekt hover dla kategorii */
+  .main-skill:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: var(--shadow-md) !important;
+  }
+
+  /* Responsywność - na mniejszych ekranach */
+  @media (max-width: 768px) {
+    .main-skill {
+      font-size: 20px !important;
+      padding: 18px 22px !important;
+      min-width: 180px !important;
+      min-height: 70px !important;
+    }
+    
+    .main-skill.level0, .branch-skill.level0, 
+    .main-skill.level1, .branch-skill.level1, 
+    .main-skill.level2, .branch-skill.level2, 
+    .main-skill.level3, .branch-skill.level3 {
+      min-width: 140px !important;
+      min-height: 55px !important;
+      font-size: 15px !important;
+      padding: 14px !important;
+    }
+    
+    .branch-skill.level0 {
+      font-size: 24px !important;
+    }
+    
+    .branch-skill .fab.fa-youtube {
+      font-size: 18px !important;
+      right: 8px !important;
+    }
+  }
 
 
 
 
-/* Poziomy */
-.main-skill.level0, .branch-skill.level0 { background: var(--level0); }
-.main-skill.level1, .branch-skill.level1 { background: var(--level1); color: #000; }
-.main-skill.level2, .branch-skill.level2 { background: var(--level2); }
-.main-skill.level3, .branch-skill.level3 { background: var(--level3); }
+  /* Poziomy */
+  .main-skill.level0, .branch-skill.level0 { background: var(--level0); }
+  .main-skill.level1, .branch-skill.level1 { background: var(--level1); color: #000; }
+  .main-skill.level2, .branch-skill.level2 { background: var(--level2); }
+  .main-skill.level3, .branch-skill.level3 { background: var(--level3); }
 
-/* Łączniki */
-.branch {
-  display: flex; align-items: center;
-  gap: 30px; position: relative;
-}
-.branch::before {
-  content: ""; position: absolute; top: 50%;
-  width: 80px; height: 2px;
-  background: var(--connector);
-}
+  /* Łączniki */
+  .branch {
+    display: flex; align-items: center;
+    gap: 30px; position: relative;
+  }
+  .branch::before {
+    content: ""; position: absolute; top: 50%;
+    width: 80px; height: 2px;
+    background: var(--connector);
+  }
 
-/* Mini-video */
-.branch-skill.mini-video {
-  background: #21262d;
-  border: 1px solid #30363d;
-  padding: 6px;
-}
-.branch-skill.mini-video:hover { background: #2a2f3a; }
+  /* Mini-video */
+  .branch-skill.mini-video {
+    background: #21262d;
+    border: 1px solid #30363d;
+    padding: 6px;
+  }
+  .branch-skill.mini-video:hover { background: #2a2f3a; }
 
-/* Progress gałęzi */
-.branch-progress {
-  margin-top: 8px;
-  font-size: 0.8rem;
-  background: #21262d;
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-  color: var(--muted);
-}
+  /* Progress gałęzi */
+  .branch-progress {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    background: #21262d;
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    color: var(--muted);
+  }
 
-/* Grywalizacja */
-.user-card {
-  background: var(--panel);
-  border: 1px solid #30363d;
-  border-radius: var(--radius-lg);
-  padding: 15px;
-  transition: var(--transition);
-}
-.user-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
+  /* Grywalizacja */
+  .user-card {
+    background: var(--panel);
+    border: 1px solid #30363d;
+    border-radius: var(--radius-lg);
+    padding: 15px;
+    transition: var(--transition);
+  }
+  .user-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
 
-/* Responsywność */
-@media (max-width: 768px) {
-  .tree-level { flex-direction: column; }
-  .user-panel { position: relative; margin: 0 auto 20px; }
-}
-
-
+  /* Responsywność */
+  @media (max-width: 768px) {
+    .tree-level { flex-direction: column; }
+    .user-panel { position: relative; margin: 0 auto 20px; }
+  }
 
 
 
 
-.branch-skill.level0 {
-  color: #777;          /* szary kolor ikony */
-  font-size: 24px;      /* większa kłódka */
-}
-.branch-skill.level0 i {
-  margin: 0;            /* usuń odstępy */
-}
-.hidden {
-  display: none !important;
-}
 
 
-  /* Header */
-  header {
+  .branch-skill.level0 {
+    color: #777;          /* szary kolor ikony */
+    font-size: 24px;      /* większa kłódka */
+  }
+  .branch-skill.level0 i {
+    margin: 0;            /* usuń odstępy */
+  }
+  .hidden {
+    display: none !important;
+  }
+
+
+    /* Header */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-sm);
+        padding: 0.875rem 0;
+      }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--darker);
+      }
+
+      .logo img {
+        height: 32px;
+        width: auto;
+      }
+
+      .nav-menu {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        color: var(--dark);
+        position: relative;
+        font-size: 0.95rem;
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+        transition: var(--transition);
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: var(--dark);
+      }
+
+
+  </style>
+
+
+
+
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --dark: #1e293b;
+      --darker: #0f172a;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --success: #10b981;
+      
+      --gradient-primary: linear-gradient(135deg, #2563eb, #7e22ce);
+      --gradient-accent: linear-gradient(135deg, #06b6d4, #3b82f6);
+      --gradient-card: linear-gradient(135deg, #ffffff, #f1f5f9);
+      
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      --radius: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      background-color: var(--light);
+      line-height: 1.5;
+      overflow-x: hidden;
+      font-size: 0.95rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.875rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-accent {
+      background: var(--gradient-accent);
+      color: white;
+    }
+
+    .section {
+      padding: 3.5rem 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title h2 {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    /* Header */
+    header {
       position: fixed;
       top: 0;
       left: 0;
@@ -502,1241 +720,1045 @@ h1 {
       color: var(--dark);
     }
 
-
-</style>
-
-
-
-
-
-<style>
-  :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --secondary: #7e22ce;
-    --accent: #06b6d4;
-    --dark: #1e293b;
-    --darker: #0f172a;
-    --light: #f8fafc;
-    --gray: #94a3b8;
-    --success: #10b981;
-    
-    --gradient-primary: linear-gradient(135deg, #2563eb, #7e22ce);
-    --gradient-accent: linear-gradient(135deg, #06b6d4, #3b82f6);
-    --gradient-card: linear-gradient(135deg, #ffffff, #f1f5f9);
-    
-    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    
-    --radius: 10px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    color: var(--dark);
-    background-color: var(--light);
-    line-height: 1.5;
-    overflow-x: hidden;
-    font-size: 0.95rem;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 0.875rem;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  h3 {
-    font-size: 1.5rem;
-  }
-
-  p {
-    margin-bottom: 1.25rem;
-    font-size: 0.95rem;
-  }
-
-  a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: var(--transition);
-  }
-
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 1.25rem;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    font-weight: 600;
-    transition: var(--transition);
-    border: none;
-    cursor: pointer;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .btn-primary {
-    background: var(--gradient-primary);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-  }
-
-  .btn-secondary:hover {
-    background: var(--primary);
-    color: white;
-  }
-
-  .btn-accent {
-    background: var(--gradient-accent);
-    color: white;
-  }
-
-  .section {
-    padding: 3.5rem 0;
-  }
-
-  .section-title {
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
-
-  .section-title h2 {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1.25rem;
-  }
-
-  .section-title h2::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 3px;
-    background: var(--gradient-primary);
-    border-radius: 2px;
-  }
-
-  /* Header */
-  header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-sm);
-    padding: 0.875rem 0;
-  }
-
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--darker);
-  }
-
-  .logo img {
-    height: 32px;
-    width: auto;
-  }
-
-  .nav-menu {
-    display: flex;
-    gap: 1.5rem;
-  }
-
-  .nav-link {
-    font-weight: 500;
-    color: var(--dark);
-    position: relative;
-    font-size: 0.95rem;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    transition: var(--transition);
-  }
-
-  .nav-link:hover::after {
-    width: 100%;
-  }
-
-  .mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
-    color: var(--dark);
-  }
-
-  /* Hero Section */
-  .hero {
-    padding: 8rem 0 4rem;
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(126, 34, 206, 0.03) 100%);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: var(--gradient-primary);
-    opacity: 0.1;
-    filter: blur(60px);
-  }
-
-  .hero-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
-    align-items: center;
-  }
-
-  .hero-text h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1.25rem;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .hero-text p {
-    font-size: 1.1rem;
-    color: var(--gray);
-    margin-bottom: 2rem;
-  }
-
-  .hero-buttons {
-    display: flex;
-    gap: 0.875rem;
-    flex-wrap: wrap;
-  }
-
-  .hero-image {
-    position: relative;
-  }
-
-  .hero-image img {
-    width: 100%;
-    max-width: 450px;
-    height: auto;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
-    transform: perspective(800px) rotateY(-10deg);
-    transition: var(--transition);
-  }
-
-  .hero-image img:hover {
-    transform: perspective(800px) rotateY(0);
-  }
-
-  /* Features */
-  .features {
-    background: white;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.75rem;
-  }
-
-  .feature-card {
-    background: var(--gradient-card);
-    padding: 1.75rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-    text-align: center;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .feature-icon {
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.25rem;
-    border-radius: 50%;
-    background: var(--gradient-primary);
-    color: white;
-    font-size: 1.5rem;
-  }
-
-  /* Course Info */
-  .course-info {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(126, 34, 206, 0.03) 100%);
-  }
-
-  .info-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3.5rem;
-    align-items: center;
-  }
-
-  .info-image {
-    position: relative;
-  }
-
-  .info-image img {
-    width: 100%;
-    max-width: 450px;
-    height: auto;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .info-badge {
-    position: absolute;
-    top: -12px;
-    right: -12px;
-    background: var(--gradient-primary);
-    color: white;
-    padding: 0.625rem 1.25rem;
-    border-radius: 25px;
-    font-weight: 600;
-    box-shadow: var(--shadow-md);
-    font-size: 0.85rem;
-  }
-
-  .info-content h2 {
-    margin-bottom: 1.25rem;
-  }
-
-  .info-list {
-    list-style: none;
-    margin-bottom: 1.75rem;
-  }
-
-  .info-list li {
-    margin-bottom: 0.625rem;
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: 0.95rem;
-  }
-
-  .info-list li::before {
-    content: '✓';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    background: var(--success);
-    color: white;
-    border-radius: 50%;
-    font-size: 0.7rem;
-  }
-
-  /* Instructor */
-  .instructor {
-    background: white;
-  }
-
-  .instructor-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 3.5rem;
-    align-items: center;
-  }
-
-  .instructor-image {
-    position: relative;
-  }
-
-  .instructor-image img {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .instructor-badge {
-    position: absolute;
-    bottom: -12px;
-    left: -12px;
-    background: var(--gradient-primary);
-    color: white;
-    padding: 0.625rem 1.25rem;
-    border-radius: 25px;
-    font-weight: 600;
-    box-shadow: var(--shadow-md);
-    font-size: 0.85rem;
-  }
-
-  .instructor-bio h2 {
-    margin-bottom: 1.25rem;
-  }
-
-  .social-links {
-    display: flex;
-    gap: 0.875rem;
-    margin-top: 1.25rem;
-  }
-
-  .social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--light);
-    color: var(--dark);
-    transition: var(--transition);
-  }
-
-  .social-link:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-3px);
-  }
-
-  /* FAQ */
-  .faq {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(126, 34, 206, 0.03) 100%);
-  }
-
-  .faq-container {
-    max-width: 750px;
-    margin: 0 auto;
-  }
-
-  .faq-item {
-    margin-bottom: 1.25rem;
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    background: white;
-  }
-
-  .faq-question {
-    padding: 1.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition);
-    font-size: 0.95rem;
-  }
-
-  .faq-question:hover {
-    color: var(--primary);
-  }
-
-  .faq-question i {
-    transition: var(--transition);
-  }
-
-  .faq-answer {
-    padding: 0 1.25rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: var(--transition);
-    font-size: 0.9rem;
-  }
-
-  .faq-item.active .faq-question i {
-    transform: rotate(180deg);
-  }
-
-  .faq-item.active .faq-answer {
-    padding: 0 1.25rem 1.25rem;
-    max-height: 500px;
-  }
-
-  /* CTA */
-  .cta {
-    background: var(--gradient-primary);
-    color: white;
-    text-align: center;
-    padding: 5rem 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    left: -80px;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .cta::after {
-    content: '';
-    position: absolute;
-    bottom: -80px;
-    right: -80px;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .cta h2 {
-    margin-bottom: 1.25rem;
-  }
-
-  .cta p {
-    max-width: 550px;
-    margin: 0 auto 2rem;
-    opacity: 0.9;
-  }
-
-  /* Footer */
-  footer {
-    background: var(--darker);
-    color: white;
-    padding: 4rem 0 1.75rem;
-  }
-
-  .footer-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2.5rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    margin-bottom: 1.25rem;
-    font-weight: 700;
-    font-size: 1.25rem;
-  }
-
-  .footer-logo img {
-    height: 32px;
-    width: auto;
-  }
-
-  .footer-about p {
-    opacity: 0.7;
-    margin-bottom: 1.25rem;
-    font-size: 0.9rem;
-  }
-
-  .footer-links h3,
-  .footer-contact h3 {
-    margin-bottom: 1.25rem;
-    position: relative;
-    display: inline-block;
-    font-size: 1.1rem;
-  }
-
-  .footer-links h3::after,
-  .footer-contact h3::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    width: 25px;
-    height: 2px;
-    background: var(--gradient-primary);
-    border-radius: 2px;
-  }
-
-  .footer-links ul {
-    list-style: none;
-  }
-
-  .footer-links li {
-    margin-bottom: 0.625rem;
-  }
-
-  .footer-links a {
-    color: var(--gray);
-    transition: var(--transition);
-    font-size: 0.9rem;
-  }
-
-  .footer-links a:hover {
-    color: white;
-    padding-left: 5px;
-  }
-
-  .footer-contact p {
-    margin-bottom: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    opacity: 0.7;
-    font-size: 0.9rem;
-  }
-
-  .footer-bottom {
-    text-align: center;
-    padding-top: 1.75rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    opacity: 0.7;
-    font-size: 0.85rem;
-  }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    h1 {
-      font-size: 2.25rem;
+    /* Hero Section */
+    .hero {
+      padding: 8rem 0 4rem;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(126, 34, 206, 0.03) 100%);
+      position: relative;
+      overflow: hidden;
     }
-    
-    h2 {
-      font-size: 1.75rem;
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      opacity: 0.1;
+      filter: blur(60px);
     }
-    
-    .hero-content,
-    .info-container,
-    .instructor-container {
-      grid-template-columns: 1fr;
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 2.5rem;
+      align-items: center;
     }
-    
-    .hero-text {
-      order: 2;
-      text-align: center;
-    }
-    
-    .hero-image {
-      order: 1;
-    }
-  }
 
-  @media (max-width: 768px) {
-    .nav-menu {
-      position: fixed;
-      top: 70px;
-      left: 0;
+    .hero-text h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-text p {
+      font-size: 1.1rem;
+      color: var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 0.875rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .hero-image img {
       width: 100%;
-      flex-direction: column;
-      background: white;
-      padding: 1.75rem;
-      box-shadow: var(--shadow-md);
-      transform: translateY(-100%);
-      opacity: 0;
-      visibility: hidden;
+      max-width: 450px;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      transform: perspective(800px) rotateY(-10deg);
       transition: var(--transition);
     }
-    
-    .nav-menu.active {
-      transform: translateY(0);
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .mobile-menu-btn {
-      display: block;
-    }
-    
-    .hero {
-      padding: 6rem 0 2.5rem;
-    }
-    
-    .hero-text h1 {
-      font-size: 2rem;
-    }
-    
-    .hero-buttons {
-      justify-content: center;
-    }
-  }
 
-  @media (max-width: 576px) {
-    .section {
-      padding: 2.5rem 0;
+    .hero-image img:hover {
+      transform: perspective(800px) rotateY(0);
     }
-    
-    .hero-text h1 {
-      font-size: 1.75rem;
+
+    /* Features */
+    .features {
+      background: white;
     }
-    
-    .btn {
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .feature-card {
+      background: var(--gradient-card);
+      padding: 1.75rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .feature-icon {
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    /* Course Info */
+    .course-info {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(126, 34, 206, 0.03) 100%);
+    }
+
+    .info-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .info-image {
+      position: relative;
+    }
+
+    .info-image img {
       width: 100%;
+      max-width: 450px;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .info-badge {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      background: var(--gradient-primary);
+      color: white;
+      padding: 0.625rem 1.25rem;
+      border-radius: 25px;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      font-size: 0.85rem;
+    }
+
+    .info-content h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .info-list {
+      list-style: none;
+      margin-bottom: 1.75rem;
+    }
+
+    .info-list li {
+      margin-bottom: 0.625rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-size: 0.95rem;
+    }
+
+    .info-list li::before {
+      content: '✓';
+      display: flex;
+      align-items: center;
       justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: var(--success);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
     }
-    
-    .hero-buttons {
-      flex-direction: column;
+
+    /* Instructor */
+    .instructor {
+      background: white;
     }
-  }
 
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
+    .instructor-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 3.5rem;
+      align-items: center;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    .instructor-image {
+      position: relative;
     }
-  }
 
-  .fade-in {
-    animation: fadeIn 1s ease forwards;
-  }
+    .instructor-image img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+    }
 
-  .delay-1 {
-    animation-delay: 0.2s;
-  }
+    .instructor-badge {
+      position: absolute;
+      bottom: -12px;
+      left: -12px;
+      background: var(--gradient-primary);
+      color: white;
+      padding: 0.625rem 1.25rem;
+      border-radius: 25px;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      font-size: 0.85rem;
+    }
 
-  .delay-2 {
-    animation-delay: 0.4s;
-  }
+    .instructor-bio h2 {
+      margin-bottom: 1.25rem;
+    }
 
-  .delay-3 {
-    animation-delay: 0.6s;
-  }
+    .social-links {
+      display: flex;
+      gap: 0.875rem;
+      margin-top: 1.25rem;
+    }
 
-.sub-navbar {
-  position: fixed;   /* przyklejony do ekranu */
-  top: 0;            /* górna krawędź */
-  left: 50%;         /* środek ekranu */
-  transform: translateX(-50%); /* przesuwa o połowę szerokości */
-  z-index: 1000;     /* nad innymi elementami */
-  background: white; /* opcjonalnie */
-  padding: 10px;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--light);
+      color: var(--dark);
+      transition: var(--transition);
+    }
 
-.sub-navbar-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    .social-link:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
 
-.user-info {
-  display: flex;
-  align-items: center;
-}
+    /* FAQ */
+    .faq {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(126, 34, 206, 0.03) 100%);
+    }
 
-.user-avatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: #007bff;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
+    .faq-container {
+      max-width: 750px;
+      margin: 0 auto;
+    }
 
+    .faq-item {
+      margin-bottom: 1.25rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      background: white;
+    }
 
+    .faq-question {
+      padding: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
 
+    .faq-question:hover {
+      color: var(--primary);
+    }
 
-@media (max-width: 768px) {
+    .faq-question i {
+      transition: var(--transition);
+    }
+
+    .faq-answer {
+      padding: 0 1.25rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .faq-item.active .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    .faq-item.active .faq-answer {
+      padding: 0 1.25rem 1.25rem;
+      max-height: 500px;
+    }
+
+    /* CTA */
+    .cta {
+      background: var(--gradient-primary);
+      color: white;
+      text-align: center;
+      padding: 5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: -80px;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .cta::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      right: -80px;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .cta h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .cta p {
+      max-width: 550px;
+      margin: 0 auto 2rem;
+      opacity: 0.9;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--darker);
+      color: white;
+      padding: 4rem 0 1.75rem;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      margin-bottom: 1.25rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .footer-logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    .footer-about p {
+      opacity: 0.7;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-links h3,
+    .footer-contact h3 {
+      margin-bottom: 1.25rem;
+      position: relative;
+      display: inline-block;
+      font-size: 1.1rem;
+    }
+
+    .footer-links h3::after,
+    .footer-contact h3::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 25px;
+      height: 2px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.625rem;
+    }
+
+    .footer-links a {
+      color: var(--gray);
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+
+    .footer-contact p {
+      margin-bottom: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 1.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0.7;
+      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      h1 {
+        font-size: 2.25rem;
+      }
+      
+      h2 {
+        font-size: 1.75rem;
+      }
+      
+      .hero-content,
+      .info-container,
+      .instructor-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+      
+      .hero-text {
+        order: 2;
+        text-align: center;
+      }
+      
+      .hero-image {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: white;
+        padding: 1.75rem;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+      }
+      
+      .nav-menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .hero {
+        padding: 6rem 0 2.5rem;
+      }
+      
+      .hero-text h1 {
+        font-size: 2rem;
+      }
+      
+      .hero-buttons {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .section {
+        padding: 2.5rem 0;
+      }
+      
+      .hero-text h1 {
+        font-size: 1.75rem;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .delay-1 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.6s;
+    }
+
   .sub-navbar {
-  position: fixed;   /* przyklejony do ekranu */
-  top: 0;            /* górna krawędź */
-  left: 50%;         /* środek ekranu */
-  transform: translateX(-50%); /* przesuwa o połowę szerokości */
-  z-index: 1000;     /* nad innymi elementami */
-  background: white; /* opcjonalnie */
-  padding: 10px;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: fixed;   /* przyklejony do ekranu */
+    top: 60px;            /* górna krawędź */
+    left: 50%;         /* środek ekranu */
+    transform: translateX(-50%); /* przesuwa o połowę szerokości */
+    z-index: 1000;     /* nad innymi elementami */
+    background: white; /* opcjonalnie */
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
 
   .sub-navbar-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  .sub-navbar .progress-wrapper {
-    width: 100%;
-    align-items: flex-start;
+  .user-info {
+    display: flex;
+    align-items: center;
   }
-}
-</style>
+
+  .user-avatar {
+    width: 35px;
+    top:60px; 
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
 
 
 
-</head>
-<body>
-<!-- Header -->
-<header>
-  <div class="container header-container">
-    <a href="#" class="logo">
-      <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo">
-      <span>Breakingu</span>
-    </a>
-    
-    <nav class="nav-menu">
-    
-      <a id="gamificationBtn" class="nav-link">Grywalizacja</a> 
-      <a href="https://test.glovesmaker.pl/admin" class="nav-link">Admin</a>
-      <a href="#course" class="nav-link">Course</a>
-      <a href="#instructor" class="nav-link">Instructor</a>
+
+  @media (max-width: 768px) {
+    .sub-navbar {
+    position: fixed;   /* przyklejony do ekranu */
+    top: 60px;            /* górna krawędź */
+    left: 50%;         /* środek ekranu */
+    transform: translateX(-50%); /* przesuwa o połowę szerokości */
+    z-index: -10;     /* nad innymi elementami */
+    background: white; /* opcjonalnie */
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .sub-navbar-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .sub-navbar .progress-wrapper {
+      width: 100%;
+      align-items: flex-start;
+    }
+  }
+  </style>
+
+
+
+  </head>
+  <body>
+  <!-- Header -->
+  <header>
+    <div class="container header-container">
+      <a href="#" class="logo">
+        <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo">
+        <span>Breakingu</span>
+      </a>
       
-      <a href="#contact" class="nav-link">Contact</a>
-      <a id="logoutBtn" class="nav-link">Wyloguj</a>
-    </nav>
-    
-    <button class="mobile-menu-btn">
-      <i class="fas fa-bars"></i>
-    </button>
-  </div>
-
-
-  
-</header>
-
-
-  <!-- Ekran logowania -->
-  <div id="auth-container" class="auth-container">
-    <h2 style="color:white">Logowanie do Umiejętności Breaking</h2>
-    <div id="login-form">
-      <input type="email" id="login-email" class="auth-input" placeholder="Adres email">
-      <input type="password" id="login-password" class="auth-input" placeholder="Hasło">
-      <div id="login-error" class="error-message"></div>
-      <button id="login-btn" style="color:black" class="auth-button">Zaloguj się</button>
-      <div class="auth-switch" style="color:white" id="show-register">Nie masz konta? Zarejestruj się</div>
+      <nav class="nav-menu">
+      
+        <a id="gamificationBtn" class="nav-link">Grywalizacja</a> 
+        
+        <a href="#course" class="nav-link">Course</a>
+        <a href="#instructor" class="nav-link">Instructor</a>
+        
+        <a href="#contact" class="nav-link">Contact</a>
+        <a href="https://test.glovesmaker.pl/admin" class="nav-link">Admin</a>
+        <a id="logoutBtn" class="nav-link">Wyloguj</a>
+      </nav>
+      
+      <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
+
+
     
-    <div id="register-form" style="display: none;">
-      <input type="text" id="register-name" class="auth-input" placeholder="Imię i nazwisko">
-      <input type="email" id="register-email" class="auth-input" placeholder="Adres email">
-      <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)">
-      <div id="register-error" class="error-message"></div>
-      <button id="register-btn" class="auth-button" style="color:white">Zarejestruj się</button>
-      <div class="auth-switch" id="show-login" style="color:white">Masz już konto? Zaloguj się</div>
-    </div>
-  </div>
-
-  <!-- Główna aplikacja -->
-  <div id="app-container" class="app-container" style="margin: 120px 0; display: none;">
+  </header>
 
 
-    <div class="container">
-
-   
-      <div class="skill-tree" id="skillTree">
-        <div class="tree-axis"></div>
-     
+    <!-- Ekran logowania -->
+    <div id="auth-container" class="auth-container">
+      <h2 style="color:white">Logowanie do Umiejętności Breaking</h2>
+      <div id="login-form">
+        <input type="email" id="login-email" class="auth-input" placeholder="Adres email">
+        <input type="password" id="login-password" class="auth-input" placeholder="Hasło">
+        <div id="login-error" class="error-message"></div>
+        <button id="login-btn" style="color:black" class="auth-button">Zaloguj się</button>
+        <div class="auth-switch" style="color:white" id="show-register">Nie masz konta? Zarejestruj się</div>
       </div>
+      
+      <div id="register-form" style="display: none;">
+        <input type="text" id="register-name" class="auth-input" placeholder="Imię i nazwisko">
+        <input type="email" id="register-email" class="auth-input" placeholder="Adres email">
+        <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)">
+        <div id="register-error" class="error-message"></div>
+        <button id="register-btn" class="auth-button" style="color:white">Zarejestruj się</button>
+        <div class="auth-switch" id="show-login" style="color:white">Masz już konto? Zaloguj się</div>
+      </div>
+    </div>
+
+    <!-- Główna aplikacja -->
+    <div id="app-container" class="app-container" style="margin: 120px 0; display: none;">
 
 
-<div class="sub-navbar">
-  <div class="sub-navbar-container">
-    <div class="user-info">
-      <div class="user-avatar" id="userAvatar">U</div>
-      <div class="user-section">
-        <div class="user-name" id="userName">Użytkownik</div>
-        <div class="progress-wrapper">
-          <div class="progress-bar">
-            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      <div class="container">
+
+    
+        <div class="skill-tree" id="skillTree">
+          <div class="tree-axis"></div>
+      
+        </div>
+
+
+  <div class="sub-navbar">
+    <div class="sub-navbar-container">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-section">
+          <div class="user-name" id="userName">Użytkownik</div>
+          <div class="progress-wrapper">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">0/25 umiejętności</div>
           </div>
-          <div class="progress-text" id="progressText">0/25 umiejętności</div>
         </div>
       </div>
-    </div>
 
-    <div class="sub-navbar-actions">
-      <a href="#" id="backToMySkillsNav" class="nav-link" style="display:none; margin-right: 10px;">Powrót do moich umiejętności</a>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-  <!-- W app-container, pod header ale przed skill-tree -->
-  <div id="gamification-section" style="margin: 20px 0; display: none;">
-    <h2>Grywalizacja</h2>
-    <div id="users-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;"></div>
-  </div>
-
-    </div>
-    
-    <div class="user-panel">
-      <!-- <div class="user-info">
-        <div class="user-avatar" id="userAvatar">U</div>
-        <div class="user-name" id="userName">Użytkownik</div>
+      <div class="sub-navbar-actions">
+        <a href="#" id="backToMySkillsNav" class="nav-link" ></a>
       </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-      </div>
-      <div class="progress-text" id="progressText">0/25 umiejętności</div>
-   
-      <button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
-
-      <button class="logout-btn" id="logoutBtn">Wyloguj</button>-->
-
-
     </div>
-
-
-  
-
   </div>
 
 
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      getDocs, 
-      doc, 
-      getDoc, 
-      setDoc,
-      updateDoc 
-    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword, 
-      signOut, 
-      onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBdhMIiqetOfDGP85ERxtgwn3AXR50pBcE",
-      authDomain: "base-468e0.firebaseapp.com",
-      projectId: "base-468e0",
-      storageBucket: "base-468e0.appspot.com",
-      messagingSenderId: "829161895559",
-      appId: "1:829161895559:web:d832541aac05b35847ea22"
-    };
+
+
+    <!-- W app-container, pod header ale przed skill-tree -->
+    <div id="gamification-section" style="margin: 20px 0; display: none;">
+      <h2>Grywalizacja</h2>
+      <div id="users-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;"></div>
+    </div>
+
+      </div>
+      
+      <div class="user-panel">
+        <!-- <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-name" id="userName">Użytkownik</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progressText">0/25 umiejętności</div>
     
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+        <button class="logout-btn" id="gamificationBtn" >Grywalizacja</button>
+
+        <button class="logout-btn" id="logoutBtn">Wyloguj</button>-->
 
 
-        // Zmienne globalne
-    let userSkills = {};
-    let currentUserId = null;
-    let allUsers = [];
-    let isGamificationView = false;
-    let usersData = {};
-    let currentUserData = null;
+      </div>
 
 
-    // Struktura drzewka umiejętności
-    const SKILL_TREE = [
-      {
-        id: "toprock",
-        name: "Toprock",
-        desc: "Podstawowe kroki wykonywane na stojąco",
-        level: "Poziom podstawowy",
-        branches: [
-          {
-            direction: "left",
-            skills: [
-              { id: "basic-toprock", name: "Basic Toprock", level: "Poziom 1" },
-              { id: "indian-step", name: "Indian Step", level: "Poziom 1", req: ["basic-toprock"], videoUrl: "https://www.youtube-nocookie.com/embed/xOXyKlhGiLE?si=hAqhz4vdzQxmLcXD" },
-              { id: "side-step", name: "Side Step", level: "Poziom 2", req: ["indian-step"] },
-              { id: "crossover-step", name: "Crossover Step", level: "Poziom 2", req: ["side-step"] },
-              { id: "advanced-toprock", name: "Zaawansowane Toprock", level: "Poziom 3", req: ["crossover-step"] }
-            ]
-          }
-        ]
-      },
-      {
-        id: "footwork",
-        name: "Footwork",
-        desc: "Ruchy wykonywane blisko ziemi",
-        level: "Poziom średniozaawansowany",
-        branches: [
-          {
-            direction: "right",
-            skills: [
-              { id: "basic-6step", name: "6-step", level: "Poziom 1" },
-              { id: "cc", name: "CC (Kick-outs)", level: "Poziom 1", req: ["basic-6step"]},
-              { id: "3step", name: "3-step", level: "Poziom 2", req: ["basic-6step"], videoUrl: "https://www.youtube-nocookie.com/embed/xOXyKlhGiLE?si=hAqhz4vdzQxmLcXD"  },
-              { id: "coffee-grinder", name: "Coffee Grinder", level: "Poziom 2", req: ["cc"] },
-              { id: "footwork-combos", name: "Kombinacje", level: "Poziom 3", req: ["3step","coffee-grinder"] }
-            ]
-          }
-        ]
-      },
-      {
-        id: "freezes",
-        name: "Freezy",
-        desc: "Pozycje zatrzymania w tańcu",
-        level: "Poziom zaawansowany",
-        branches: [
-          {
-            direction: "left",
-            skills: [
-              { id: "baby-freeze", name: "Baby Freeze", level: "Poziom 1" },
-              { id: "chair-freeze", name: "Chair Freeze", level: "Poziom 1", req: ["baby-freeze"] },
-              { id: "airchair", name: "Airchair", level: "Poziom 2", req: ["chair-freeze"] },
-              { id: "handstand-freeze", name: "Handstand Freeze", level: "Poziom 2", req: ["baby-freeze"] },
-              { id: "combo-freezes", name: "Kombinacje Freezów", level: "Poziom 3", req: ["airchair","handstand-freeze"] }
-            ]
-          }
-        ]
-      },
-      {
-        id: "powermoves",
-        name: "Powermoves",
-        desc: "Dynamiczne ruchy wymagające siły",
-        level: "Poziom ekspert",
-        branches: [
-       
-          {
-            direction: "right",
-            skills: [
-              { id: "backspin", name: "Backspin", level: "Poziom 1" },
-              { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] },
-              { id: "flare", name: "Flare", level: "Poziom 2", req: ["windmill"] },
-              { id: "headspin", name: "Headspin", level: "Poziom 2", req: ["windmill"] },
-              { id: "airflare", name: "Airflare", level: "Poziom 3", req: ["flare","headspin"] }
-            ]
-          }
-        ]
-      },
-      {
-        id: "style",
-        name: "Styl i muzykalność",
-        desc: "Rozwijanie własnego stylu",
-        level: "Poziom mistrzowski",
-        branches: [
-          {
-            direction: "left",
-            skills: [
-              { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
-              { id: "musicality", name: "Muzykalność", level: "Poziom 2", req: ["rhythm"] },
-              { id: "transitions", name: "Płynne przejścia", level: "Poziom 2", req: ["musicality"] },
-              { id: "personal-style", name: "Własny styl", level: "Poziom 3", req: ["transitions"] }
-            ]
-          }
-        ]
-      }
-    ];
+    
+
+    </div>
 
 
 
-    // Referencje do elementów DOM
-    const authContainer = document.getElementById('auth-container');
-    const appContainer = document.getElementById('app-container');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const loginError = document.getElementById('login-error');
-    const registerError = document.getElementById('register-error');
-    const userAvatar = document.getElementById('userAvatar');
-    const userName = document.getElementById('userName');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const skillTree = document.getElementById('skillTree');
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+      import { 
+        getFirestore, 
+        collection, 
+        getDocs, 
+        doc, 
+        getDoc, 
+        setDoc,
+        updateDoc 
+      } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+      import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword, 
+        signOut, 
+        onAuthStateChanged 
+      } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-
-
-    // Przełączanie między formularzami
-    document.getElementById('show-register').addEventListener('click', () => {
-      loginForm.style.display = 'none';
-      registerForm.style.display = 'block';
-      registerError.textContent = '';
-    });
-
-    document.getElementById('show-login').addEventListener('click', () => {
-      registerForm.style.display = 'none';
-      loginForm.style.display = 'block';
-      loginError.textContent = '';
-    });
-
-    // Logowanie
-    document.getElementById('login-btn').addEventListener('click', async () => {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
+      const firebaseConfig = {
+        apiKey: "AIzaSyBdhMIiqetOfDGP85ERxtgwn3AXR50pBcE",
+        authDomain: "base-468e0.firebaseapp.com",
+        projectId: "base-468e0",
+        storageBucket: "base-468e0.appspot.com",
+        messagingSenderId: "829161895559",
+        appId: "1:829161895559:web:d832541aac05b35847ea22"
+      };
       
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        loginError.textContent = '';
-      } catch (error) {
-        console.error('Błąd logowania:', error);
-        loginError.textContent = getAuthErrorMessage(error.code);
-      }
-    });
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
 
-    // Rejestracja
-    document.getElementById('register-btn').addEventListener('click', async () => {
-      const name = document.getElementById('register-name').value;
-      const email = document.getElementById('register-email').value;
-      const password = document.getElementById('register-password').value;
-      
-      if (!name) {
-        registerError.textContent = 'Podaj imię i nazwisko';
-        return;
-      }
-      
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+
+          // Zmienne globalne
+      let userSkills = {};
+      let currentUserId = null;
+      let allUsers = [];
+      let isGamificationView = false;
+      let usersData = {};
+      let currentUserData = null;
+
+
+      // Struktura drzewka umiejętności
+      const SKILL_TREE = [
+        {
+          id: "toprock",
+          name: "Toprock",
+          desc: "Podstawowe kroki wykonywane na stojąco",
+          level: "Poziom podstawowy",
+          branches: [
+            {
+              direction: "left",
+              skills: [
+                { id: "basic-toprock", name: "Basic Toprock", level: "Poziom 1" },
+                { id: "indian-step", name: "Indian Step", level: "Poziom 1", req: ["basic-toprock"], videoUrl: "https://www.youtube-nocookie.com/embed/xOXyKlhGiLE?si=hAqhz4vdzQxmLcXD" },
+                { id: "side-step", name: "Side Step", level: "Poziom 2", req: ["indian-step"] },
+                { id: "crossover-step", name: "Crossover Step", level: "Poziom 1", req: ["side-step"] },
+                { id: "advanced-toprock", name: "Zaawansowane Toprock", level: "Poziom 1", req: ["crossover-step"] }
+              ]
+            }
+          ]
+        },
+        {
+          id: "footwork",
+          name: "Footwork",
+          desc: "Ruchy wykonywane blisko ziemi",
+          level: "Poziom średniozaawansowany",
+          branches: [
+            {
+              direction: "right",
+              skills: [
+                { id: "basic-6step", name: "6-step", level: "Poziom 1" },
+                { id: "cc", name: "CC (Kick-outs)", level: "Poziom 1", req: ["basic-6step"]},
+                { id: "3step", name: "3-step", level: "Poziom 1", req: ["basic-6step"], videoUrl: "https://www.youtube-nocookie.com/embed/xOXyKlhGiLE?si=hAqhz4vdzQxmLcXD"  },
+                { id: "coffee-grinder", name: "Coffee Grinder", level: "Poziom 1", req: ["cc"] },
+                { id: "footwork-combos", name: "Kombinacje", level: "Poziom 1", req: ["3step","coffee-grinder"] }
+              ]
+            }
+          ]
+        },
+        {
+          id: "freezes",
+          name: "Freezy",
+          desc: "Pozycje zatrzymania w tańcu",
+          level: "Poziom zaawansowany",
+          branches: [
+            {
+              direction: "left",
+              skills: [
+                { id: "baby-freeze", name: "Baby Freeze", level: "Poziom 1" },
+                { id: "chair-freeze", name: "Chair Freeze", level: "Poziom 1", req: ["baby-freeze"] },
+                { id: "airchair", name: "Airchair", level: "Poziom 1", req: ["chair-freeze"] },
+                { id: "handstand-freeze", name: "Handstand Freeze", level: "Poziom 1", req: ["baby-freeze"] },
+                { id: "combo-freezes", name: "Kombinacje Freezów", level: "Poziom 1", req: ["airchair","handstand-freeze"] }
+              ]
+            }
+          ]
+        },
+        {
+          id: "powermoves",
+          name: "Powermoves",
+          desc: "Dynamiczne ruchy wymagające siły",
+          level: "Poziom ekspert",
+          branches: [
         
-        // Utwórz dokument użytkownika w Firestore
-        await setDoc(doc(db, "users", user.uid), {
-          name: name,
-          email: email,
-          role: "user",
-          skills: {},
-          createdAt: new Date()
-        });
-        
+            {
+              direction: "right",
+              skills: [
+                { id: "backspin", name: "Backspin", level: "Poziom 1" },
+                { id: "windmill", name: "Windmill", level: "Poziom 1", req: ["backspin"] },
+                { id: "flare", name: "Flare", level: "Poziom 1", req: ["windmill"] },
+                { id: "headspin", name: "Headspin", level: "Poziom 1", req: ["windmill"] },
+                { id: "airflare", name: "Airflare", level: "Poziom 1", req: ["flare","headspin"] }
+              ]
+            }
+          ]
+        },
+        {
+          id: "style",
+          name: "Styl i muzykalność",
+          desc: "Rozwijanie własnego stylu",
+          level: "Poziom mistrzowski",
+          branches: [
+            {
+              direction: "left",
+              skills: [
+                { id: "rhythm", name: "Czucie rytmu", level: "Poziom 1" },
+                { id: "musicality", name: "Muzykalność", level: "Poziom 1", req: ["rhythm"] },
+                { id: "transitions", name: "Płynne przejścia", level: "Poziom 1", req: ["musicality"] },
+                { id: "personal-style", name: "Własny styl", level: "Poziom 1", req: ["transitions"] }
+              ]
+            }
+          ]
+        }
+      ];
+
+
+
+      // Referencje do elementów DOM
+      const authContainer = document.getElementById('auth-container');
+      const appContainer = document.getElementById('app-container');
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const loginError = document.getElementById('login-error');
+      const registerError = document.getElementById('register-error');
+      const userAvatar = document.getElementById('userAvatar');
+      const userName = document.getElementById('userName');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const skillTree = document.getElementById('skillTree');
+
+
+
+      // Przełączanie między formularzami
+      document.getElementById('show-register').addEventListener('click', () => {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
         registerError.textContent = '';
-      } catch (error) {
-        console.error('Błąd rejestracji:', error);
-        registerError.textContent = getAuthErrorMessage(error.code);
-      }
-    });
+      });
 
-    // Wylogowanie
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-      } catch (error) {
-        console.error('Błąd wylogowania:', error);
-      }
-    });
+      document.getElementById('show-login').addEventListener('click', () => {
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        loginError.textContent = '';
+      });
 
+      // Logowanie
+      document.getElementById('login-btn').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          loginError.textContent = '';
+        } catch (error) {
+          console.error('Błąd logowania:', error);
+          loginError.textContent = getAuthErrorMessage(error.code);
+        }
+      });
+
+      // Rejestracja
+      document.getElementById('register-btn').addEventListener('click', async () => {
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        
+        if (!name) {
+          registerError.textContent = 'Podaj imię i nazwisko';
+          return;
+        }
+        
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const user = userCredential.user;
+          
+          // Utwórz dokument użytkownika w Firestore
+          await setDoc(doc(db, "users", user.uid), {
+            name: name,
+            email: email,
+            role: "user",
+            skills: {},
+            createdAt: new Date()
+          });
+          
+          registerError.textContent = '';
+        } catch (error) {
+          console.error('Błąd rejestracji:', error);
+          registerError.textContent = getAuthErrorMessage(error.code);
+        }
+      });
+
+      // Wylogowanie
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error('Błąd wylogowania:', error);
+        }
+      });
+
+      // Obserwuj stan autentykacji
     // Obserwuj stan autentykacji
-   // Obserwuj stan autentykacji
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    // Użytkownik zalogowany
-    currentUserId = user.uid;
-    authContainer.style.display = 'none';
-    appContainer.style.display = 'block';
-    
-    // Pobierz dane użytkownika
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    currentUserData = userDoc.exists() ? userDoc.data() : {};
-    
-    // Ustaw informacje o użytkowniku
-    userAvatar.textContent = currentUserData.name ? currentUserData.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
-    userName.textContent = currentUserData.name || user.email;
-    
-    // Załaduj umiejętności użytkownika
-    await loadUserSkills();
-    renderSkillTree();
-    
-    // Załaduj wszystkich użytkowników
-    await loadAllUsers();
-  } else {
-    // Użytkownik wylogowany
-    currentUserId = null;
-    currentUserData = null;
-    authContainer.style.display = 'block';
-    appContainer.style.display = 'none';
-  }
-});
-
-    // Załaduj umiejętności użytkownika z Firestore
-// Załaduj umiejętności użytkownika z Firestore
-async function loadUserSkills() {
-  if (!currentUserId) return;
-  
-  try {
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      userSkills = userData.skills || {};
-      usersData[currentUserId] = userData; // Zapisz dane bieżącego użytkownika
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // Użytkownik zalogowany
+      currentUserId = user.uid;
+      authContainer.style.display = 'none';
+      appContainer.style.display = 'block';
+      
+      // Pobierz dane użytkownika
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      currentUserData = userDoc.exists() ? userDoc.data() : {};
+      
+      // Ustaw informacje o użytkowniku
+      userAvatar.textContent = currentUserData.name ? currentUserData.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+      userName.textContent = currentUserData.name || user.email;
+      
+      // Załaduj umiejętności użytkownika
+      await loadUserSkills();
+      renderSkillTree();
+      
+      // Załaduj wszystkich użytkowników
+      await loadAllUsers();
     } else {
+      // Użytkownik wylogowany
+      currentUserId = null;
+      currentUserData = null;
+      authContainer.style.display = 'block';
+      appContainer.style.display = 'none';
+    }
+  });
+
+      // Załaduj umiejętności użytkownika z Firestore
+  // Załaduj umiejętności użytkownika z Firestore
+  async function loadUserSkills() {
+    if (!currentUserId) return;
+    
+    try {
+      const userDoc = await getDoc(doc(db, "users", currentUserId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        userSkills = userData.skills || {};
+        usersData[currentUserId] = userData; // Zapisz dane bieżącego użytkownika
+      } else {
+        userSkills = {};
+      }
+    } catch (error) {
+      console.error("Błąd ładowania umiejętności:", error);
       userSkills = {};
     }
-  } catch (error) {
-    console.error("Błąd ładowania umiejętności:", error);
-    userSkills = {};
   }
-}
 
-// Funkcja do renderowania drzewka
-function renderSkillTree() {
+  // Funkcja do renderowania drzewka
+  function renderSkillTree() {
   skillTree.innerHTML = '';
 
   SKILL_TREE.forEach((category) => {
     const levelContainer = document.createElement('div');
     levelContainer.className = 'tree-level';
 
+    // policz progres w tej kategorii
+    const skillsInCategory = category.branches.flatMap(b => b.skills)
+      .filter(skill => skill.level !== "Poziom 3"); // ignorujemy poziom 3
+    const unlockedInCategory = skillsInCategory.filter(skill => {
+      const level = userSkills[skill.id] || 0;
+      return level === 1 || level === 2;
+    }).length;
+    const categoryPercent = Math.round((unlockedInCategory / skillsInCategory.length) * 100);
+
     // --- KATEGORIA GŁÓWNA ---
     const mainSkill = document.createElement('div');
     mainSkill.className = 'main-skill';
-    mainSkill.innerHTML = `<div class="skill-name">${category.name}</div>`;
+mainSkill.innerHTML = `
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="skill-name">${category.name}</div>
+    <div style="
+      font-size: 16px; 
+      font-weight: 600; 
+      color: #black; 
+      margin-left: 10px;
+      z-index: -20;
+    ">
+      ${categoryPercent}%
+    </div>
+  </div>
+`;
 
-    // --- NOWY STYL DLA KATEGORII ---
     mainSkill.style.cssText = `
-      font-size: 20px;           /* większy napis */
+      font-size: 20px;
       font-weight: 700;
-      padding: 20px 24px;        /* większe kafelki */
+      padding: 20px 24px;
       border: 2px solid black;   
-      background: white;          /* białe tło */
-      color: black;               /* czarny tekst */
+      background: white;
+      color: black;
       border-radius: 12px;
       text-align: center;
       cursor: pointer;
@@ -1753,25 +1775,14 @@ function renderSkillTree() {
     skillsContainer.style.gap = '12px';
     skillsContainer.style.marginTop = '12px';
 
-    let highestLevel = 0;
-
     category.branches.forEach(branch => {
       branch.skills.forEach(skill => {
         let userLevel = userSkills[skill.id] || 0;
-
-        // Sprawdź wymagania: jeśli któryś z wymaganych skill.id nie został odblokowany, level = 0
         if (skill.req && skill.req.some(reqId => !userSkills[reqId] || userSkills[reqId] === 0)) {
           userLevel = 0;
         }
 
-        // Aktualizuj najwyższy poziom kategorii (tylko dla poziomów 1-2)
-        if (userLevel === 1 || userLevel === 2) {
-          if (userLevel > highestLevel) highestLevel = userLevel;
-        }
-
         const skillElement = document.createElement('div');
-
-        // Jeśli poziom 0 lub 3 -> kłódka
         if (userLevel === 0 || userLevel === 3) {
           skillElement.className = 'branch-skill level0';
           skillElement.innerHTML = `<i class="fas fa-lock"></i>`;
@@ -1780,27 +1791,8 @@ function renderSkillTree() {
           skillElement.style.justifyContent = "center";
           skillElement.style.height = "45px";
         } else {
-          // Odblokowane poziomy 1 i 2
           skillElement.className = `branch-skill level${userLevel}`;
           skillElement.innerHTML = `<div class="skill-name">${skill.name}</div>`;
-
-          // Ikona wideo jeśli jest
-          if (skill.videoUrl) {
-            const videoIcon = document.createElement('i');
-            videoIcon.className = 'fab fa-youtube';
-            videoIcon.style.position = 'absolute';
-            videoIcon.style.top = '8px';
-            videoIcon.style.right = '8px';
-            videoIcon.style.fontSize = '20px';
-            videoIcon.style.color = '#ff0000';
-            videoIcon.style.cursor = 'pointer';
-            videoIcon.title = 'Zobacz film';
-            videoIcon.addEventListener('click', (e) => {
-              e.stopPropagation();
-              window.open(skill.videoUrl, '_blank');
-            });
-            skillElement.appendChild(videoIcon);
-          }
         }
 
         skillElement.style.position = 'relative';
@@ -1826,379 +1818,416 @@ function renderSkillTree() {
 
 
 
-// Aktualizuj pasek postępu (fioletowe ignorowane)
-function updateProgress() {
-  const totalSkills = SKILL_TREE.reduce((total, category) => {
-    const skillsInCategory = category.branches.reduce((branchTotal, branch) => {
-      // Liczymy tylko umiejętności poziomu 1 i 2
-      return branchTotal + branch.skills.filter(skill => skill.level !== "Poziom 3").length;
+
+  // Aktualizuj pasek postępu (fioletowe ignorowane)
+  function updateProgress() {
+    const totalSkills = SKILL_TREE.reduce((total, category) => {
+      const skillsInCategory = category.branches.reduce((branchTotal, branch) => {
+        // Liczymy tylko umiejętności poziomu 1 i 2
+        return branchTotal + branch.skills.filter(skill => skill.level !== "Poziom 3").length;
+      }, 0);
+      return total + skillsInCategory + 1; // +1 za kategorię
     }, 0);
-    return total + skillsInCategory + 1; // +1 za kategorię
-  }, 0);
 
-  const unlockedSkills = Object.entries(userSkills)
-    .filter(([skillId, level]) => {
-      const skill = SKILL_TREE.flatMap(c => c.branches.flatMap(b => b.skills))
-                     .find(s => s.id === skillId);
-      return skill && skill.level !== "Poziom 3" && level > 0;
-    }).length;
-
-  const progressPercent = (unlockedSkills / totalSkills) * 100;
-
-  document.getElementById('progressFill').style.width = `${progressPercent}%`;
-  document.getElementById('progressText').textContent = `${unlockedSkills}/${totalSkills} umiejętności`;
-}
-
-
-    
-    // Funkcja do tłumaczenia kodów błędów Firebase
-    function getAuthErrorMessage(errorCode) {
-      switch (errorCode) {
-        case 'auth/email-already-in-use':
-          return 'Ten adres email jest już używany.';
-        case 'auth/invalid-email':
-          return 'Nieprawidłowy adres email.';
-        case 'auth/operation-not-allowed':
-          return 'Operacja nie jest dozwolona.';
-        case 'auth/weak-password':
-          return 'Hasło jest zbyt słabe. Użyj co najmniej 6 znaków.';
-        case 'auth/user-disabled':
-          return 'Konto zostało wyłączone.';
-        case 'auth/user-not-found':
-          return 'Nie znaleziono użytkownika.';
-        case 'auth/wrong-password':
-          return 'Nieprawidłowe hasło.';
-        default:
-          return 'Wystąpił nieznany błąd. Spróbuj ponownie.';
-      }
-    }
-    
-    // Funkcja zwracająca tekst dla poziomu umiejętności
-    function getLevelText(level) {
-      switch(level) {
-        case 1: return "Poziom 1";
-        case 2: return "Poziom 2";
-        default: return "Nieokreślony poziom";
-      }
-    }
-
-    
-
-
-// Funkcja do ładowania wszystkich użytkowników
-// Funkcja do ładowania wszystkich użytkowników
-async function loadAllUsers() {
-  try {
-    const usersSnapshot = await getDocs(collection(db, "users"));
-    allUsers = [];
-    
-    usersSnapshot.forEach(doc => {
-      const userData = doc.data();
-      usersData[doc.id] = userData;
-      
-      // Wyklucz obecnego użytkownika i adminów
-      if (doc.id !== currentUserId && userData.role !== 'admin') {
-        allUsers.push({
-          id: doc.id,
-          ...userData
-        });
-      }
-    });
-  } catch (error) {
-    console.error("Błąd ładowania użytkowników:", error);
-  }
-}
-
-// Funkcja do renderowania kafelków użytkowników
-function renderUsersGrid() {
-  const usersGrid = document.getElementById('users-grid');
-  usersGrid.innerHTML = '';
-
-  allUsers.forEach(user => {
-    const userCard = document.createElement('div');
-    userCard.className = 'user-card';
-    userCard.style.cssText = `
-      background: #161b22;
-      padding: 15px;
-      border-radius: 12px;
-      text-align: left;
-      cursor: pointer;
-      transition: transform 0.2s;
-      border: 1px solid #30363d;
-      color: #e6edf3;
-    `;
-
-    const userSkillsData = user.skills || {};
-
-    // Całkowity procent
-    const totalPercent = calculateProgress(userSkillsData);
-
-    // Procent dla każdej dziedziny
-    const categoryPercents = SKILL_TREE.map(category => {
-      const skillsInCategory = category.branches.flatMap(b => b.skills);
-      const unlockedCount = skillsInCategory.filter(skill => {
-        const level = userSkillsData[skill.id] || 0;
-        return level === 1 || level === 2; // tylko poziomy odblokowane
+    const unlockedSkills = Object.entries(userSkills)
+      .filter(([skillId, level]) => {
+        const skill = SKILL_TREE.flatMap(c => c.branches.flatMap(b => b.skills))
+                      .find(s => s.id === skillId);
+        return skill && skill.level !== "Poziom 3" && level > 0;
       }).length;
-      return {
-        name: category.name,
-        percent: Math.round((unlockedCount / skillsInCategory.length) * 100)
-      };
-    });
 
-    // Tworzenie HTML kategorii z wyróżnieniem
-    let categoryHTML = '';
-    categoryPercents.forEach(cat => {
-      categoryHTML += `
-        <div style="
-          font-size: 12px; 
-          font-weight: 200; 
-          color: #ffffff; 
-          background: #30363d; 
-          padding: 6px 8px; 
-          margin-bottom: 4px; 
-          border-radius: 8px;
-        ">
-          ${cat.name}: ${cat.percent}%
-        </div>
-      `;
-    });
+    const progressPercent = (unlockedSkills / totalSkills) * 100;
 
-    userCard.innerHTML = `
-      <h1 style="margin: 5px 0; color: #00d4ff; font-size:18px;">${user.name || 'Użytkownik'}</h1>
-      <div style="font-size: 14px; margin-bottom: 8px;">Całkowity postęp: ${totalPercent}%</div>
-      ${categoryHTML}
-    `;
-
-    usersCardEvents(userCard, user.id, user.name);
-
-    usersGrid.appendChild(userCard);
-  });
-}
-
-// Funkcja do obsługi kliknięcia i efektów hover
-function usersCardEvents(card, userId, userName) {
-  card.addEventListener('click', () => {
-    viewUserSkills(userId, userName);
-  });
-
-  card.addEventListener('mouseenter', () => {
-    card.style.transform = 'translateY(-5px)';
-    card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
-  });
-
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'translateY(0)';
-    card.style.boxShadow = 'none';
-  });
-}
-
-// Funkcja do obliczenia całkowitego postępu
-function calculateProgress(skills) {
-  const totalSkills = SKILL_TREE.reduce((total, category) => {
-    const count = category.branches.flatMap(b => b.skills).length;
-    return total + count;
-  }, 0);
-
-  const unlockedSkills = Object.values(skills).filter(level => level === 1 || level === 2).length;
-  return Math.round((unlockedSkills / totalSkills) * 100);
-}
-
-
-// Funkcja do podglądu umiejętności innego użytkownika
-// Funkcja do podglądu umiejętności innego użytkownika
-async function viewUserSkills(userId, userName) {
-  try {
-    // Ukryj grywalizację i pokaż drzewko
-    document.getElementById('gamification-section').style.display = 'none';
-    document.getElementById('skillTree').style.display = 'block';
-  document.getElementById('backToMySkillsNav').style.display = 'none';
-    isGamificationView = false;
-    
-    const userDoc = await getDoc(doc(db, "users", userId));
-    if (userDoc.exists()) {
-      userSkills = userDoc.data().skills || {};
-      document.getElementById('userName').textContent = `${userName} (podgląd)`;
-      renderSkillTree();
-      
-      // Dodaj przycisk powrotu (jeśli jeszcze nie istnieje)
-      let backButton = document.getElementById('backButton');
-      if (!backButton) {
-        backButton = document.createElement('button');
-        backButton.id = 'backButton';
-        backButton.textContent = 'Powrót do mojego widoku';
-        backButton.style.cssText = `
-          padding: 10px 15px;
-          background: #ff6b6b;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          margin: 10px 0;
-          width: 100%;
-        `;
-        
-        backButton.onclick = async () => {
-          await loadUserSkills();
-          document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
-          renderSkillTree();
-          backButton.remove();
-        };
-        
-        const userPanel = document.querySelector('.user-panel');
-        userPanel.appendChild(backButton);
-      }
-    }
-  } catch (error) {
-    console.error("Błąd ładowania umiejętności użytkownika:", error);
+    document.getElementById('progressFill').style.width = `${progressPercent}%`;
+    const percent = Math.round((unlockedSkills / totalSkills) * 100);
+document.getElementById('progressText').textContent = `${percent}% umiejętności`;
   }
-}
-
-document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
-  e.preventDefault();
-  // Ta sama logika co w backButton.onclick
-  await loadUserSkills();
-  document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
-  renderSkillTree();
-  document.getElementById('gamification-section').style.display = 'none';
-  document.getElementById('skillTree').style.display = 'block';
-  // Ukryj przycisk w panelu użytkownika jeśli istnieje
-  const backButton = document.getElementById('backButton');
-  if (backButton) backButton.remove();
-  isGamificationView = false;
-  // Ukryj link w navbarze
-  document.getElementById('backToMySkillsNav').style.display = 'none';
-});
 
 
-document.getElementById('gamificationBtn').addEventListener('click', async () => {
-  if (!isGamificationView) { // jeśli nie jesteśmy jeszcze w widoku grywalizacji
-    isGamificationView = true;
-    await loadAllUsers();
-    
-    document.getElementById('gamification-section').style.display = 'block';
-    document.getElementById('skillTree').style.display = 'none';
+      
+      // Funkcja do tłumaczenia kodów błędów Firebase
+      function getAuthErrorMessage(errorCode) {
+        switch (errorCode) {
+          case 'auth/email-already-in-use':
+            return 'Ten adres email jest już używany.';
+          case 'auth/invalid-email':
+            return 'Nieprawidłowy adres email.';
+          case 'auth/operation-not-allowed':
+            return 'Operacja nie jest dozwolona.';
+          case 'auth/weak-password':
+            return 'Hasło jest zbyt słabe. Użyj co najmniej 6 znaków.';
+          case 'auth/user-disabled':
+            return 'Konto zostało wyłączone.';
+          case 'auth/user-not-found':
+            return 'Nie znaleziono użytkownika.';
+          case 'auth/wrong-password':
+            return 'Nieprawidłowe hasło.';
+          default:
+            return 'Wystąpił nieznany błąd. Spróbuj ponownie.';
+        }
+      }
+      
+      // Funkcja zwracająca tekst dla poziomu umiejętności
+      function getLevelText(level) {
+        switch(level) {
+          case 1: return "Poziom 1";
+          case 2: return "Poziom 2";
+          default: return "Nieokreślony poziom";
+        }
+      }
 
-    // Usuń istniejący przycisk powrotu, jeśli jest
-    const oldBackButton = document.getElementById('backButton');
-    if (oldBackButton) oldBackButton.remove();
+      
 
-    // Dodaj przycisk powrotu
-    // Dodaj przycisk powrotu
-    const backButton = document.createElement('button');
-    backButton.id = 'backButton';
-    backButton.textContent = 'Powrót do moich umiejętności';
-    backButton.style.cssText = `
-      padding: 10px 15px;
-      background: white;
-      color: black;
-      border: 2px solid black;
-      border-radius: 8px;
-      cursor: pointer;
-      margin: 10px 0;
-      width: 100%;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    `;
-    backButton.onmouseenter = () => {
-      backButton.style.background = '#f0f0f0';
-    };
-    backButton.onmouseleave = () => {
-      backButton.style.background = 'white';
-    };
-    backButton.onclick = async () => {
-      await loadUserSkills(); // załaduj własne umiejętności
-      document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
-      renderSkillTree();
+
+  // Funkcja do ładowania wszystkich użytkowników
+  // Funkcja do ładowania wszystkich użytkowników
+  async function loadAllUsers() {
+    try {
+      const usersSnapshot = await getDocs(collection(db, "users"));
+      allUsers = [];
+      
+      usersSnapshot.forEach(doc => {
+        const userData = doc.data();
+        usersData[doc.id] = userData;
+        
+        // Wyklucz obecnego użytkownika i adminów
+        if (doc.id !== currentUserId && userData.role !== 'admin') {
+          allUsers.push({
+            id: doc.id,
+            ...userData
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Błąd ładowania użytkowników:", error);
+    }
+  }
+
+  // Funkcja do renderowania kafelków użytkowników
+  function renderUsersGrid() {
+    const usersGrid = document.getElementById('users-grid');
+    usersGrid.innerHTML = '';
+
+    allUsers.forEach(user => {
+      const userCard = document.createElement('div');
+      userCard.className = 'user-card';
+      userCard.style.cssText = `
+        background: #161b22;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.2s;
+        border: 1px solid #30363d;
+        color: #e6edf3;
+      `;
+
+      const userSkillsData = user.skills || {};
+
+      // Całkowity procent
+      const totalPercent = calculateProgress(userSkillsData);
+
+      // Procent dla każdej dziedziny
+      const categoryPercents = SKILL_TREE.map(category => {
+        const skillsInCategory = category.branches.flatMap(b => b.skills);
+        const unlockedCount = skillsInCategory.filter(skill => {
+          const level = userSkillsData[skill.id] || 0;
+          return level === 1 || level === 2; // tylko poziomy odblokowane
+        }).length;
+        return {
+          name: category.name,
+          percent: Math.round((unlockedCount / skillsInCategory.length) * 100)
+        };
+      });
+
+      // Tworzenie HTML kategorii z wyróżnieniem
+      let categoryHTML = '';
+      categoryPercents.forEach(cat => {
+        categoryHTML += `
+          <div style="
+            font-size: 12px; 
+            font-weight: 200; 
+            color: #ffffff; 
+            background: #30363d; 
+            padding: 6px 8px; 
+            margin-bottom: 4px; 
+            border-radius: 8px;
+          ">
+            ${cat.name}: ${cat.percent}%
+          </div>
+        `;
+      });
+
+      userCard.innerHTML = `
+        <h1 style="margin: 5px 0; color: #00d4ff; font-size:18px;">${user.name || 'Użytkownik'}</h1>
+        <div style="font-size: 14px; margin-bottom: 8px;">Całkowity postęp: ${totalPercent}%</div>
+        ${categoryHTML}
+      `;
+
+      usersCardEvents(userCard, user.id, user.name);
+
+      usersGrid.appendChild(userCard);
+    });
+  }
+
+  // Funkcja do obsługi kliknięcia i efektów hover
+  function usersCardEvents(card, userId, userName) {
+    card.addEventListener('click', () => {
+      viewUserSkills(userId, userName);
+    });
+
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'translateY(-5px)';
+      card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'translateY(0)';
+      card.style.boxShadow = 'none';
+    });
+  }
+
+  // Funkcja do obliczenia całkowitego postępu
+  function calculateProgress(skills) {
+    const totalSkills = SKILL_TREE.reduce((total, category) => {
+      const count = category.branches.flatMap(b => b.skills).length;
+      return total + count;
+    }, 0);
+
+    const unlockedSkills = Object.values(skills).filter(level => level === 1 || level === 2).length;
+    return Math.round((unlockedSkills / totalSkills) * 100);
+  }
+
+
+  // Funkcja do podglądu umiejętności innego użytkownika
+  // Funkcja do podglądu umiejętności innego użytkownika
+  async function viewUserSkills(userId, userName) {
+    try {
+      // Ukryj grywalizację i pokaż drzewko
       document.getElementById('gamification-section').style.display = 'none';
       document.getElementById('skillTree').style.display = 'block';
-      backButton.remove();
+    document.getElementById('backToMySkillsNav').style.display = 'none';
       isGamificationView = false;
-    };
-
-    document.querySelector('.user-panel').appendChild(backButton);
-
-    renderUsersGrid();
-  }
-    // 🔽 DODANE: zamknij menu mobilne po kliknięciu
-  if (navMenu.classList.contains('active')) {
-    navMenu.classList.remove('active');
-    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-  }
-});
-
-
-  </script>
-
-
-
- <!-- Footer -->
- <footer id="contact">
-  <div class="container">
-    <div class="footer-container">
-      <div class="footer-about">
-        <a href="/" class="footer-logo">
-          <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="logo">
-          <h1 style="font-size: 20px;">XXX</h1>
-        </a>
-        <p>test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test</p>
-      </div>
       
-      <div class="footer-links">
-        <h1 style="font-size: 20px;">Quick Links</h1>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#course">Course</a></li>
-          <li><a href="#instructor">Instructor</a></li>
-          <li><a href="#faq">FAQ</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-contact">
-        <h1 style="font-size: 20px;">Contact Us</h1>
-        <p><i class="fas fa-envelope"></i> xxx@xx.pl</p>
-        <p><i class="fas fa-map-marker-alt"></i> xxx 7, 57-372 Wrocław, Poland</p>
-      </div>
-    </div>
-    
-    <div class="footer-bottom">
-      <p>© 2025 xx. All rights reserved.</p>
-      <p>test test test test test test test test test test test test test test test test test test</p>
-    </div>
-  </div>
-</footer>
+      const userDoc = await getDoc(doc(db, "users", userId));
+      if (userDoc.exists()) {
+        userSkills = userDoc.data().skills || {};
+        document.getElementById('userName').textContent = `${userName} (podgląd)`;
+        renderSkillTree();
+        
+        // Dodaj przycisk powrotu (jeśli jeszcze nie istnieje)
+        let backButton = document.getElementById('backButton');
+        if (!backButton) {
+          backButton = document.createElement('button');
+          backButton.id = 'backButton';
+          backButton.textContent = 'Powrót do mojego widoku';
+          backButton.style.cssText = `
+            padding: 10px 15px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 100%;
+          `;
+          
+          backButton.onclick = async () => {
+            await loadUserSkills();
+            document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+            renderSkillTree();
+            backButton.remove();
+          };
+          
+          const userPanel = document.querySelector('.user-panel');
+          userPanel.appendChild(backButton);
+        }
+      }
+    } catch (error) {
+      console.error("Błąd ładowania umiejętności użytkownika:", error);
+    }
+  }
 
-<script>
-  // Mobile menu toggle
-  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-  const navMenu = document.querySelector('.nav-menu');
-  
-  mobileMenuBtn.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
-      ? '<i class="fas fa-times"></i>' 
-      : '<i class="fas fa-bars"></i>';
+  document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
+    e.preventDefault();
+    // Ta sama logika co w backButton.onclick
+    await loadUserSkills();
+    document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+    renderSkillTree();
+    document.getElementById('gamification-section').style.display = 'none';
+    document.getElementById('skillTree').style.display = 'block';
+    // Ukryj przycisk w panelu użytkownika jeśli istnieje
+    const backButton = document.getElementById('backButton');
+    if (backButton) backButton.remove();
+    isGamificationView = false;
+    // Ukryj link w navbarze
+    document.getElementById('backToMySkillsNav').style.display = 'none';
   });
-  
-  // FAQ accordion
-  const faqItems = document.querySelectorAll('.faq-item');
-  
-  faqItems.forEach(item => {
-    const question = item.querySelector('.faq-question');
+
+
+  document.getElementById('gamificationBtn').addEventListener('click', async () => {
+    if (!isGamificationView) { // jeśli nie jesteśmy jeszcze w widoku grywalizacji
+      isGamificationView = true;
+      await loadAllUsers();
+      
+      document.getElementById('gamification-section').style.display = 'block';
+      document.getElementById('skillTree').style.display = 'none';
+
+      // Usuń istniejący przycisk powrotu, jeśli jest
+      const oldBackButton = document.getElementById('backButton');
+      if (oldBackButton) oldBackButton.remove();
+
+      // Dodaj przycisk powrotu
+      // Dodaj przycisk powrotu
+      const backButton = document.createElement('button');
+      backButton.id = 'backButton';
+      backButton.textContent = 'Powrót do moich umiejętności';
+      backButton.style.cssText = `
+        padding: 10px 15px;
+        background: white;
+        color: black;
+        border: 2px solid black;
+        border-radius: 8px;
+        cursor: pointer;
+        
+        width: 100%;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      `;
+      backButton.onmouseenter = () => {
+        backButton.style.background = '#f0f0f0';
+      };
+      backButton.onmouseleave = () => {
+        backButton.style.background = 'white';
+      };
+      backButton.onclick = async () => {
+        await loadUserSkills(); // załaduj własne umiejętności
+        document.getElementById('userName').textContent = currentUserData?.name || 'Użytkownik';
+        renderSkillTree();
+        document.getElementById('gamification-section').style.display = 'none';
+        document.getElementById('skillTree').style.display = 'block';
+        backButton.remove();
+        isGamificationView = false;
+      };
+
+      document.querySelector('.user-panel').appendChild(backButton);
+
+      renderUsersGrid();
+    }
+      // 🔽 DODANE: zamknij menu mobilne po kliknięciu
+    if (navMenu.classList.contains('active')) {
+      navMenu.classList.remove('active');
+      mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+  });
+
+
+    </script>
+
+
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-container">
+        <div class="footer-about">
+          <a href="/" class="footer-logo">
+            <img src="https://img.freepik.com/premium-wektory/kolorowa-ilustracja-z-gradientem-ptakow-koncepcja-logo_1253202-1578.jpg?semt=ais_hybrid&w=740&q=80" alt="logo">
+            <h1 style="font-size: 20px;">XXX</h1>
+          </a>
+          <p>test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test</p>
+        </div>
+        
+        <div class="footer-links">
+          <h1 style="font-size: 20px;">Quick Links</h1>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#course">Course</a></li>
+            <li><a href="#instructor">Instructor</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-contact">
+          <h1 style="font-size: 20px;">Contact Us</h1>
+          <p><i class="fas fa-envelope"></i> xxx@xx.pl</p>
+          <p><i class="fas fa-map-marker-alt"></i> xxx 7, 57-372 Wrocław, Poland</p>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© 2025 xx. All rights reserved.</p>
+        <p>test test test test test test test test test test test test test test test test test test</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
     
-    question.addEventListener('click', () => {
-      item.classList.toggle('active');
+    mobileMenuBtn.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
     });
-  });
-  
-  // Smooth scrolling for anchor links
+    
+    // FAQ accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      
+      question.addEventListener('click', () => {
+        item.classList.toggle('active');
+      });
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          if (navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          }
+        }
+      });
+    });
+
+
+
+
+
+    // Smooth scrolling for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
       
       const targetId = this.getAttribute('href');
       if (targetId === '#') return;
+      
+      // Jeśli użytkownik nie jest zalogowany, przekieruj do logowania
+      if (!currentUserId && targetId !== '#') {
+        authContainer.style.display = 'block';
+        appContainer.style.display = 'none';
+        return;
+      }
       
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
@@ -2215,42 +2244,7 @@ document.getElementById('gamificationBtn').addEventListener('click', async () =>
       }
     });
   });
-
-
-
-
-
-  // Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    const targetId = this.getAttribute('href');
-    if (targetId === '#') return;
-    
-    // Jeśli użytkownik nie jest zalogowany, przekieruj do logowania
-    if (!currentUserId && targetId !== '#') {
-      authContainer.style.display = 'block';
-      appContainer.style.display = 'none';
-      return;
-    }
-    
-    const targetElement = document.querySelector(targetId);
-    if (targetElement) {
-      window.scrollTo({
-        top: targetElement.offsetTop - 80,
-        behavior: 'smooth'
-      });
-      
-      // Close mobile menu if open
-      if (navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-      }
-    }
-  });
-});
-</script>
-</body>
-</html>
+  </script>
+  </body>
+  </html>
 
