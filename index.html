@@ -1551,7 +1551,32 @@ body {
   </style>
  </head>
 
+<script>
+  // Obsługa przycisku Home
+document.querySelector('.nav-link[href="/"]').addEventListener('click', async (e) => {
+  e.preventDefault(); // zatrzymaj przeładowanie strony
 
+  // Jeśli jesteś zalogowany → pokaż swoje drzewko
+  if (currentUserId) {
+    await loadUserSkills();
+    renderSkillTree();
+    updateProgress();
+
+    document.getElementById('gamification-section').style.display = 'none';
+    document.getElementById('skillTree').style.display = 'block';
+    document.getElementById('other-user-preview').style.display = 'none';
+    document.getElementById('backToMySkillsNav').style.display = 'none';
+    isViewingOtherUser = false;
+    isGamificationView = false;
+  } else {
+    // jeśli nie zalogowany → pokaż ekran logowania
+    authContainer.style.display = 'block';
+    appContainer.style.display = 'none';
+  }
+});
+
+  
+  </script>
 
  
 <body>
