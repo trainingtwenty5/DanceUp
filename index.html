@@ -1540,7 +1540,7 @@ body {
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 50%"></div>
                 </div>
-                <div class="progress-text" id="progressText">0/25 umiejętności</div>
+                <div class="progress-text" id="progressText">0/25</div>
             </div>
         </div>
         <div class="user-actions">
@@ -1550,9 +1550,9 @@ body {
 
     <!-- Menu po prawej -->
     <nav class="nav-menu">
-        <a id="/" class="nav-link">Home</a>
+        <a href="/" class="nav-link">Home</a>
         <a id="gamificationBtn" class="nav-link">Grywalizacja</a>
-        <a href="#course" class="nav-link">Course</a>
+        
         <a href="#instructor" class="nav-link">Instructor</a>
         <a id="logoutBtn" class="nav-link">Wyloguj</a>
     </nav>
@@ -2058,7 +2058,7 @@ function renderSkillTree(skillsToRender = null) {
 
     document.getElementById('progressFill').style.width = `${progressPercent}%`;
     const percent = Math.round((unlockedSkills / totalSkills) * 100);
-document.getElementById('progressText').textContent = `${percent}% umiejętności`;
+document.getElementById('progressText').textContent = `${percent}%`;
   }
 
 
@@ -2238,7 +2238,7 @@ async function viewUserSkills(userId, userName) {
     document.getElementById('other-user-preview').style.display = 'block';
 
     renderSkillTree(otherUserSkills);  // render drzewka innego użytkownika
-    document.getElementById('backToMySkillsNav').style.display = 'inline-block';
+   // document.getElementById('backToMySkillsNav').style.display = 'inline-block';
     
     // Ukryj sekcję grywalizacji i pokaż drzewko
     document.getElementById('gamification-section').style.display = 'none';
@@ -2251,24 +2251,7 @@ async function viewUserSkills(userId, userName) {
   }
 }
 
-// Powrót do własnego drzewka
-document.getElementById('backToMySkillsNav').addEventListener('click', async (e) => {
-  e.preventDefault();
-  
-  if (!isViewingOtherUser) return;
 
-  // Ukryj podgląd innego użytkownika (niebieski box z nazwą)
-  document.getElementById('other-user-preview').style.display = 'none';
-  document.getElementById('backToMySkillsNav').style.display = 'none';
-  
-  // Wczytaj i wyrenderuj własne umiejętności
-  await loadUserSkills();
-  renderSkillTree();
-  updateProgress();
-  
-  isViewingOtherUser = false;
-  currentViewedUserId = null;
-});
 
 // Obsługa przycisku grywalizacji - ZMIENIONA
 document.getElementById('gamificationBtn').addEventListener('click', async () => {
