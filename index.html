@@ -138,7 +138,7 @@
   /* Styl na telefon */
   @media (max-width: 768px) {
     .user-panel {
-      position: relative;         /* żeby nie przyklejało do rogu */
+      position: fixed;         /* żeby nie przyklejało do rogu */
       top: auto;
       right: auto;
       margin: 60px 60px;          /* wyśrodkowanie */
@@ -1395,7 +1395,7 @@ body {
 
 /* Menu po prawej */
 .nav-menu {
-    display: flex;
+    display: fixed;
     gap: 10px;
     align-items: center;
 }
@@ -1430,10 +1430,22 @@ body {
 /* Responsywność */
 @media (max-width: 992px) {
     .main-navbar {
+        position: fixed;       /* przyklejony navbar */
+        top: 0;
+        left: 0;
+        width: 100%;
         flex-wrap: wrap;
         justify-content: center;
-        padding: 10px;
+        padding: 10px 20px;
+        background: white;     /* tło nagłówka */
+        z-index: 1000;
     }
+
+    /* Odstęp, żeby treść nie była zasłonięta */
+    body {
+        padding-top: 120px; /* wysokość navbaru + ewentualny margines */
+    }
+
     .user-info-wrapper {
         position: relative;
         left: auto;
@@ -1441,29 +1453,42 @@ body {
         justify-content: center;
         margin: 5px 0;
     }
+
     .nav-menu {
         display: none;
         flex-direction: column;
         width: 100%;
-        top: 120px;
+        position: absolute;   /* rozwija się względem navbaru */
+        top: 100%;            /* zaraz pod navbar */
+        left: 0;
         text-align: center;
-        z-index: 100;
+        background: white;
+        padding: 10px 0;
+        gap: 10px;
+        z-index: 1001;        /* wyżej niż navbar */
     }
+
     .nav-menu.active {
         display: flex;
     }
+
     .mobile-menu-btn {
         display: block;
-        margin-left: auto;
+        position: absolute;
+        top: 25%;
+        right: 20px;
+        transform: translateY(-50%);
+        z-index: 1100;
+        margin-left: 0;
     }
-}
+
 
 #auth-container, #app-container {
     display: none;
 }
 
 .nav-menu {
-    display: flex;
+    display: fixed;
     gap: 10px;
     align-items: center;
 }
@@ -1481,7 +1506,7 @@ body {
 /* Responsywność */
 @media (max-width: 992px) {
     .nav-menu {
-        display: none;
+        display: fixed;
         flex-direction: column;
         width: 100%;
         gap: 5px;
@@ -1496,7 +1521,7 @@ body {
     }
 }
 .nav-menu {
-    display: flex;
+    display: fixed;
     gap: 10px;
 }
 
@@ -1507,7 +1532,7 @@ body {
 /* Responsywność */
 @media (max-width: 992px) {
     .nav-menu {
-        display: none;
+        display: fixed;
         flex-direction: column;
         gap: 5px;
     }
